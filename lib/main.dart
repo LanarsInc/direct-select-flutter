@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_direct_select/dropdown_direct.dart';
+import 'package:flutter_direct_select/direct_select_list.dart';
 
 void main() => runApp(MyApp());
 
@@ -27,7 +27,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   List _cities = [
     "Cluj-Napoca",
     "Bucuresti",
@@ -36,9 +35,8 @@ class _MyHomePageState extends State<MyHomePage> {
     "Constanta"
   ];
 
-  List<DropdownDirectMenuItem<String>> _dropDownMenuItems;
+  List<DirectSelectItem<String>> _dropDownMenuItems;
   String _currentCity;
-
 
   @override
   void initState() {
@@ -47,53 +45,42 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
   }
 
-  List<DropdownDirectMenuItem<String>> getDropDownMenuItems() {
-    List<DropdownDirectMenuItem<String>> items = new List();
+  List<DirectSelectItem<String>> getDropDownMenuItems() {
+    List<DirectSelectItem<String>> items = List();
     for (String city in _cities) {
-      items.add(new DropdownDirectMenuItem(value: city, child: new Text(city)));
+      items.add(DirectSelectItem(value: city, child: Text(city)));
     }
     return items;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            new Text("Please choose your city: "),
-            new Container(
-              padding: new EdgeInsets.all(16.0),
-            ),
-            new DropdownDirectButton(
-              value: _currentCity,
-              items: _dropDownMenuItems,
-              onChanged: changedDropDownItem,
-            )
-          ],
+    final appBar = AppBar(
+      title: Text(widget.title),
+    );
+    final bottomNavigationBar = BottomNavigationBar(
+      currentIndex: 0, // this will be set when a tab is tapped
+      items: [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home),
+          title: Text('Home'),
         ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.mail),
+          title: Text('Messages'),
+        ),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.person), title: Text('Profile'))
+      ],
+    );
+    return Scaffold(
+      appBar: appBar,
+      body: Container(
+        padding: EdgeInsets.all(8),
+        decoration: BoxDecoration(color: Colors.black12),
+        child: Center(child: DirectSelectList(items: getDropDownMenuItems(),)),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 0, // this will be set when a new tab is tapped
-        items: [
-          BottomNavigationBarItem(
-            icon: new Icon(Icons.home),
-            title: new Text('Home'),
-          ),
-          BottomNavigationBarItem(
-            icon: new Icon(Icons.mail),
-            title: new Text('Messages'),
-          ),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              title: Text('Profile')
-          )
-        ],
-      ),
+      bottomNavigationBar: bottomNavigationBar,
     );
   }
 
