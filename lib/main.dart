@@ -35,16 +35,6 @@ class _MyHomePageState extends State<MyHomePage> {
     "Constanta"
   ];
 
-  List<DirectSelectItem<String>> _dropDownMenuItems;
-  String _currentCity;
-
-  @override
-  void initState() {
-    _dropDownMenuItems = getDropDownMenuItems();
-    _currentCity = _dropDownMenuItems[0].value;
-    super.initState();
-  }
-
   List<DirectSelectItem<String>> getDropDownMenuItems() {
     List<DirectSelectItem<String>> items = List();
     for (String city in _cities) {
@@ -76,17 +66,28 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: appBar,
       body: Container(
-        padding: EdgeInsets.all(8),
+        padding: EdgeInsets.all(12),
         decoration: BoxDecoration(color: Colors.black12),
-        child: Center(child: DirectSelectList(items: getDropDownMenuItems(),)),
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            verticalDirection: VerticalDirection.down,
+            children: <Widget>[
+              Card(
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    Expanded(
+                        child: DirectSelectList(items: getDropDownMenuItems())),
+                  ],
+                ),
+              ),
+              Container(child: Text("data"),)
+            ],
+          ),
+        ),
       ),
       bottomNavigationBar: bottomNavigationBar,
     );
-  }
-
-  void changedDropDownItem(String selectedCity) {
-    setState(() {
-      _currentCity = selectedCity;
-    });
   }
 }
