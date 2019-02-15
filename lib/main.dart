@@ -37,9 +37,19 @@ class _MyHomePageState extends State<MyHomePage> {
     "Constanta"
   ];
 
+  List _numbers = ["1", "2", "3", "4", "5"];
+
   List<DirectSelectItem<String>> getDropDownMenuItems() {
     List<DirectSelectItem<String>> items = List();
     for (String city in _cities) {
+      items.add(DirectSelectItem(value: city, child: Text(city)));
+    }
+    return items;
+  }
+
+  List<DirectSelectItem<String>> getDropDownMenuItems2() {
+    List<DirectSelectItem<String>> items = List();
+    for (String city in _numbers) {
       items.add(DirectSelectItem(value: city, child: Text(city)));
     }
     return items;
@@ -67,28 +77,60 @@ class _MyHomePageState extends State<MyHomePage> {
     );
 
     final dsl = DirectSelectList(items: getDropDownMenuItems());
+    final dsl2 = DirectSelectList(items: getDropDownMenuItems2());
     return Scaffold(
       appBar: appBar,
       body: DirectSelectContainer(
-        controls: [dsl],
-        child: Container(
-          padding: EdgeInsets.all(12),
-          decoration: BoxDecoration(color: Colors.black12),
+        controls: [dsl, dsl2],
+        child: Center(
           child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               verticalDirection: VerticalDirection.down,
               children: <Widget>[
                 Card(
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: <Widget>[
-                      Expanded(
-                          child: dsl),
-                    ],
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                            alignment: AlignmentDirectional.centerStart,
+                            child: Text("City")),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: <Widget>[
+                              Expanded(child: dsl),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                Container(child: Text("data"),)
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                            alignment: AlignmentDirectional.centerStart,
+                            child: Text("Numbers")),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: <Widget>[
+                              Expanded(child: dsl2),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
               ],
             ),
           ),

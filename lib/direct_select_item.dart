@@ -7,17 +7,40 @@ class DirectSelectItem<T> extends StatefulWidget {
   final T value;
   final Widget child;
 
+  DirectSelectItemState state;
+  double scale = 1.0;
+
   DirectSelectItem({Key key, this.value, this.child}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return DirectSelectItemState();
+    state = DirectSelectItemState(scale: scale);
+    return state;
+  }
+
+  void updateScale(double scale) {
+    scale = scale;
+    state.setScale(scale);
   }
 }
 
 class DirectSelectItemState<T> extends State<DirectSelectItem<T>>
     with SingleTickerProviderStateMixin {
   bool isSelected = false;
+  double scale = 1.0;
+
+  DirectSelectItemState({this.scale});
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  void setScale(double scale) {
+    setState(() {
+      this.scale = scale;
+    });
+  }
 
   void setSelected() {
     setState(() {
@@ -28,7 +51,10 @@ class DirectSelectItemState<T> extends State<DirectSelectItem<T>>
   @override
   Widget build(BuildContext context) {
     return Container(
-        child: widget.child,
+        child: Transform.scale(
+            scale: scale,
+            alignment: Alignment.centerLeft,
+            child: widget.child),
         decoration: isSelected
             ? BoxDecoration(color: Colors.redAccent.withOpacity(0.3))
             : BoxDecoration(color: Colors.black38),
