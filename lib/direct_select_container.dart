@@ -6,8 +6,10 @@ import 'package:flutter_direct_select/direct_select_list.dart';
 class DirectSelectContainer extends StatefulWidget {
   final Widget child;
   final List<DirectSelectList> controls;
+  final scaleFactor;
 
-  const DirectSelectContainer({Key key, this.controls, this.child})
+  const DirectSelectContainer(
+      {Key key, this.controls, this.child, this.scaleFactor = 5.0})
       : super(key: key);
 
   @override
@@ -21,8 +23,6 @@ const listPadding = 500.0;
 
 class DirectSelectContainerState extends State<DirectSelectContainer>
     with SingleTickerProviderStateMixin {
-  double scaleFactor = 3.0;
-
   bool isOverlayVisible = false;
 
   ScrollController _scrollController;
@@ -35,123 +35,23 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
 
   int lastSelectedItem = 0;
 
+  final scrollToListElementAnimationDuration = Duration(milliseconds: 300);
+  final fadeAnimationDuration = Duration(milliseconds: 300);
+
   @override
   void initState() {
     super.initState();
 
-    animationController = AnimationController(
-        duration: const Duration(milliseconds: 400), vsync: this);
+    animationController =
+        AnimationController(duration: fadeAnimationDuration, vsync: this);
 
     for (DirectSelectList dsl in widget.controls) {
       dsl.setOnTapEventListener((owner, location) {
-        setVisible(owner, location);
+        _toggleListOverlayVisibility(owner, location);
       });
 
       dsl.setOnDragEvent((dragDy) {
-        try {
-          if (_scrollController != null && _scrollController.position != null) {
-            final offset = _scrollController.offset;
-            _scrollController.jumpTo(offset + dragDy);
-
-            final scrollPixels =
-                _scrollController.offset - listPadding + _adjustedTopOffset;
-            final selectedItemIndex = getCurrentElementIndex(scrollPixels);
-            _currentList.setSelectedItemIndex(selectedItemIndex);
-
-            _currentList.items[lastSelectedItem].updateScale(1.0);
-            lastSelectedItem = selectedItemIndex;
-
-            final neighbourDistance = getNeighbourDistance(scrollPixels);
-            int neighbourIncrementDirection = 0;
-            if (neighbourDistance > 0) {
-              neighbourIncrementDirection = 1;
-            } else {
-              neighbourIncrementDirection = -1;
-            }
-            int neighbourIndex = lastSelectedItem + neighbourIncrementDirection;
-            double neighbourDistanceToCurrentItem =
-            (1 - neighbourDistance.abs());
-
-            if (neighbourDistanceToCurrentItem > 1 ||
-                neighbourDistanceToCurrentItem < 0) {
-              neighbourDistanceToCurrentItem = 1.0;
-            }
-
-            bool updateScale = true;
-            if (neighbourIndex < 0) {
-              updateScale = false;
-            }
-
-            if (neighbourIndex > _currentList.items.length - 1) {
-              updateScale = false;
-            }
-
-            if (updateScale) {
-              _currentList.items[selectedItemIndex].updateScale(
-                  1.0 + neighbourDistanceToCurrentItem / scaleFactor);
-              _currentList.items[neighbourIndex]
-                  .updateScale(1.0 + neighbourDistance.abs() / scaleFactor);
-            } else {
-              _currentList.items[selectedItemIndex]
-                  .updateScale(1.0 + 1.0 / scaleFactor);
-            }
-          }
-        } catch (e) {}
-      });
-    }
-  }
-
-  int getCurrentElementIndex(double scrollPixels) {
-    int selectedElement = (scrollPixels / _currentList.itemHeight).round();
-    final maxElementIndex = _currentList.items.length;
-
-    if (selectedElement < 0) {
-      selectedElement = 0;
-    }
-    if (selectedElement >= maxElementIndex) {
-      selectedElement = maxElementIndex - 1;
-    }
-    return selectedElement;
-  }
-
-  double getNeighbourDistance(double scrollPixels) {
-    double selectedElementDeviation = (scrollPixels / _currentList.itemHeight);
-    int selectedElement = getCurrentElementIndex(scrollPixels);
-    return selectedElementDeviation - selectedElement;
-  }
-
-  Future setVisible(DirectSelectList visibleList, double location) async {
-    if (isOverlayVisible == true) {
-      try {
-        await _scrollController.animateTo(
-            listPadding -
-                _adjustedTopOffset +
-                _currentList.getSelectedItemIndex() * _currentList.itemHeight,
-            duration: Duration(milliseconds: 300),
-            curve: Curves.ease);
-      } catch (e) {} finally {
-        _currentList.commitSelection();
-        animationController.duration = Duration(milliseconds: 300);
-        animationController.reverse().then((f) {
-          setState(() {
-            _scrollController.dispose();
-            _scrollController = null;
-            _currentList.items[lastSelectedItem].scale = 1.0;
-            _currentScrollLocation = 0;
-            _adjustedTopOffset = 0;
-
-            isOverlayVisible = false;
-          });
-        });
-      }
-    } else {
-      setState(() {
-        _currentList = visibleList;
-        _currentScrollLocation = location;
-        lastSelectedItem = _currentList.getSelectedItemIndex();
-        isOverlayVisible = true;
-        animationController.duration = Duration(milliseconds: 300);
-        animationController.forward(from: 0.0);
+        _performListDrag(dragDy);
       });
     }
   }
@@ -186,38 +86,8 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
                   Expanded(
                     child: Stack(
                       children: <Widget>[
-                        Container(
-                            color: Colors.white,
-                            child: ListView.builder(
-                              controller: _scrollController,
-                              itemCount: _currentList.items.length + 2,
-                              itemBuilder: (BuildContext context, int index) {
-                                if (index == 0 ||
-                                    index == _currentList.items.length + 1) {
-                                  return Container(height: listPadding);
-                                }
-                                final item = _currentList.items[index - 1];
-                                if (lastSelectedItem == index - 1) {
-                                  item.scale = 1.0 + 1.0 / scaleFactor;
-                                } else {
-                                  item.scale = 1.0;
-                                }
-                                return item;
-                              },
-                            )),
-                        Positioned(
-                          top: _adjustedTopOffset,
-                          left: 0,
-                          right: 0,
-                          height: _currentList.itemHeight,
-                          child: Container(
-                            height: _currentList.itemHeight,
-                            decoration:
-                            _currentList.focusedItemDecoration != null
-                                ? _currentList.focusedItemDecoration
-                                : BoxDecoration(),
-                          ),
-                        )
+                        _getListWidget(),
+                        _getSelectionOverlayWidget(),
                       ],
                     ),
                   ),
@@ -226,5 +96,164 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
             ))
       ],
     );
+  }
+
+  Widget _getListWidget() {
+    return Container(
+        color: Colors.white,
+        child: ListView.builder(
+          controller: _scrollController,
+          itemCount: _currentList.items.length + 2,
+          itemBuilder: (BuildContext context, int index) {
+            if (index == 0 || index == _currentList.items.length + 1) {
+              return Container(height: listPadding);
+            }
+            final item = _currentList.items[index - 1];
+            final normalScale = 1.0;
+            if (lastSelectedItem == index - 1) {
+              item.updateScale(_calculateNewScale(normalScale));
+            } else {
+              item.updateScale(normalScale);
+            }
+            return item;
+          },
+        ));
+  }
+
+  Widget _getSelectionOverlayWidget() {
+    return Positioned(
+        top: _adjustedTopOffset,
+        left: 0,
+        right: 0,
+        height: _currentList.itemHeight,
+        child: Container(
+            height: _currentList.itemHeight,
+            decoration: _currentList.focusedItemDecoration != null
+                ? _currentList.focusedItemDecoration
+                : BoxDecoration()));
+  }
+
+  void _performListDrag(double dragDy) {
+    try {
+      if (_scrollController != null && _scrollController.position != null) {
+        final offset = _scrollController.offset;
+        _scrollController.jumpTo(offset + dragDy);
+
+        final scrollPixels =
+            _scrollController.offset - listPadding + _adjustedTopOffset;
+
+        final selectedItemIndex = getCurrentElementIndex(scrollPixels);
+        lastSelectedItem = selectedItemIndex;
+        _currentList.setSelectedItemIndex(selectedItemIndex);
+
+        _performScaleTransformation(scrollPixels, selectedItemIndex);
+      }
+    } catch (e) {}
+  }
+
+  void _performScaleTransformation(double scrollPixels, int selectedItemIndex) {
+    final neighbourDistance = getNeighbourDistance(scrollPixels);
+    int neighbourIncrementDirection =
+    neighbourScrollDirection(neighbourDistance);
+
+    int neighbourIndex = lastSelectedItem + neighbourIncrementDirection;
+
+    double neighbourDistanceToCurrentItem =
+    getNeighbourDistanceToCurrentItem(neighbourDistance);
+
+    if (neighbourIndex < 0 || neighbourIndex > _currentList.items.length - 1) {
+      //incorrect neighbour index quit
+      return;
+    }
+
+    _currentList.items[selectedItemIndex]
+        .updateScale(_calculateNewScale(neighbourDistanceToCurrentItem));
+    _currentList.items[neighbourIndex]
+        .updateScale(_calculateNewScale(neighbourDistance.abs()));
+  }
+
+  double _calculateNewScale(double distance) =>
+      1.0 + distance / widget.scaleFactor;
+
+  int neighbourScrollDirection(double neighbourDistance) {
+    int neighbourScrollDirection = 0;
+    if (neighbourDistance > 0) {
+      neighbourScrollDirection = 1;
+    } else {
+      neighbourScrollDirection = -1;
+    }
+    return neighbourScrollDirection;
+  }
+
+  double getNeighbourDistanceToCurrentItem(double neighbourDistance) {
+    double neighbourDistanceToCurrentItem = (1 - neighbourDistance.abs());
+
+    if (neighbourDistanceToCurrentItem > 1 ||
+        neighbourDistanceToCurrentItem < 0) {
+      neighbourDistanceToCurrentItem = 1.0;
+    }
+    return neighbourDistanceToCurrentItem;
+  }
+
+  int getCurrentElementIndex(double scrollPixels) {
+    int selectedElement = (scrollPixels / _currentList.itemHeight).round();
+    final maxElementIndex = _currentList.items.length;
+
+    if (selectedElement < 0) {
+      selectedElement = 0;
+    }
+    if (selectedElement >= maxElementIndex) {
+      selectedElement = maxElementIndex - 1;
+    }
+    return selectedElement;
+  }
+
+  double getNeighbourDistance(double scrollPixels) {
+    double selectedElementDeviation = (scrollPixels / _currentList.itemHeight);
+    int selectedElement = getCurrentElementIndex(scrollPixels);
+    return selectedElementDeviation - selectedElement;
+  }
+
+  Future _toggleListOverlayVisibility(DirectSelectList visibleList,
+      double location) async {
+    if (isOverlayVisible == true) {
+      try {
+        await _scrollController.animateTo(
+            listPadding -
+                _adjustedTopOffset +
+                _currentList.getSelectedItemIndex() * _currentList.itemHeight,
+            duration: scrollToListElementAnimationDuration,
+            curve: Curves.ease);
+      } catch (e) {} finally {
+        _currentList.commitSelection();
+        animationController.reverse().then((f) {
+          setState(() {
+            _hideListOverlay();
+          });
+        });
+      }
+    } else {
+      setState(() {
+        _showListOverlay(visibleList, location);
+      });
+    }
+  }
+
+  void _showListOverlay(DirectSelectList visibleList, double location) {
+    _currentList = visibleList;
+    _currentScrollLocation = location;
+    lastSelectedItem = _currentList.getSelectedItemIndex();
+    isOverlayVisible = true;
+    animationController.forward(from: 0.0);
+  }
+
+  void _hideListOverlay() {
+    _scrollController.dispose();
+    _scrollController = null;
+    _currentList.items[lastSelectedItem].updateScale(1.0);
+    _currentScrollLocation = 0;
+    _adjustedTopOffset = 0;
+
+    isOverlayVisible = false;
   }
 }

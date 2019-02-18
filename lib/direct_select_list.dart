@@ -5,8 +5,12 @@ class DirectSelectList<T> extends StatefulWidget {
   final List<DirectSelectItem> items;
   final DirectSelectState state = DirectSelectState();
   final itemHeight;
+  final selectedItem = ValueNotifier<int>(0);
   final Function(T, BuildContext context) itemSelected;
   final Decoration focusedItemDecoration;
+
+  void Function(DirectSelectList, double) onTapEventListener;
+  void Function(double) onDragEventListener;
 
   DirectSelectList({Key key,
     @required this.items,
@@ -22,19 +26,19 @@ class DirectSelectList<T> extends StatefulWidget {
 
   setOnTapEventListener(
       Function(DirectSelectList owner, double location) onTapEventListener) {
-    state.onTapEventListener = onTapEventListener;
+    this.onTapEventListener = onTapEventListener;
   }
 
-  setOnDragEvent(Function(double) callback) {
-    state.onDragEventListener = callback;
+  setOnDragEvent(Function(double) onDragEventListener) {
+    this.onDragEventListener = onDragEventListener;
   }
 
   int getSelectedItemIndex() {
-    return state.selectedItemIndex;
+    return selectedItem.value;
   }
 
   void setSelectedItemIndex(int index) {
-    state.selectedItemIndex = index;
+    selectedItem.value = index;
   }
 
   void commitSelection() {
@@ -42,23 +46,18 @@ class DirectSelectList<T> extends StatefulWidget {
   }
 
   T getSelectedItem() {
-    return items[state.selectedItemIndex].value;
+    return items[selectedItem.value].value;
   }
 }
 
 class DirectSelectState<T> extends State<DirectSelectList<T>> {
-  void Function(DirectSelectList, double) onTapEventListener;
-  void Function(double) onDragEventListener;
-
   bool isShowing = false;
-  var selectedItemIndex = 0;
 
   void commitSelection() {
     setState(() {});
-    if (this.widget.itemSelected != null) {
-      this
-          .widget
-          .itemSelected(widget.items[selectedItemIndex].value, this.context);
+    if (widget.itemSelected != null) {
+      widget.itemSelected(
+          widget.items[widget.selectedItem.value].value, this.context);
     }
   }
 
@@ -66,7 +65,7 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
   Widget build(BuildContext context) {
     return Container(
       child: GestureDetector(
-          child: widget.items[selectedItemIndex].getSelectedItem(),
+          child: widget.items[widget.selectedItem.value].getSelectedItem(),
           onTapDown: (tapDownDetails) {
             _showListOverlay(getItemTopPosition(context));
           },
@@ -74,7 +73,7 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
             _hideListOverlay(getItemTopPosition(context));
           },
           onVerticalDragEnd: (dragDetails) {
-            _hideListOverlay(0);
+            _hideListOverlay(getItemTopPosition(context));
           },
           onVerticalDragUpdate: (dragInfo) {
             _showListOverlay(dragInfo.primaryDelta);
@@ -90,15 +89,15 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
 
   _hideListOverlay(double dy) {
     isShowing = false;
-    onTapEventListener(widget, dy);
+    widget.onTapEventListener(widget, dy);
   }
 
   _showListOverlay(double dy) {
     if (!isShowing) {
       isShowing = true;
-      onTapEventListener(widget, getItemTopPosition(context));
+      widget.onTapEventListener(widget, getItemTopPosition(context));
     } else {
-      onDragEventListener(dy);
+      widget.onDragEventListener(dy);
     }
   }
 }

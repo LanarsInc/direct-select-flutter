@@ -1,84 +1,69 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-const double _kMenuItemHeight = 48.0;
-
-// ignore: must_be_immutable
 class DirectSelectItem<T> extends StatefulWidget {
   final T value;
   final isSelected;
+  final scale = ValueNotifier<double>(1.0);
   final Widget Function(BuildContext context, T value) listItemBuilder;
-  final Widget Function(BuildContext context, T value) selectedItemBuilder;
-
-  DirectSelectItemState<T> state;
-  double scale = 1.0;
+  final Widget Function(BuildContext context, T value) buttonItemBuilder;
 
   DirectSelectItem({Key key,
-    this.value,
+    @required this.value,
     @required this.listItemBuilder,
-    @required this.selectedItemBuilder,
+    @required this.buttonItemBuilder,
     this.isSelected = false})
       : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    state = DirectSelectItemState(scale: scale, isSelected: isSelected);
-    return state;
+    return DirectSelectItemState<T>(scale: scale, isSelected: isSelected);
   }
 
   void updateScale(double scale) {
-    scale = scale;
-    state.setScale(scale);
+    this.scale.value = scale;
   }
 
   DirectSelectItem<T> getSelectedItem() {
-    return DirectSelectItem(
+    return DirectSelectItem<T>(
         value: value,
-        selectedItemBuilder: selectedItemBuilder,
+        buttonItemBuilder: buttonItemBuilder,
         listItemBuilder: listItemBuilder,
         isSelected: true);
   }
 }
 
-class DirectSelectItemState<T> extends State<DirectSelectItem<T>>
-    with SingleTickerProviderStateMixin {
-  bool isSelected = false;
-  double scale = 1.0;
+class DirectSelectItemState<T> extends State<DirectSelectItem<T>> {
+  final bool isSelected;
+  final ValueListenable scale;
 
-  DirectSelectItemState({this.scale, this.isSelected});
+  DirectSelectItemState({this.scale, this.isSelected = false});
 
   @override
   void initState() {
     super.initState();
   }
 
-  void setScale(double scale) {
-    setState(() {
-      this.scale = scale;
-    });
-  }
-
-  void setSelected() {
-    setState(() {
-      isSelected = true;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     if (isSelected) {
       return Container(
-          child: widget.selectedItemBuilder(context, widget.value),
-          alignment: AlignmentDirectional.centerStart,
-          height: _kMenuItemHeight);
+          height: 48.0,
+          child: widget.buttonItemBuilder(context, widget.value),
+          alignment: AlignmentDirectional.centerStart);
     } else {
-      return Container(
-          child: Transform.scale(
-              scale: scale,
-              alignment: Alignment.centerLeft,
-              child: widget.listItemBuilder(context, widget.value)),
-          alignment: AlignmentDirectional.centerStart,
-          height: _kMenuItemHeight);
+      return ValueListenableBuilder<double>(
+          valueListenable: scale,
+          builder: (context, value, child) {
+            return Container(
+                height: 48.0,
+                child: Transform.scale(
+                    scale: value,
+                    alignment: Alignment.centerLeft,
+                    child: widget.listItemBuilder(context, widget.value)),
+                alignment: AlignmentDirectional.centerStart);
+          });
     }
   }
 }

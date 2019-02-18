@@ -48,7 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
             return Container(
                 child: Text(value), margin: EdgeInsets.only(left: 5));
           },
-          selectedItemBuilder: (context, value) {
+          buttonItemBuilder: (context, value) {
             return Card(
                 margin: EdgeInsets.all(0),
                 elevation: 2,
@@ -72,7 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
             return Container(
                 child: Text(value), margin: EdgeInsets.only(left: 5));
           },
-          selectedItemBuilder: (context, value) {
+          buttonItemBuilder: (context, value) {
             return Card(
                 margin: EdgeInsets.all(0),
                 elevation: 2,
