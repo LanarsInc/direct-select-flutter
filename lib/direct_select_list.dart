@@ -8,8 +8,10 @@ class DirectSelectList<T> extends StatefulWidget {
   final Function(T, BuildContext context) itemSelected;
   final Decoration focusedItemDecoration;
 
-  DirectSelectList(
-      {Key key, @required this.items, this.itemSelected, this.focusedItemDecoration})
+  DirectSelectList({Key key,
+    @required this.items,
+    this.itemSelected,
+    this.focusedItemDecoration})
       : super(key: key);
 
   @override
@@ -52,8 +54,9 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
   void commitSelection() {
     setState(() {});
     if (this.widget.itemSelected != null) {
-      this.widget.itemSelected(
-          widget.items[selectedItemIndex].value, this.context);
+      this
+          .widget
+          .itemSelected(widget.items[selectedItemIndex].value, this.context);
     }
   }
 
@@ -61,7 +64,7 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
   Widget build(BuildContext context) {
     return Container(
       child: GestureDetector(
-          child: widget.items[selectedItemIndex],
+          child: widget.items[selectedItemIndex].getSelectedItem(),
           onTapDown: (tapDownDetails) {
             _dragOverlay(getItemTopPosition(context));
           },

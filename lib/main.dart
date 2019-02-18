@@ -42,15 +42,47 @@ class _MyHomePageState extends State<MyHomePage> {
   List<DirectSelectItem<String>> getDropDownMenuItems() {
     List<DirectSelectItem<String>> items = List();
     for (String city in _cities) {
-      items.add(DirectSelectItem(value: city, child: Text(city)));
+      items.add(DirectSelectItem(
+          value: city,
+          listItemBuilder: (context, value) {
+            return Container(
+                child: Text(value), margin: EdgeInsets.only(left: 5));
+          },
+          selectedItemBuilder: (context, value) {
+            return Card(
+                margin: EdgeInsets.all(0),
+                elevation: 2,
+                child: Container(
+                  height: 48,
+                  margin: EdgeInsets.only(left: 4),
+                  child: Text(value),
+                  alignment: AlignmentDirectional.centerStart,
+                ));
+          }));
     }
     return items;
   }
 
   List<DirectSelectItem<String>> getDropDownMenuItems2() {
     List<DirectSelectItem<String>> items = List();
-    for (String city in _numbers) {
-      items.add(DirectSelectItem(value: city, child: Text(city)));
+    for (String num in _numbers) {
+      items.add(DirectSelectItem(
+          value: num,
+          listItemBuilder: (context, value) {
+            return Container(
+                child: Text(value), margin: EdgeInsets.only(left: 5));
+          },
+          selectedItemBuilder: (context, value) {
+            return Card(
+                margin: EdgeInsets.all(0),
+                elevation: 2,
+                child: Container(
+                  height: 48,
+                  margin: EdgeInsets.only(left: 4),
+                  child: Text(value),
+                  alignment: AlignmentDirectional.centerStart,
+                ));
+          }));
     }
     return items;
   }
@@ -78,16 +110,15 @@ class _MyHomePageState extends State<MyHomePage> {
 
     final dsl = DirectSelectList(
         items: getDropDownMenuItems(),
-        focusedItemDecoration: BoxDecoration(
-            color: Colors.greenAccent.withOpacity(0.3)),
+        focusedItemDecoration:
+        BoxDecoration(color: Colors.greenAccent.withOpacity(0.3)),
         itemSelected: (item, context) {
           Scaffold.of(context)
               .showSnackBar(SnackBar(content: Text(item.toString())));
         });
     final dsl2 = DirectSelectList(
         items: getDropDownMenuItems2(),
-        focusedItemDecoration: BoxDecoration(
-            border: Border.all(width: 1)));
+        focusedItemDecoration: BoxDecoration(border: Border.all(width: 1)));
     return Scaffold(
       appBar: appBar,
       body: DirectSelectContainer(
@@ -99,38 +130,38 @@ class _MyHomePageState extends State<MyHomePage> {
               mainAxisSize: MainAxisSize.min,
               verticalDirection: VerticalDirection.down,
               children: <Widget>[
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: <Widget>[
-                        Container(
-                            alignment: AlignmentDirectional.centerStart,
-                            child: Text("City")),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: <Widget>[
-                              Expanded(child: dsl),
-                            ],
-                          ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                          alignment: AlignmentDirectional.centerStart,
+                          margin: EdgeInsets.only(left: 4),
+                          child: Text("City")),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          children: <Widget>[
+                            Expanded(child: dsl),
+                          ],
                         ),
-                        Container(
-                            padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
-                            alignment: AlignmentDirectional.centerStart,
-                            child: Text("Numbers")),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: <Widget>[
-                              Expanded(child: dsl2),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
+                      ),
+                      Container(
+                          padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
+                          margin: EdgeInsets.only(left: 4),
+                          alignment: AlignmentDirectional.centerStart,
+                          child: Text("Number")),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          children: <Widget>[
+                            Expanded(child: dsl2),
+                          ],
+                        ),
+                      )
+                    ],
                   ),
                 ),
               ],

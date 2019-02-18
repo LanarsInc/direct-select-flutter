@@ -5,22 +5,37 @@ const double _kMenuItemHeight = 48.0;
 
 class DirectSelectItem<T> extends StatefulWidget {
   final T value;
-  final Widget child;
+  final isSelected;
+  final Widget Function(BuildContext context, T value) listItemBuilder;
+  final Widget Function(BuildContext context, T value) selectedItemBuilder;
 
-  DirectSelectItemState state;
+  DirectSelectItemState<T> state;
   double scale = 1.0;
 
-  DirectSelectItem({Key key, this.value, this.child}) : super(key: key);
+  DirectSelectItem({Key key,
+    this.value,
+    @required this.listItemBuilder,
+    @required this.selectedItemBuilder,
+    this.isSelected = false})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    state = DirectSelectItemState(scale: scale);
+    state = DirectSelectItemState(scale: scale, isSelected: isSelected);
     return state;
   }
 
   void updateScale(double scale) {
     scale = scale;
     state.setScale(scale);
+  }
+
+  DirectSelectItem<T> getSelectedItem() {
+    return DirectSelectItem(
+        value: value,
+        selectedItemBuilder: selectedItemBuilder,
+        listItemBuilder: listItemBuilder,
+        isSelected: true);
   }
 }
 
@@ -29,7 +44,7 @@ class DirectSelectItemState<T> extends State<DirectSelectItem<T>>
   bool isSelected = false;
   double scale = 1.0;
 
-  DirectSelectItemState({this.scale});
+  DirectSelectItemState({this.scale, this.isSelected});
 
   @override
   void initState() {
@@ -50,15 +65,19 @@ class DirectSelectItemState<T> extends State<DirectSelectItem<T>>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        child: Transform.scale(
-            scale: scale,
-            alignment: Alignment.centerLeft,
-            child: widget.child),
-        decoration: isSelected
-            ? BoxDecoration(color: Colors.redAccent.withOpacity(0.3))
-            : BoxDecoration(color: Colors.black38),
-        alignment: AlignmentDirectional.centerStart,
-        height: _kMenuItemHeight);
+    if (isSelected) {
+      return Container(
+          child: widget.selectedItemBuilder(context, widget.value),
+          alignment: AlignmentDirectional.centerStart,
+          height: _kMenuItemHeight);
+    } else {
+      return Container(
+          child: Transform.scale(
+              scale: scale,
+              alignment: Alignment.centerLeft,
+              child: widget.listItemBuilder(context, widget.value)),
+          alignment: AlignmentDirectional.centerStart,
+          height: _kMenuItemHeight);
+    }
   }
 }
