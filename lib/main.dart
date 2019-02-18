@@ -29,7 +29,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List _cities = [
+  List<String> _cities = [
     "Cluj-Napoca",
     "Bucuresti",
     "Timisoara",
@@ -37,54 +37,25 @@ class _MyHomePageState extends State<MyHomePage> {
     "Constanta"
   ];
 
-  List _numbers = ["1", "2", "3", "4", "5"];
+  List<String> _numbers = ["1", "2", "3", "4", "5"];
 
-  List<DirectSelectItem<String>> getDropDownMenuItems() {
-    List<DirectSelectItem<String>> items = List();
-    for (String city in _cities) {
-      items.add(DirectSelectItem(
-          value: city,
-          listItemBuilder: (context, value) {
-            return Container(
-                child: Text(value), margin: EdgeInsets.only(left: 5));
-          },
-          buttonItemBuilder: (context, value) {
-            return Card(
-                margin: EdgeInsets.all(0),
-                elevation: 2,
-                child: Container(
-                  height: 48,
-                  margin: EdgeInsets.only(left: 4),
-                  child: Text(value),
-                  alignment: AlignmentDirectional.centerStart,
-                ));
-          }));
-    }
-    return items;
-  }
-
-  List<DirectSelectItem<String>> getDropDownMenuItems2() {
-    List<DirectSelectItem<String>> items = List();
-    for (String num in _numbers) {
-      items.add(DirectSelectItem(
-          value: num,
-          listItemBuilder: (context, value) {
-            return Container(
-                child: Text(value), margin: EdgeInsets.only(left: 5));
-          },
-          buttonItemBuilder: (context, value) {
-            return Card(
-                margin: EdgeInsets.all(0),
-                elevation: 2,
-                child: Container(
-                  height: 48,
-                  margin: EdgeInsets.only(left: 4),
-                  child: Text(value),
-                  alignment: AlignmentDirectional.centerStart,
-                ));
-          }));
-    }
-    return items;
+  DirectSelectItem<String> getDropDownMenuItem(String value) {
+    return DirectSelectItem<String>(
+        value: value,
+        listItemBuilder: (context, value) {
+          return Container(
+              child: Text(value), margin: EdgeInsets.only(left: 5));
+        },
+        buttonItemBuilder: (context, value) {
+          return Card(
+              margin: EdgeInsets.all(0),
+              elevation: 2,
+              child: Container(
+                margin: EdgeInsets.only(left: 4),
+                child: Text(value),
+                alignment: AlignmentDirectional.centerStart,
+              ));
+        });
   }
 
   @override
@@ -108,17 +79,20 @@ class _MyHomePageState extends State<MyHomePage> {
       ],
     );
 
-    final dsl = DirectSelectList(
-        items: getDropDownMenuItems(),
+    final dsl = DirectSelectList<String>(
+        values: _cities,
+        itemBuilder: (String value) => getDropDownMenuItem(value),
         focusedItemDecoration:
         BoxDecoration(color: Colors.greenAccent.withOpacity(0.3)),
         itemSelected: (item, context) {
-          Scaffold.of(context)
-              .showSnackBar(SnackBar(content: Text(item.toString())));
+          Scaffold.of(context).showSnackBar(SnackBar(content: Text(item)));
         });
-    final dsl2 = DirectSelectList(
-        items: getDropDownMenuItems2(),
+
+    final dsl2 = DirectSelectList<String>(
+        values: _numbers,
+        itemBuilder: (String value) => getDropDownMenuItem(value),
         focusedItemDecoration: BoxDecoration(border: Border.all(width: 1)));
+
     return Scaffold(
       appBar: appBar,
       body: DirectSelectContainer(

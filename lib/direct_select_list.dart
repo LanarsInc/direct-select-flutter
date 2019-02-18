@@ -1,27 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_direct_select/direct_select_item.dart';
 
+typedef DirectSelectItemsBuilder<T> = DirectSelectItem<T> Function(T value);
+
 class DirectSelectList<T> extends StatefulWidget {
-  final List<DirectSelectItem> items;
-  final DirectSelectState state = DirectSelectState();
-  final itemHeight;
-  final selectedItem = ValueNotifier<int>(0);
-  final Function(T, BuildContext context) itemSelected;
+  final List<DirectSelectItem<T>> items;
+  final DirectSelectState<T> state = DirectSelectState();
   final Decoration focusedItemDecoration;
 
+  final selectedItem = ValueNotifier<int>(0);
+
+  final Function(T value, BuildContext context) itemSelected;
+
+  //todo find better way to notify parent widget about gesture events to make this class immutable
   void Function(DirectSelectList, double) onTapEventListener;
   void Function(double) onDragEventListener;
 
   DirectSelectList({Key key,
-    @required this.items,
+    @required List<T> values,
+    @required DirectSelectItemsBuilder<T> itemBuilder,
     this.itemSelected,
-    this.itemHeight = 48.0,
     this.focusedItemDecoration})
-      : super(key: key);
+      : items = values.map((val) => itemBuilder(val)).toList(),
+        super(key: key);
 
   @override
   State<StatefulWidget> createState() {
     return state;
+  }
+
+  //todo pass item height in this class and build items with that height
+  double itemHeight() {
+    if (items != null && items.isNotEmpty) {
+      return items.first.itemHeight;
+    }
+    return 0.0;
   }
 
   setOnTapEventListener(
@@ -63,22 +76,20 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: GestureDetector(
-          child: widget.items[widget.selectedItem.value].getSelectedItem(),
-          onTapDown: (tapDownDetails) {
-            _showListOverlay(getItemTopPosition(context));
-          },
-          onTapUp: (tapUpDetails) {
-            _hideListOverlay(getItemTopPosition(context));
-          },
-          onVerticalDragEnd: (dragDetails) {
-            _hideListOverlay(getItemTopPosition(context));
-          },
-          onVerticalDragUpdate: (dragInfo) {
-            _showListOverlay(dragInfo.primaryDelta);
-          }),
-    );
+    return GestureDetector(
+        child: widget.items[widget.selectedItem.value].getSelectedItem(),
+        onTapDown: (tapDownDetails) {
+          _showListOverlay(getItemTopPosition(context));
+        },
+        onTapUp: (tapUpDetails) {
+          _hideListOverlay(getItemTopPosition(context));
+        },
+        onVerticalDragEnd: (dragDetails) {
+          _hideListOverlay(getItemTopPosition(context));
+        },
+        onVerticalDragUpdate: (dragInfo) {
+          _showListOverlay(dragInfo.primaryDelta);
+        });
   }
 
   double getItemTopPosition(BuildContext context) {

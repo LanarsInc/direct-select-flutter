@@ -26,7 +26,8 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
   bool isOverlayVisible = false;
 
   ScrollController _scrollController;
-  DirectSelectList _currentList = DirectSelectList(items: []);
+  DirectSelectList _currentList =
+  DirectSelectList(itemBuilder: (val) => null, values: []);
   double _currentScrollLocation = 0;
 
   double _adjustedTopOffset = 0.0;
@@ -71,7 +72,7 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
         initialScrollOffset: listPadding -
             _currentScrollLocation +
             topOffset +
-            _currentList.getSelectedItemIndex() * _currentList.itemHeight);
+            _currentList.getSelectedItemIndex() * _currentList.itemHeight());
 
     return Stack(
       children: <Widget>[
@@ -125,9 +126,9 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
         top: _adjustedTopOffset,
         left: 0,
         right: 0,
-        height: _currentList.itemHeight,
+        height: _currentList.itemHeight(),
         child: Container(
-            height: _currentList.itemHeight,
+            height: _currentList.itemHeight(),
             decoration: _currentList.focusedItemDecoration != null
                 ? _currentList.focusedItemDecoration
                 : BoxDecoration()));
@@ -196,7 +197,7 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
   }
 
   int getCurrentElementIndex(double scrollPixels) {
-    int selectedElement = (scrollPixels / _currentList.itemHeight).round();
+    int selectedElement = (scrollPixels / _currentList.itemHeight()).round();
     final maxElementIndex = _currentList.items.length;
 
     if (selectedElement < 0) {
@@ -209,7 +210,8 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
   }
 
   double getNeighbourDistance(double scrollPixels) {
-    double selectedElementDeviation = (scrollPixels / _currentList.itemHeight);
+    double selectedElementDeviation =
+    (scrollPixels / _currentList.itemHeight());
     int selectedElement = getCurrentElementIndex(scrollPixels);
     return selectedElementDeviation - selectedElement;
   }
@@ -221,7 +223,7 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
         await _scrollController.animateTo(
             listPadding -
                 _adjustedTopOffset +
-                _currentList.getSelectedItemIndex() * _currentList.itemHeight,
+                _currentList.getSelectedItemIndex() * _currentList.itemHeight(),
             duration: scrollToListElementAnimationDuration,
             curve: Curves.ease);
       } catch (e) {} finally {

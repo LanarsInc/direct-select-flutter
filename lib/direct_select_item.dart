@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 class DirectSelectItem<T> extends StatefulWidget {
   final T value;
   final isSelected;
+  final double itemHeight;
   final scale = ValueNotifier<double>(1.0);
   final Widget Function(BuildContext context, T value) listItemBuilder;
   final Widget Function(BuildContext context, T value) buttonItemBuilder;
@@ -13,6 +14,7 @@ class DirectSelectItem<T> extends StatefulWidget {
     @required this.value,
     @required this.listItemBuilder,
     @required this.buttonItemBuilder,
+    this.itemHeight = 48.0,
     this.isSelected = false})
       : super(key: key);
 
@@ -28,6 +30,7 @@ class DirectSelectItem<T> extends StatefulWidget {
   DirectSelectItem<T> getSelectedItem() {
     return DirectSelectItem<T>(
         value: value,
+        itemHeight: itemHeight,
         buttonItemBuilder: buttonItemBuilder,
         listItemBuilder: listItemBuilder,
         isSelected: true);
@@ -49,7 +52,7 @@ class DirectSelectItemState<T> extends State<DirectSelectItem<T>> {
   Widget build(BuildContext context) {
     if (isSelected) {
       return Container(
-          height: 48.0,
+          height: widget.itemHeight,
           child: widget.buttonItemBuilder(context, widget.value),
           alignment: AlignmentDirectional.centerStart);
     } else {
@@ -57,7 +60,7 @@ class DirectSelectItemState<T> extends State<DirectSelectItem<T>> {
           valueListenable: scale,
           builder: (context, value, child) {
             return Container(
-                height: 48.0,
+                height: widget.itemHeight,
                 child: Transform.scale(
                     scale: value,
                     alignment: Alignment.centerLeft,
