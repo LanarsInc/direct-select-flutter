@@ -50,6 +50,8 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
         AnimationController(duration: fadeAnimationDuration, vsync: this);
 
     for (DirectSelectList dsl in widget.controls) {
+      dsl.refreshDefaultValue();
+
       dsl.setOnTapEventListener((owner, location) {
         _toggleListOverlayVisibility(owner, location);
       });
@@ -156,7 +158,6 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
               _scrollController.offset - listPadding + _adjustedTopOffset;
           final selectedItemIndex = _getCurrentListElementIndex(scrollPixels);
           lastSelectedItem = selectedItemIndex;
-          _currentList.setSelectedItemIndex(selectedItemIndex);
 
           _performScaleTransformation(scrollPixels, selectedItemIndex);
         }
@@ -246,11 +247,11 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
         await _scrollController.animateTo(
             listPadding -
                 _adjustedTopOffset +
-                _currentList.getSelectedItemIndex() * _currentList.itemHeight(),
+                lastSelectedItem * _currentList.itemHeight(),
             duration: scrollToListElementAnimationDuration,
             curve: Curves.ease);
       } catch (e) {} finally {
-        _currentList.commitSelection();
+        _currentList.setSelectedItemIndex(lastSelectedItem);
         animationController.reverse().then((f) {
           setState(() {
             _hideListOverlay();

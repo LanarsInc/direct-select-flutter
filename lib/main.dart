@@ -1,3 +1,4 @@
+import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_direct_select/direct_select_container.dart';
 import 'package:flutter_direct_select/direct_select_item.dart';
@@ -41,6 +42,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   DirectSelectItem<String> getDropDownMenuItem(String value) {
     return DirectSelectItem<String>(
+        itemHeight: 56,
         value: value,
         listItemBuilder: (context, value) {
           return Container(
@@ -60,38 +62,69 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final appBar = AppBar(
-      title: Text(widget.title),
-    );
-    final bottomNavigationBar = BottomNavigationBar(
-      currentIndex: 0, // this will be set when a tab is tapped
-      items: [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          title: Text('Home'),
+    final appBar = PreferredSize(
+        child: Container(
+          decoration: BoxDecoration(
+              color: Color.fromRGBO(246, 247, 249, 1),
+              border: BorderDirectional(
+                  bottom: BorderSide(width: 1, color: Colors.black12))),
+          child: Padding(
+              padding: EdgeInsets.only(left: 16, bottom: 24),
+              child: Column(
+                  verticalDirection: VerticalDirection.up,
+                  children: <Widget>[
+                    Container(
+                        alignment: AlignmentDirectional.centerStart,
+                        child: Text("Add Food",
+                            style: TextStyle(
+                                fontSize: 26,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold))),
+                    Container(
+                        alignment: AlignmentDirectional.centerStart,
+                        child: Text("Journal",
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.black38,
+                                fontWeight: FontWeight.bold)))
+                  ])),
         ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.mail),
-          title: Text('Messages'),
-        ),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.person), title: Text('Profile'))
+        preferredSize: Size.fromHeight(90));
+
+    final bottomNavigationBar = FancyBottomNavigation(
+      initialSelection: 1,
+      activeIconColor: Colors.white,
+      inactiveIconColor: Colors.blueAccent,
+      circleColor: Colors.blueAccent,
+      tabs: [
+        TabData(iconData: Icons.home, title: "Home"),
+        TabData(iconData: Icons.add, title: "Add"),
+        TabData(iconData: Icons.all_inclusive, title: "Infinity")
       ],
+      onTabChangedListener: (position) {
+        setState(() {
+
+        });
+      },
     );
 
     final dsl = DirectSelectList<String>(
         values: _cities,
+        defaultItemIndex: 3,
         itemBuilder: (String value) => getDropDownMenuItem(value),
         focusedItemDecoration:
         BoxDecoration(color: Colors.greenAccent.withOpacity(0.3)),
-        itemSelected: (item, context) {
+        onItemSelectedListener: (item, context) {
           Scaffold.of(context).showSnackBar(SnackBar(content: Text(item)));
         });
 
     final dsl2 = DirectSelectList<String>(
         values: _numbers,
         itemBuilder: (String value) => getDropDownMenuItem(value),
-        focusedItemDecoration: BoxDecoration(border: Border.all(width: 1)));
+        focusedItemDecoration: BoxDecoration(
+            border: BorderDirectional(
+                bottom: BorderSide(width: 1, color: Colors.black12),
+                top: BorderSide(width: 1, color: Colors.black12))));
 
     return Scaffold(
       appBar: appBar,
