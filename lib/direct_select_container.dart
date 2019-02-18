@@ -7,9 +7,13 @@ class DirectSelectContainer extends StatefulWidget {
   final Widget child;
   final List<DirectSelectList> controls;
   final scaleFactor;
+  final EdgeInsetsGeometry listPadding;
 
-  const DirectSelectContainer(
-      {Key key, this.controls, this.child, this.scaleFactor = 4.0})
+  const DirectSelectContainer({Key key,
+    this.controls,
+    this.child,
+    this.scaleFactor = 4.0,
+    this.listPadding = const EdgeInsets.all(0)})
       : super(key: key);
 
   @override
@@ -33,6 +37,8 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
 
   int lastSelectedItem = 0;
 
+  double listPadding = 0;
+
   final scrollToListElementAnimationDuration = Duration(milliseconds: 300);
   final fadeAnimationDuration = Duration(milliseconds: 300);
 
@@ -53,8 +59,6 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
       });
     }
   }
-
-  double listPadding = 500;
 
   @override
   Widget build(BuildContext context) {
@@ -107,6 +111,7 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
     return Container(
         color: Colors.white,
         child: ListView.builder(
+          padding: widget.listPadding,
           controller: _scrollController,
           itemCount: _currentList.items.length + 2,
           itemBuilder: (BuildContext context, int index) {

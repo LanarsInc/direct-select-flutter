@@ -96,6 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: appBar,
       body: DirectSelectContainer(
+        listPadding: EdgeInsets.only(left: 24, right: 24),
         controls: [dsl, dsl2],
         child: Padding(
           padding: const EdgeInsets.all(20.0),
