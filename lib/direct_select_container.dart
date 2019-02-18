@@ -140,7 +140,6 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
             _currentScrollLocation = 0;
             _adjustedTopOffset = 0;
 
-
             isOverlayVisible = false;
           });
         });
@@ -213,9 +212,10 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
                           height: _currentList.itemHeight,
                           child: Container(
                             height: _currentList.itemHeight,
-                            decoration: BoxDecoration(
-                                color: Colors.greenAccent.withOpacity(0.0),
-                                border: Border.all(width: 1)),
+                            decoration:
+                            _currentList.focusedItemDecoration != null
+                                ? _currentList.focusedItemDecoration
+                                : BoxDecoration(),
                           ),
                         )
                       ],

@@ -76,8 +76,18 @@ class _MyHomePageState extends State<MyHomePage> {
       ],
     );
 
-    final dsl = DirectSelectList(items: getDropDownMenuItems());
-    final dsl2 = DirectSelectList(items: getDropDownMenuItems2());
+    final dsl = DirectSelectList(
+        items: getDropDownMenuItems(),
+        focusedItemDecoration: BoxDecoration(
+            color: Colors.greenAccent.withOpacity(0.3)),
+        itemSelected: (item, context) {
+          Scaffold.of(context)
+              .showSnackBar(SnackBar(content: Text(item.toString())));
+        });
+    final dsl2 = DirectSelectList(
+        items: getDropDownMenuItems2(),
+        focusedItemDecoration: BoxDecoration(
+            border: Border.all(width: 1)));
     return Scaffold(
       appBar: appBar,
       body: DirectSelectContainer(
@@ -106,16 +116,8 @@ class _MyHomePageState extends State<MyHomePage> {
                             ],
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                ),
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: <Widget>[
                         Container(
+                            padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
                             alignment: AlignmentDirectional.centerStart,
                             child: Text("Numbers")),
                         Padding(
@@ -126,11 +128,11 @@ class _MyHomePageState extends State<MyHomePage> {
                               Expanded(child: dsl2),
                             ],
                           ),
-                        ),
+                        )
                       ],
                     ),
                   ),
-                )
+                ),
               ],
             ),
           ),

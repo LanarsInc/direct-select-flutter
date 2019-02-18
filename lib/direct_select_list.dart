@@ -5,8 +5,12 @@ class DirectSelectList<T> extends StatefulWidget {
   final List<DirectSelectItem> items;
   final DirectSelectState state = DirectSelectState();
   final itemHeight = 48.0;
+  final Function(T, BuildContext context) itemSelected;
+  final Decoration focusedItemDecoration;
 
-  DirectSelectList({Key key, @required this.items}) : super(key: key);
+  DirectSelectList(
+      {Key key, @required this.items, this.itemSelected, this.focusedItemDecoration})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -32,6 +36,10 @@ class DirectSelectList<T> extends StatefulWidget {
   void commitSelection() {
     state.commitSelection();
   }
+
+  T getSelectedItem() {
+    return items[state.selectedItemIndex].value;
+  }
 }
 
 class DirectSelectState<T> extends State<DirectSelectList<T>> {
@@ -43,6 +51,10 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
 
   void commitSelection() {
     setState(() {});
+    if (this.widget.itemSelected != null) {
+      this.widget.itemSelected(
+          widget.items[selectedItemIndex].value, this.context);
+    }
   }
 
   @override
