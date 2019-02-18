@@ -4,13 +4,14 @@ import 'package:flutter_direct_select/direct_select_item.dart';
 class DirectSelectList<T> extends StatefulWidget {
   final List<DirectSelectItem> items;
   final DirectSelectState state = DirectSelectState();
-  final itemHeight = 48.0;
+  final itemHeight;
   final Function(T, BuildContext context) itemSelected;
   final Decoration focusedItemDecoration;
 
   DirectSelectList({Key key,
     @required this.items,
     this.itemSelected,
+    this.itemHeight = 48.0,
     this.focusedItemDecoration})
       : super(key: key);
 
@@ -19,12 +20,13 @@ class DirectSelectList<T> extends StatefulWidget {
     return state;
   }
 
-  addOnTapEvent(Function(DirectSelectList owner, double location) callback) {
-    state.callback = callback;
+  setOnTapEventListener(
+      Function(DirectSelectList owner, double location) onTapEventListener) {
+    state.onTapEventListener = onTapEventListener;
   }
 
-  addOnDragEvent(Function(double) callback) {
-    state.dragCallback = callback;
+  setOnDragEvent(Function(double) callback) {
+    state.onDragEventListener = callback;
   }
 
   int getSelectedItemIndex() {
@@ -45,8 +47,8 @@ class DirectSelectList<T> extends StatefulWidget {
 }
 
 class DirectSelectState<T> extends State<DirectSelectList<T>> {
-  void Function(DirectSelectList, double) callback;
-  void Function(double) dragCallback;
+  void Function(DirectSelectList, double) onTapEventListener;
+  void Function(double) onDragEventListener;
 
   bool isShowing = false;
   var selectedItemIndex = 0;
@@ -66,16 +68,16 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
       child: GestureDetector(
           child: widget.items[selectedItemIndex].getSelectedItem(),
           onTapDown: (tapDownDetails) {
-            _dragOverlay(getItemTopPosition(context));
+            _showListOverlay(getItemTopPosition(context));
           },
           onTapUp: (tapUpDetails) {
-            _hideOverlay(getItemTopPosition(context));
+            _hideListOverlay(getItemTopPosition(context));
           },
           onVerticalDragEnd: (dragDetails) {
-            _hideOverlay(0);
+            _hideListOverlay(0);
           },
           onVerticalDragUpdate: (dragInfo) {
-            _dragOverlay(dragInfo.primaryDelta);
+            _showListOverlay(dragInfo.primaryDelta);
           }),
     );
   }
@@ -86,17 +88,17 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
     return itemRect.top;
   }
 
-  _hideOverlay(double dy) {
+  _hideListOverlay(double dy) {
     isShowing = false;
-    callback(widget, dy);
+    onTapEventListener(widget, dy);
   }
 
-  _dragOverlay(double dy) {
+  _showListOverlay(double dy) {
     if (!isShowing) {
       isShowing = true;
-      callback(widget, dy);
+      onTapEventListener(widget, getItemTopPosition(context));
     } else {
-      dragCallback(dy);
+      onDragEventListener(dy);
     }
   }
 }

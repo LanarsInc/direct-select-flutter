@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 
 const double _kMenuItemHeight = 48.0;
 
+// ignore: must_be_immutable
 class DirectSelectItem<T> extends StatefulWidget {
   final T value;
   final isSelected;

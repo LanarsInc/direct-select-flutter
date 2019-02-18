@@ -43,11 +43,11 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
         duration: const Duration(milliseconds: 400), vsync: this);
 
     for (DirectSelectList dsl in widget.controls) {
-      dsl.addOnTapEvent((owner, location) {
+      dsl.setOnTapEventListener((owner, location) {
         setVisible(owner, location);
       });
 
-      dsl.addOnDragEvent((dragDy) {
+      dsl.setOnDragEvent((dragDy) {
         try {
           if (_scrollController != null && _scrollController.position != null) {
             final offset = _scrollController.offset;
