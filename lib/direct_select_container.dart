@@ -9,7 +9,7 @@ class DirectSelectContainer extends StatefulWidget {
   final scaleFactor;
 
   const DirectSelectContainer(
-      {Key key, this.controls, this.child, this.scaleFactor = 5.0})
+      {Key key, this.controls, this.child, this.scaleFactor = 4.0})
       : super(key: key);
 
   @override
@@ -17,9 +17,6 @@ class DirectSelectContainer extends StatefulWidget {
     return DirectSelectContainerState();
   }
 }
-
-//todo better padding calculation
-const listPadding = 500.0;
 
 class DirectSelectContainerState extends State<DirectSelectContainer>
     with SingleTickerProviderStateMixin {
@@ -57,6 +54,8 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
     }
   }
 
+  double listPadding = 500;
+
   @override
   Widget build(BuildContext context) {
     double topOffset = 0.0;
@@ -66,6 +65,11 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
         topOffset = (object.parentData as ContainerBoxParentData).offset.dy;
       }
     }
+
+    listPadding = MediaQuery
+        .of(context)
+        .size
+        .height;
 
     _adjustedTopOffset = _currentScrollLocation - topOffset;
     _scrollController = ScrollController(
@@ -137,30 +141,43 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
   void _performListDrag(double dragDy) {
     try {
       if (_scrollController != null && _scrollController.position != null) {
-        final offset = _scrollController.offset;
-        _scrollController.jumpTo(offset + dragDy);
+        final currentScrollOffset = _scrollController.offset;
 
-        final scrollPixels =
-            _scrollController.offset - listPadding + _adjustedTopOffset;
+        final scrollPosition = currentScrollOffset + dragDy;
+        if (_dragActionAllowed(scrollPosition + _adjustedTopOffset)) {
+          _scrollController.jumpTo(scrollPosition);
 
-        final selectedItemIndex = getCurrentElementIndex(scrollPixels);
-        lastSelectedItem = selectedItemIndex;
-        _currentList.setSelectedItemIndex(selectedItemIndex);
+          final scrollPixels =
+              _scrollController.offset - listPadding + _adjustedTopOffset;
+          final selectedItemIndex = _getCurrentListElementIndex(scrollPixels);
+          lastSelectedItem = selectedItemIndex;
+          _currentList.setSelectedItemIndex(selectedItemIndex);
 
-        _performScaleTransformation(scrollPixels, selectedItemIndex);
+          _performScaleTransformation(scrollPixels, selectedItemIndex);
+        }
       }
     } catch (e) {}
   }
 
+  bool _dragActionAllowed(double scrollPosition) {
+    if (scrollPosition < listPadding ||
+        scrollPosition >
+            (_currentList.items.length - 1) * _currentList.itemHeight() +
+                listPadding) {
+      return false;
+    }
+    return true;
+  }
+
   void _performScaleTransformation(double scrollPixels, int selectedItemIndex) {
-    final neighbourDistance = getNeighbourDistance(scrollPixels);
+    final neighbourDistance = _getNeighbourListElementDistance(scrollPixels);
     int neighbourIncrementDirection =
     neighbourScrollDirection(neighbourDistance);
 
     int neighbourIndex = lastSelectedItem + neighbourIncrementDirection;
 
     double neighbourDistanceToCurrentItem =
-    getNeighbourDistanceToCurrentItem(neighbourDistance);
+    _getNeighbourListElementDistanceToCurrentItem(neighbourDistance);
 
     if (neighbourIndex < 0 || neighbourIndex > _currentList.items.length - 1) {
       //incorrect neighbour index quit
@@ -186,7 +203,8 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
     return neighbourScrollDirection;
   }
 
-  double getNeighbourDistanceToCurrentItem(double neighbourDistance) {
+  double _getNeighbourListElementDistanceToCurrentItem(
+      double neighbourDistance) {
     double neighbourDistanceToCurrentItem = (1 - neighbourDistance.abs());
 
     if (neighbourDistanceToCurrentItem > 1 ||
@@ -196,7 +214,7 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
     return neighbourDistanceToCurrentItem;
   }
 
-  int getCurrentElementIndex(double scrollPixels) {
+  int _getCurrentListElementIndex(double scrollPixels) {
     int selectedElement = (scrollPixels / _currentList.itemHeight()).round();
     final maxElementIndex = _currentList.items.length;
 
@@ -209,10 +227,10 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
     return selectedElement;
   }
 
-  double getNeighbourDistance(double scrollPixels) {
+  double _getNeighbourListElementDistance(double scrollPixels) {
     double selectedElementDeviation =
     (scrollPixels / _currentList.itemHeight());
-    int selectedElement = getCurrentElementIndex(scrollPixels);
+    int selectedElement = _getCurrentListElementIndex(scrollPixels);
     return selectedElementDeviation - selectedElement;
   }
 

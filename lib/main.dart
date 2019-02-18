@@ -97,49 +97,47 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: appBar,
       body: DirectSelectContainer(
         controls: [dsl, dsl2],
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              verticalDirection: VerticalDirection.down,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                          alignment: AlignmentDirectional.centerStart,
-                          margin: EdgeInsets.only(left: 4),
-                          child: Text("City")),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: <Widget>[
-                            Expanded(child: dsl),
-                          ],
-                        ),
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            verticalDirection: VerticalDirection.down,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                        alignment: AlignmentDirectional.centerStart,
+                        margin: EdgeInsets.only(left: 4),
+                        child: Text("City")),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: <Widget>[
+                          Expanded(child: dsl),
+                        ],
                       ),
-                      Container(
-                          padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
-                          margin: EdgeInsets.only(left: 4),
-                          alignment: AlignmentDirectional.centerStart,
-                          child: Text("Number")),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: <Widget>[
-                            Expanded(child: dsl2),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
+                    ),
+                    Container(
+                        padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
+                        margin: EdgeInsets.only(left: 4),
+                        alignment: AlignmentDirectional.centerStart,
+                        child: Text("Number")),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: <Widget>[
+                          Expanded(child: dsl2),
+                        ],
+                      ),
+                    )
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
