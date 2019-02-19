@@ -8,11 +8,11 @@ class DirectSelectList<T> extends StatefulWidget {
   final List<DirectSelectItem<T>> items;
   final Decoration focusedItemDecoration;
   final int defaultItemIndex;
+  final ValueNotifier<int> selectedItem;
 
   final Function(T value, BuildContext context) onItemSelectedListener;
-
   //todo find better way to notify parent widget about gesture events to make this class immutable
-  ValueNotifier<int> selectedItem;
+
   void Function(DirectSelectList, double) onTapEventListener;
   void Function(double) onDragEventListener;
 
@@ -23,13 +23,14 @@ class DirectSelectList<T> extends StatefulWidget {
     this.focusedItemDecoration,
     this.defaultItemIndex = 0})
       : items = values.map((val) => itemBuilder(val)).toList(),
+        selectedItem = ValueNotifier<int>(defaultItemIndex),
         assert(defaultItemIndex + 1 <= values.length + 1),
         super(key: key);
 
   @override
   State<StatefulWidget> createState() {
     return DirectSelectState<T>(
-        onTapEventListener, onDragEventListener, selectedItem);
+        onTapEventListener, onDragEventListener);
   }
 
   //todo pass item height in this class and build items with that height
@@ -49,7 +50,7 @@ class DirectSelectList<T> extends StatefulWidget {
   }
 
   void refreshDefaultValue() {
-    selectedItem = ValueNotifier<int>(defaultItemIndex);
+
   }
 
   int getSelectedItemIndex() {
@@ -73,24 +74,22 @@ class DirectSelectList<T> extends StatefulWidget {
 
 class DirectSelectState<T> extends State<DirectSelectList<T>> {
   bool isShowing = false;
-  final ValueListenable selectedItem;
   final void Function(DirectSelectList, double) onTapEventListener;
   final void Function(double) onDragEventListener;
 
-  DirectSelectState(this.onTapEventListener, this.onDragEventListener,
-      this.selectedItem);
+  DirectSelectState(this.onTapEventListener, this.onDragEventListener);
 
   @override
   Widget build(BuildContext context) {
-    selectedItem.addListener(() {
+    widget.selectedItem.addListener(() {
       if (widget.onItemSelectedListener != null) {
         widget.onItemSelectedListener(
-            widget.items[selectedItem.value].value, this.context);
+            widget.items[widget.selectedItem.value].value, this.context);
       }
     });
 
     return ValueListenableBuilder<int>(
-        valueListenable: selectedItem,
+        valueListenable: widget.selectedItem,
         builder: (context, value, child) {
           return GestureDetector(
               child: widget.items[value].getSelectedItem(),
