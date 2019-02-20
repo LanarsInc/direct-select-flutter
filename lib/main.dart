@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_direct_select/direct_select_container.dart';
 import 'package:flutter_direct_select/direct_select_item.dart';
 import 'package:flutter_direct_select/direct_select_list.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 void main() => runApp(MyApp());
 
@@ -45,19 +46,44 @@ class _MyHomePageState extends State<MyHomePage> {
         itemHeight: 56,
         value: value,
         listItemBuilder: (context, value) {
-          return Container(
-              child: Text(value), margin: EdgeInsets.only(left: 5));
+          return Row(
+            children: <Widget>[
+              Container(child: Text(value)),
+            ],
+          );
         },
         buttonItemBuilder: (context, value) {
           return Card(
               margin: EdgeInsets.all(0),
               elevation: 2,
-              child: Container(
-                margin: EdgeInsets.only(left: 4),
-                child: Text(value),
-                alignment: AlignmentDirectional.centerStart,
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  Expanded(
+                    child: Container(
+                      margin: EdgeInsets.only(left: 16),
+                      child: Text(value),
+                      alignment: AlignmentDirectional.centerStart,
+                    ),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Expanded(
+                          child: SvgPicture.asset("assets/ic_direct_select.svg",
+                              width: 24, height: 24, color: Colors.black38)),
+                    ],
+                  )
+                ],
               ));
         });
+  }
+
+  _getDslDecoration() {
+    return BoxDecoration(
+        border: BorderDirectional(
+            bottom: BorderSide(width: 1, color: Colors.black12),
+            top: BorderSide(width: 1, color: Colors.black12)));
   }
 
   @override
@@ -102,9 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
         TabData(iconData: Icons.all_inclusive, title: "Infinity")
       ],
       onTabChangedListener: (position) {
-        setState(() {
-
-        });
+        setState(() {});
       },
     );
 
@@ -112,8 +136,7 @@ class _MyHomePageState extends State<MyHomePage> {
         values: _cities,
         defaultItemIndex: 3,
         itemBuilder: (String value) => getDropDownMenuItem(value),
-        focusedItemDecoration:
-        BoxDecoration(color: Colors.greenAccent.withOpacity(0.3)),
+        focusedItemDecoration: _getDslDecoration(),
         onItemSelectedListener: (item, context) {
           Scaffold.of(context).showSnackBar(SnackBar(content: Text(item)));
         });
@@ -121,15 +144,11 @@ class _MyHomePageState extends State<MyHomePage> {
     final dsl2 = DirectSelectList<String>(
         values: _numbers,
         itemBuilder: (String value) => getDropDownMenuItem(value),
-        focusedItemDecoration: BoxDecoration(
-            border: BorderDirectional(
-                bottom: BorderSide(width: 1, color: Colors.black12),
-                top: BorderSide(width: 1, color: Colors.black12))));
+        focusedItemDecoration: _getDslDecoration());
 
     return Scaffold(
       appBar: appBar,
       body: DirectSelectContainer(
-        listPadding: EdgeInsets.only(left: 24, right: 24),
         controls: [dsl, dsl2],
         child: Padding(
           padding: const EdgeInsets.all(20.0),

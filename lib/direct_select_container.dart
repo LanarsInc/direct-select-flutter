@@ -8,11 +8,13 @@ class DirectSelectContainer extends StatefulWidget {
   final List<DirectSelectList> controls;
   final scaleFactor;
   final EdgeInsetsGeometry listPadding;
+  final int dragSpeedMultiplier;
 
   const DirectSelectContainer({Key key,
     this.controls,
     this.child,
     this.scaleFactor = 4.0,
+    this.dragSpeedMultiplier = 2,
     this.listPadding = const EdgeInsets.all(0)})
       : super(key: key);
 
@@ -150,7 +152,8 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
       if (_scrollController != null && _scrollController.position != null) {
         final currentScrollOffset = _scrollController.offset;
 
-        final scrollPosition = currentScrollOffset + dragDy;
+        final scrollPosition =
+            currentScrollOffset + dragDy * widget.dragSpeedMultiplier;
         if (_dragActionAllowed(scrollPosition + _adjustedTopOffset)) {
           _scrollController.jumpTo(scrollPosition);
 
@@ -189,6 +192,8 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
       //incorrect neighbour index quit
       return;
     }
+    _currentList.items[selectedItemIndex].updateOpacity(1.0);
+    _currentList.items[neighbourIndex].updateOpacity(0.5);
 
     _currentList.items[selectedItemIndex]
         .updateScale(_calculateNewScale(neighbourDistanceToCurrentItem));
@@ -269,6 +274,7 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
     _currentList = visibleList;
     _currentScrollLocation = location;
     lastSelectedItem = _currentList.getSelectedItemIndex();
+    _currentList.items[lastSelectedItem].updateOpacity(1.0);
     isOverlayVisible = true;
     animationController.forward(from: 0.0);
   }
