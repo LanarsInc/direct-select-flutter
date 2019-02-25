@@ -14,13 +14,14 @@ class DirectSelectItem<T> extends StatefulWidget {
   final Widget Function(BuildContext context, T value) listItemBuilder;
   final Widget Function(BuildContext context, T value) buttonItemBuilder;
 
-  DirectSelectItem({Key key,
-    @required this.value,
-    @required this.listItemBuilder,
-    @required this.buttonItemBuilder,
-    this.inListPadding = 40,
-    this.itemHeight = 48.0,
-    this.isSelected = false})
+  DirectSelectItem(
+      {Key key,
+      @required this.value,
+      @required this.listItemBuilder,
+      @required this.buttonItemBuilder,
+      this.inListPadding = 40,
+      this.itemHeight = 48.0,
+      this.isSelected = false})
       : super(key: key);
 
   @override
@@ -38,11 +39,12 @@ class DirectSelectItem<T> extends StatefulWidget {
 
   DirectSelectItem<T> getSelectedItem() {
     return DirectSelectItem<T>(
-        value: value,
-        itemHeight: itemHeight,
-        buttonItemBuilder: buttonItemBuilder,
-        listItemBuilder: listItemBuilder,
-        isSelected: true);
+      value: value,
+      itemHeight: itemHeight,
+      buttonItemBuilder: buttonItemBuilder,
+      listItemBuilder: listItemBuilder,
+      isSelected: true,
+    );
   }
 }
 

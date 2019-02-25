@@ -11,17 +11,19 @@ class DirectSelectList<T> extends StatefulWidget {
   final ValueNotifier<int> selectedItem;
 
   final Function(T value, BuildContext context) onItemSelectedListener;
+
   //todo find better way to notify parent widget about gesture events to make this class immutable
 
   void Function(DirectSelectList, double) onTapEventListener;
   void Function(double) onDragEventListener;
 
-  DirectSelectList({Key key,
-    @required List<T> values,
-    @required DirectSelectItemsBuilder<T> itemBuilder,
-    this.onItemSelectedListener,
-    this.focusedItemDecoration,
-    this.defaultItemIndex = 0})
+  DirectSelectList(
+      {Key key,
+      @required List<T> values,
+      @required DirectSelectItemsBuilder<T> itemBuilder,
+      this.onItemSelectedListener,
+      this.focusedItemDecoration,
+      this.defaultItemIndex = 0})
       : items = values.map((val) => itemBuilder(val)).toList(),
         selectedItem = ValueNotifier<int>(defaultItemIndex),
         assert(defaultItemIndex + 1 <= values.length + 1),
@@ -30,7 +32,9 @@ class DirectSelectList<T> extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     return DirectSelectState<T>(
-        onTapEventListener, onDragEventListener);
+      onTapEventListener,
+      onDragEventListener,
+    );
   }
 
   //todo pass item height in this class and build items with that height
@@ -41,7 +45,8 @@ class DirectSelectList<T> extends StatefulWidget {
     return 0.0;
   }
 
-  setOnTapEventListener(Function(DirectSelectList owner, double location) onTapEventListener) {
+  setOnTapEventListener(
+      Function(DirectSelectList owner, double location) onTapEventListener) {
     this.onTapEventListener = onTapEventListener;
   }
 
@@ -49,9 +54,7 @@ class DirectSelectList<T> extends StatefulWidget {
     this.onDragEventListener = onDragEventListener;
   }
 
-  void refreshDefaultValue() {
-
-  }
+  void refreshDefaultValue() {}
 
   int getSelectedItemIndex() {
     if (selectedItem != null) {
@@ -123,6 +126,7 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
     if (!isShowing) {
       isShowing = true;
       onTapEventListener(widget, _getItemTopPosition(context));
+
     } else {
       onDragEventListener(dy);
     }

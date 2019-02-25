@@ -10,12 +10,13 @@ class DirectSelectContainer extends StatefulWidget {
   final EdgeInsetsGeometry listPadding;
   final int dragSpeedMultiplier;
 
-  const DirectSelectContainer({Key key,
-    this.controls,
-    this.child,
-    this.scaleFactor = 4.0,
-    this.dragSpeedMultiplier = 2,
-    this.listPadding = const EdgeInsets.all(0)})
+  const DirectSelectContainer(
+      {Key key,
+      this.controls,
+      this.child,
+      this.scaleFactor = 4.0,
+      this.dragSpeedMultiplier = 2,
+      this.listPadding = const EdgeInsets.all(0)})
       : super(key: key);
 
   @override
@@ -30,7 +31,7 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
 
   ScrollController _scrollController;
   DirectSelectList _currentList =
-  DirectSelectList(itemBuilder: (val) => null, values: []);
+      DirectSelectList(itemBuilder: (val) => null, values: []);
   double _currentScrollLocation = 0;
 
   double _adjustedTopOffset = 0.0;
@@ -48,17 +49,19 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
   void initState() {
     super.initState();
 
-    animationController =
-        AnimationController(duration: fadeAnimationDuration, vsync: this);
+    animationController = AnimationController(
+      duration: fadeAnimationDuration,
+      vsync: this,
+    );
 
-    for (DirectSelectList dsl in widget.controls) {
-      dsl.refreshDefaultValue();
+    for (DirectSelectList directSelectList in widget.controls) {
+      directSelectList.refreshDefaultValue();
 
-      dsl.setOnTapEventListener((owner, location) {
+      directSelectList.setOnTapEventListener((owner, location) {
         _toggleListOverlayVisibility(owner, location);
       });
 
-      dsl.setOnDragEvent((dragDy) {
+      directSelectList.setOnDragEvent((dragDy) {
         _performListDrag(dragDy);
       });
     }
@@ -68,16 +71,11 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
   Widget build(BuildContext context) {
     double topOffset = 0.0;
     RenderObject object = context.findRenderObject();
-    if (object != null) {
-      if (object.parentData is ContainerBoxParentData) {
-        topOffset = (object.parentData as ContainerBoxParentData).offset.dy;
-      }
+    if (object?.parentData is ContainerBoxParentData) {
+      topOffset = (object.parentData as ContainerBoxParentData).offset.dy;
     }
 
-    listPadding = MediaQuery
-        .of(context)
-        .size
-        .height;
+    listPadding = MediaQuery.of(context).size.height;
 
     _adjustedTopOffset = _currentScrollLocation - topOffset;
     _scrollController = ScrollController(
@@ -93,7 +91,7 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
             visible: isOverlayVisible,
             child: FadeTransition(
               opacity:
-              animationController.drive(CurveTween(curve: Curves.easeOut)),
+                  animationController.drive(CurveTween(curve: Curves.easeOut)),
               child: Column(
                 children: <Widget>[
                   Expanded(
@@ -165,7 +163,9 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
           _performScaleTransformation(scrollPixels, selectedItemIndex);
         }
       }
-    } catch (e) {}
+    } catch (e) {
+      print(e);
+    }
   }
 
   bool _dragActionAllowed(double scrollPosition) {
@@ -181,12 +181,12 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
   void _performScaleTransformation(double scrollPixels, int selectedItemIndex) {
     final neighbourDistance = _getNeighbourListElementDistance(scrollPixels);
     int neighbourIncrementDirection =
-    neighbourScrollDirection(neighbourDistance);
+        neighbourScrollDirection(neighbourDistance);
 
     int neighbourIndex = lastSelectedItem + neighbourIncrementDirection;
 
     double neighbourDistanceToCurrentItem =
-    _getNeighbourListElementDistanceToCurrentItem(neighbourDistance);
+        _getNeighbourListElementDistanceToCurrentItem(neighbourDistance);
 
     if (neighbourIndex < 0 || neighbourIndex > _currentList.items.length - 1) {
       //incorrect neighbour index quit
@@ -240,21 +240,22 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
 
   double _getNeighbourListElementDistance(double scrollPixels) {
     double selectedElementDeviation =
-    (scrollPixels / _currentList.itemHeight());
+        (scrollPixels / _currentList.itemHeight());
     int selectedElement = _getCurrentListElementIndex(scrollPixels);
     return selectedElementDeviation - selectedElement;
   }
 
-  Future _toggleListOverlayVisibility(DirectSelectList visibleList,
-      double location) async {
-    if (isOverlayVisible == true) {
+  Future _toggleListOverlayVisibility(
+      DirectSelectList visibleList, double location) async {
+    if (isOverlayVisible) {
       try {
         await _scrollController.animateTo(
-            listPadding -
-                _adjustedTopOffset +
-                lastSelectedItem * _currentList.itemHeight(),
-            duration: scrollToListElementAnimationDuration,
-            curve: Curves.ease);
+          listPadding -
+              _adjustedTopOffset +
+              lastSelectedItem * _currentList.itemHeight(),
+          duration: scrollToListElementAnimationDuration,
+          curve: Curves.ease,
+        );
       } catch (e) {} finally {
         _currentList.setSelectedItemIndex(lastSelectedItem);
         animationController.reverse().then((f) {

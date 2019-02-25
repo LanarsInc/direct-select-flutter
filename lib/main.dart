@@ -46,44 +46,36 @@ class _MyHomePageState extends State<MyHomePage> {
         itemHeight: 56,
         value: value,
         listItemBuilder: (context, value) {
-          return Row(
-            children: <Widget>[
-              Container(child: Text(value)),
-            ],
-          );
+          return Text(value);
         },
         buttonItemBuilder: (context, value) {
           return Card(
               margin: EdgeInsets.all(0),
               elevation: 2,
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                children: <Widget>[
-                  Expanded(
-                    child: Container(
-                      margin: EdgeInsets.only(left: 16),
-                      child: Text(value),
-                      alignment: AlignmentDirectional.centerStart,
-                    ),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Expanded(
-                          child: SvgPicture.asset("assets/ic_direct_select.svg",
-                              width: 24, height: 24, color: Colors.black38)),
-                    ],
-                  )
-                ],
+              child: Padding(
+                padding: const EdgeInsets.all(14.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    Text(value),
+                    Icon(
+                      Icons.unfold_more,
+                      color: Colors.black38,
+                    )
+                  ],
+                ),
               ));
         });
   }
 
   _getDslDecoration() {
     return BoxDecoration(
-        border: BorderDirectional(
-            bottom: BorderSide(width: 1, color: Colors.black12),
-            top: BorderSide(width: 1, color: Colors.black12)));
+      border: BorderDirectional(
+        bottom: BorderSide(width: 1, color: Colors.black12),
+        top: BorderSide(width: 1, color: Colors.black12),
+      ),
+    );
   }
 
   @override
@@ -156,6 +148,7 @@ class _MyHomePageState extends State<MyHomePage> {
             mainAxisSize: MainAxisSize.min,
             verticalDirection: VerticalDirection.down,
             children: <Widget>[
+              SizedBox(height: 150.0),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
