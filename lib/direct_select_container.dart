@@ -58,7 +58,7 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
       directSelectList.refreshDefaultValue();
 
       directSelectList.setOnTapEventListener((owner, location) {
-        _toggleListOverlayVisibility(owner, location);
+        return _toggleListOverlayVisibility(owner, location);
       });
 
       directSelectList.setOnDragEvent((dragDy) {
@@ -147,7 +147,7 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
 
   void _performListDrag(double dragDy) {
     try {
-      if (_scrollController != null && _scrollController.position != null) {
+      if (_scrollController != null && _scrollController.positions.isNotEmpty) {
         final currentScrollOffset = _scrollController.offset;
 
         final scrollPosition =
@@ -245,8 +245,8 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
     return selectedElementDeviation - selectedElement;
   }
 
-  Future _toggleListOverlayVisibility(
-      DirectSelectList visibleList, double location) async {
+  Future _toggleListOverlayVisibility(DirectSelectList visibleList,
+      double location) async {
     if (isOverlayVisible) {
       try {
         await _scrollController.animateTo(

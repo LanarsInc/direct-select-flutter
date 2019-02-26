@@ -60,14 +60,20 @@ class DirectSelectItemState<T> extends State<DirectSelectItem<T>>
 
   DirectSelectItemState({this.scale, this.isSelected = false});
 
-  void runScaleTransition({@required bool reverse}) {
-    setState(() {
+  bool isScaled = false;
+
+  Future runScaleTransition({@required bool reverse}) {
       if (reverse) {
-        animationController.reverse();
+        return animationController.reverse();
       } else {
-        animationController.forward(from: 0.0);
+        return animationController.forward(from: 0.0);
       }
-    });
+  }
+
+  @override
+  void didUpdateWidget(DirectSelectItem oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    runScaleTransition(reverse: true);
   }
 
   @override
@@ -75,7 +81,7 @@ class DirectSelectItemState<T> extends State<DirectSelectItem<T>>
     super.initState();
     animationController =
         AnimationController(duration: Duration(milliseconds: 200), vsync: this);
-    _tween = Tween(begin: 1.0, end: 1.05);
+    _tween = Tween(begin: 1.0, end: 1.04);
     _animation = _tween.animate(animationController)
       ..addListener(() {
         setState(() {});
@@ -119,6 +125,4 @@ class DirectSelectItemState<T> extends State<DirectSelectItem<T>>
     super.dispose();
     animationController.dispose();
   }
-
-
 }
