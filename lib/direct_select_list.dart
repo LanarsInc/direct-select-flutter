@@ -76,13 +76,17 @@ class DirectSelectList<T> extends StatefulWidget {
 }
 
 class DirectSelectState<T> extends State<DirectSelectList<T>> {
-  bool isShowing = false;
+  final GlobalKey<DirectSelectItemState> animatedStateKey =
+  GlobalKey<DirectSelectItemState>();
+
   final void Function(DirectSelectList, double) onTapEventListener;
   final void Function(double) onDragEventListener;
 
-  DirectSelectState(this.onTapEventListener, this.onDragEventListener);
+  bool isShowing = false;
 
   Map<int, DirectSelectItem<T>> selectedItems;
+
+  DirectSelectState(this.onTapEventListener, this.onDragEventListener);
 
   @override
   void initState() {
@@ -93,9 +97,6 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
           i, () => widget.items[i].getSelectedItem(animatedStateKey));
     }
   }
-
-  final GlobalKey<DirectSelectItemState> animatedStateKey =
-  GlobalKey<DirectSelectItemState>();
 
   @override
   Widget build(BuildContext context) {
