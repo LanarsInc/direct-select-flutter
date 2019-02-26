@@ -40,7 +40,7 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
 
   int lastSelectedItem = 0;
 
-  double listPadding = 0;
+  double listPadding = 0.0;
 
   final scrollToListElementAnimationDuration = Duration(milliseconds: 300);
   final fadeAnimationDuration = Duration(milliseconds: 200);
@@ -152,8 +152,12 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
 
         final scrollPosition =
             currentScrollOffset + dragDy * widget.dragSpeedMultiplier;
-        if (_dragActionAllowed(scrollPosition + _adjustedTopOffset)) {
-          _scrollController.jumpTo(scrollPosition);
+        double allowedOffset = _allowedDragDistance(
+            currentScrollOffset + _adjustedTopOffset,
+            dragDy * widget.dragSpeedMultiplier);
+        debugPrint("ALLOWED: " + allowedOffset.toString());
+        if (allowedOffset != 0.0) {
+          _scrollController.jumpTo(currentScrollOffset + allowedOffset);
 
           final scrollPixels =
               _scrollController.offset - listPadding + _adjustedTopOffset;
@@ -168,14 +172,17 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
     }
   }
 
-  bool _dragActionAllowed(double scrollPosition) {
-    if (scrollPosition < listPadding ||
-        scrollPosition >
-            (_currentList.items.length - 1) * _currentList.itemHeight() +
-                listPadding) {
-      return false;
+  double _allowedDragDistance(double currentScrollOffset, double position) {
+    double newPosition = currentScrollOffset + position;
+    double endOfListPosition = (_currentList.items.length - 1) *
+        _currentList.itemHeight() + listPadding;
+    if (newPosition < listPadding) {
+      return listPadding - currentScrollOffset;
+    } else if (newPosition > endOfListPosition) {
+      return endOfListPosition - currentScrollOffset;
+    } else {
+      return position;
     }
-    return true;
   }
 
   void _performScaleTransformation(double scrollPixels, int selectedItemIndex) {

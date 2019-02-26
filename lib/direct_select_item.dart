@@ -81,7 +81,7 @@ class DirectSelectItemState<T> extends State<DirectSelectItem<T>>
     super.initState();
     animationController =
         AnimationController(duration: Duration(milliseconds: 200), vsync: this);
-    _tween = Tween(begin: 1.0, end: 1.04);
+    _tween = Tween(begin: 1.0, end: 1.05);
     _animation = _tween.animate(animationController)
       ..addListener(() {
         setState(() {});
