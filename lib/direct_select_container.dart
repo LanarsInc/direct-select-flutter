@@ -43,7 +43,7 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
   double listPadding = 0.0;
 
   final scrollToListElementAnimationDuration = Duration(milliseconds: 300);
-  final fadeAnimationDuration = Duration(milliseconds: 200);
+  final fadeAnimationDuration = Duration(milliseconds: 300);
 
   @override
   void initState() {
