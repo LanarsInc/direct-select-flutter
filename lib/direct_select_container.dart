@@ -149,13 +149,9 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
     try {
       if (_scrollController != null && _scrollController.positions.isNotEmpty) {
         final currentScrollOffset = _scrollController.offset;
-
-        final scrollPosition =
-            currentScrollOffset + dragDy * widget.dragSpeedMultiplier;
         double allowedOffset = _allowedDragDistance(
             currentScrollOffset + _adjustedTopOffset,
             dragDy * widget.dragSpeedMultiplier);
-        debugPrint("ALLOWED: " + allowedOffset.toString());
         if (allowedOffset != 0.0) {
           _scrollController.jumpTo(currentScrollOffset + allowedOffset);
 
