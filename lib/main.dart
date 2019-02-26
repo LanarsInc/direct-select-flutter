@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_direct_select/direct_select_container.dart';
 import 'package:flutter_direct_select/direct_select_item.dart';
 import 'package:flutter_direct_select/direct_select_list.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 void main() => runApp(MyApp());
 

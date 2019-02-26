@@ -82,6 +82,21 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
 
   DirectSelectState(this.onTapEventListener, this.onDragEventListener);
 
+  Map<int, DirectSelectItem<T>> selectedItems;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedItems = Map();
+    for (int i = 0; i < widget.items.length; i++) {
+      selectedItems.putIfAbsent(
+          i, () => widget.items[i].getSelectedItem(animatedStateKey));
+    }
+  }
+
+  final GlobalKey<DirectSelectItemState> animatedStateKey =
+  GlobalKey<DirectSelectItemState>();
+
   @override
   Widget build(BuildContext context) {
     widget.selectedItem.addListener(() {
@@ -94,16 +109,21 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
     return ValueListenableBuilder<int>(
         valueListenable: widget.selectedItem,
         builder: (context, value, child) {
+          final selectedItem = selectedItems[value];
           return GestureDetector(
-              child: widget.items[value].getSelectedItem(),
+              child: selectedItem,
               onTapDown: (tapDownDetails) {
+                animatedStateKey.currentState
+                    .runScaleTransition(reverse: false);
                 _showListOverlay(_getItemTopPosition(context));
               },
               onTapUp: (tapUpDetails) {
+                animatedStateKey.currentState.runScaleTransition(reverse: true);
                 _hideListOverlay(_getItemTopPosition(context));
               },
               onVerticalDragEnd: (dragDetails) {
                 _hideListOverlay(_getItemTopPosition(context));
+                animatedStateKey.currentState.runScaleTransition(reverse: true);
               },
               onVerticalDragUpdate: (dragInfo) {
                 _showListOverlay(dragInfo.primaryDelta);
@@ -126,7 +146,6 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
     if (!isShowing) {
       isShowing = true;
       onTapEventListener(widget, _getItemTopPosition(context));
-
     } else {
       onDragEventListener(dy);
     }

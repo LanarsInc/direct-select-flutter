@@ -8,11 +8,12 @@ class DirectSelectItem<T> extends StatefulWidget {
   final double itemHeight;
   final scale = ValueNotifier<double>(1.0);
   final opacity = ValueNotifier<double>(0.5);
-  final runScale = ValueNotifier<int>(1);
   final double inListPadding;
 
   final Widget Function(BuildContext context, T value) listItemBuilder;
   final Widget Function(BuildContext context, T value) buttonItemBuilder;
+
+  DirectSelectItemState state;
 
   DirectSelectItem(
       {Key key,
@@ -26,7 +27,13 @@ class DirectSelectItem<T> extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return DirectSelectItemState<T>(scale: scale, isSelected: isSelected);
+    if (state == null) {
+      state = DirectSelectItemState<T>(scale: scale, isSelected: isSelected);
+      return state;
+    }
+    state = DirectSelectItemState<T>(
+        scale: state.scale, isSelected: state.isSelected);
+    return state;
   }
 
   void updateScale(double scale) {
@@ -37,9 +44,11 @@ class DirectSelectItem<T> extends StatefulWidget {
     this.opacity.value = opacity;
   }
 
-  DirectSelectItem<T> getSelectedItem() {
+  DirectSelectItem<T> getSelectedItem(
+      GlobalKey<DirectSelectItemState> animatedStateKey) {
     return DirectSelectItem<T>(
       value: value,
+      key: animatedStateKey,
       itemHeight: itemHeight,
       buttonItemBuilder: buttonItemBuilder,
       listItemBuilder: listItemBuilder,
@@ -54,23 +63,44 @@ class DirectSelectItemState<T> extends State<DirectSelectItem<T>>
   final ValueListenable scale;
 
   AnimationController animationController;
+  Animation _animation;
+  Tween<double> _tween;
 
   DirectSelectItemState({this.scale, this.isSelected = false});
+
+  void runScaleTransition({@required bool reverse}) {
+    setState(() {
+      if (reverse) {
+        animationController.reverse();
+      } else {
+        animationController.forward(from: 0.0);
+      }
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     animationController =
-        AnimationController(duration: Duration(milliseconds: 300), vsync: this);
+        AnimationController(duration: Duration(milliseconds: 200), vsync: this);
+    _tween = Tween(begin: 1.0, end: 1.05);
+    _animation = _tween.animate(animationController)
+      ..addListener(() {
+        setState(() {});
+      });
   }
 
   @override
   Widget build(BuildContext context) {
     if (isSelected) {
       return Container(
-          height: widget.itemHeight,
-          child: widget.buttonItemBuilder(context, widget.value),
-          alignment: AlignmentDirectional.centerStart);
+          child: Container(
+              height: widget.itemHeight,
+              child: Transform.scale(
+                  scale: _animation.value,
+                  alignment: Alignment.topLeft,
+                  child: widget.buttonItemBuilder(context, widget.value)),
+              alignment: AlignmentDirectional.centerStart));
     } else {
       return Container(
         padding: EdgeInsets.only(left: widget.inListPadding),
@@ -91,4 +121,12 @@ class DirectSelectItemState<T> extends State<DirectSelectItem<T>>
       );
     }
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+    animationController.dispose();
+  }
+
+
 }
