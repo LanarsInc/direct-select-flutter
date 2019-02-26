@@ -13,8 +13,6 @@ class DirectSelectItem<T> extends StatefulWidget {
   final Widget Function(BuildContext context, T value) listItemBuilder;
   final Widget Function(BuildContext context, T value) buttonItemBuilder;
 
-  DirectSelectItemState state;
-
   DirectSelectItem(
       {Key key,
       @required this.value,
@@ -27,13 +25,7 @@ class DirectSelectItem<T> extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    if (state == null) {
-      state = DirectSelectItemState<T>(scale: scale, isSelected: isSelected);
-      return state;
-    }
-    state = DirectSelectItemState<T>(
-        scale: state.scale, isSelected: state.isSelected);
-    return state;
+    return DirectSelectItemState<T>(scale: scale, isSelected: isSelected);
   }
 
   void updateScale(double scale) {
