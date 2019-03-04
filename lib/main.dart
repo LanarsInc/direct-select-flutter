@@ -142,7 +142,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: DirectSelectContainer(
         controls: [dsl, dsl2],
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(24.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             verticalDirection: VerticalDirection.down,

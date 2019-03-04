@@ -90,6 +90,8 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
 
   int lastSelectedItem;
 
+  bool _isShowUpAnimationRunning = false;
+
   Map<int, DirectSelectItem<T>> selectedItemWidgets;
 
   @override
@@ -119,8 +121,10 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
           return GestureDetector(
               child: selectedItem,
               onTapDown: (tapDownDetails) async {
-                animatedStateKey.currentState.runScaleTransition(
-                    reverse: false);
+                _isShowUpAnimationRunning = true;
+                await animatedStateKey.currentState
+                    .runScaleTransition(reverse: false);
+                _isShowUpAnimationRunning = false;
                 _showListOverlay(_getItemTopPosition(context));
                 lastSelectedItem = value;
               },
@@ -132,7 +136,9 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
                 _hideListOverlay(_getItemTopPosition(context));
               },
               onVerticalDragUpdate: (dragInfo) {
-                _showListOverlay(dragInfo.primaryDelta);
+                if (!_isShowUpAnimationRunning) {
+                  _showListOverlay(dragInfo.primaryDelta);
+                }
               });
         });
   }
@@ -144,13 +150,15 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
   }
 
   _hideListOverlay(double dy) async {
-    isOverlayVisible = false;
-    //fix to prevent stuck scale if selected item is the same as previous
-    onTapEventListener(widget, dy).then((v) {
-      if (lastSelectedItem == widget.selectedItem.value) {
-        animatedStateKey.currentState.runScaleTransition(reverse: true);
-      }
-    });
+    if (isOverlayVisible) {
+      isOverlayVisible = false;
+      //fix to prevent stuck scale if selected item is the same as previous
+      onTapEventListener(widget, dy).then((v) {
+        if (lastSelectedItem == widget.selectedItem.value) {
+          animatedStateKey.currentState.runScaleTransition(reverse: true);
+        }
+      });
+    }
   }
 
   _showListOverlay(double dy) {

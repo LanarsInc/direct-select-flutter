@@ -63,11 +63,11 @@ class DirectSelectItemState<T> extends State<DirectSelectItem<T>>
   bool isScaled = false;
 
   Future runScaleTransition({@required bool reverse}) {
-      if (reverse) {
-        return animationController.reverse();
-      } else {
-        return animationController.forward(from: 0.0);
-      }
+    if (reverse) {
+      return animationController.reverse();
+    } else {
+      return animationController.forward(from: 0.0);
+    }
   }
 
   @override
@@ -80,7 +80,7 @@ class DirectSelectItemState<T> extends State<DirectSelectItem<T>>
   void initState() {
     super.initState();
     animationController =
-        AnimationController(duration: Duration(milliseconds: 200), vsync: this);
+        AnimationController(duration: Duration(milliseconds: 150), vsync: this);
     _tween = Tween(begin: 1.0, end: 1.06);
     _animation = _tween.animate(animationController)
       ..addListener(() {
@@ -96,7 +96,7 @@ class DirectSelectItemState<T> extends State<DirectSelectItem<T>>
               height: widget.itemHeight,
               child: Transform.scale(
                   scale: _animation.value,
-                  alignment: Alignment.topLeft,
+                  alignment: Alignment.center,
                   child: widget.buttonItemBuilder(context, widget.value)),
               alignment: AlignmentDirectional.centerStart));
     } else {
