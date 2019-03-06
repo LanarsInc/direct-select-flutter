@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_direct_select/direct_select_item.dart';
+import 'package:rect_getter/rect_getter.dart';
 
 typedef DirectSelectItemsBuilder<T> = DirectSelectItem<T> Function(T value);
 
@@ -16,9 +17,10 @@ class DirectSelectList<T> extends StatefulWidget {
   final Function(T value, BuildContext context) onItemSelectedListener;
 
   //todo find better way to notify parent widget about gesture events to make this class immutable
-
   Future Function(DirectSelectList, double) onTapEventListener;
   void Function(double) onDragEventListener;
+
+  GlobalKey paddingGlobalKey = RectGetter.createGlobalKey();
 
   DirectSelectList(
       {Key key,
@@ -34,10 +36,7 @@ class DirectSelectList<T> extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return DirectSelectState<T>(
-      onTapEventListener,
-      onDragEventListener,
-    );
+    return DirectSelectState<T>(onTapEventListener, onDragEventListener);
   }
 
   //todo pass item height in this class and build items with that height
@@ -55,8 +54,6 @@ class DirectSelectList<T> extends StatefulWidget {
   setOnDragEvent(Function(double) onDragEventListener) {
     this.onDragEventListener = onDragEventListener;
   }
-
-  void refreshDefaultValue() {}
 
   int getSelectedItemIndex() {
     if (selectedItem != null) {
@@ -92,7 +89,7 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
 
   bool _isShowUpAnimationRunning = false;
 
-  Map<int, DirectSelectItem<T>> selectedItemWidgets;
+  Map<int, Widget> selectedItemWidgets;
 
   @override
   void initState() {
@@ -101,7 +98,10 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
     selectedItemWidgets = Map();
     for (int i = 0; i < widget.items.length; i++) {
       selectedItemWidgets.putIfAbsent(
-          i, () => widget.items[i].getSelectedItem(animatedStateKey));
+          i,
+              () =>
+              widget.items[i]
+                  .getSelectedItem(animatedStateKey, widget.paddingGlobalKey));
     }
   }
 
@@ -167,6 +167,12 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
         animatedStateKey.currentState.runScaleTransition(reverse: true);
       }
     }
+  }
+
+  @override
+  void didUpdateWidget(DirectSelectList oldWidget) {
+    widget.paddingGlobalKey = oldWidget.paddingGlobalKey;
+    super.didUpdateWidget(oldWidget);
   }
 
   _showListOverlay(double dy) {

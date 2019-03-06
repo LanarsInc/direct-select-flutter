@@ -10,10 +10,7 @@ class DirectSelectContainer extends StatefulWidget {
   final int dragSpeedMultiplier;
 
   const DirectSelectContainer(
-      {Key key,
-      this.controls,
-      this.child,
-        this.dragSpeedMultiplier = 2})
+      {Key key, this.controls, this.child, this.dragSpeedMultiplier = 2})
       : super(key: key);
 
   @override
@@ -52,8 +49,6 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
     );
 
     for (DirectSelectList directSelectList in widget.controls) {
-      directSelectList.refreshDefaultValue();
-
       directSelectList.setOnTapEventListener((owner, location) {
         return _toggleListOverlayVisibility(owner, location);
       });
@@ -110,8 +105,7 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
     var paddingLeft = 0.0;
 
     if (_currentList.items.isNotEmpty) {
-      Rect rect = RectGetter.getRectFromKey(
-          _currentList.items[lastSelectedItem].globalKey);
+      Rect rect = RectGetter.getRectFromKey(_currentList.paddingGlobalKey);
       if (rect != null) {
         paddingLeft = rect.left;
       }

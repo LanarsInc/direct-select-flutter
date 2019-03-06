@@ -38,7 +38,7 @@ class _MyHomePageState extends State<MyHomePage> {
     "Constanta"
   ];
 
-  List<String> _numbers = ["1", "2", "3", "4", "5"];
+  List<String> _numbers = ["1", "2", "3", "4", "5", "6", "7"];
 
   DirectSelectItem<String> getDropDownMenuItem(String value) {
     return DirectSelectItem<String>(
@@ -171,7 +171,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           Expanded(
                               child: Padding(
                                   child: dsl2,
-                                  padding: EdgeInsets.only(left: 12))),
+                                  padding: EdgeInsets.only(left: 22))),
                           Padding(
                             padding: EdgeInsets.only(right: 8),
                             child: Icon(

@@ -10,13 +10,11 @@ class DirectSelectItem<T> extends StatefulWidget {
   final scale = ValueNotifier<double>(1.0);
   final opacity = ValueNotifier<double>(0.5);
   final scaleFactor;
-  GlobalKey globalKey;
 
   final Widget Function(BuildContext context, T value) itemBuilder;
 
   DirectSelectItem(
       {Key key,
-        this.globalKey,
         this.scaleFactor = 4.0,
       @required this.value,
         @required this.itemBuilder,
@@ -37,16 +35,17 @@ class DirectSelectItem<T> extends StatefulWidget {
     this.opacity.value = opacity;
   }
 
-  DirectSelectItem<T> getSelectedItem(
-      GlobalKey<DirectSelectItemState> animatedStateKey) {
-    globalKey = RectGetter.createGlobalKey();
-    return DirectSelectItem<T>(
-      value: value,
-      globalKey: globalKey,
-      key: animatedStateKey,
-      itemHeight: itemHeight,
-      itemBuilder: itemBuilder,
-      isSelected: true,
+  Widget getSelectedItem(GlobalKey<DirectSelectItemState> animatedStateKey,
+      GlobalKey paddingGlobalKey) {
+    return RectGetter(
+      key: paddingGlobalKey,
+      child: DirectSelectItem<T>(
+        value: value,
+        key: animatedStateKey,
+        itemHeight: itemHeight,
+        itemBuilder: itemBuilder,
+        isSelected: true,
+      ),
     );
   }
 }
@@ -74,9 +73,9 @@ class DirectSelectItemState<T> extends State<DirectSelectItem<T>>
   @override
   void initState() {
     super.initState();
+
     animationController =
         AnimationController(duration: Duration(milliseconds: 150), vsync: this);
-    //TODO use user defined scale factor
     _tween = Tween(begin: 1.0, end: 1 + 1 / widget.scaleFactor);
     _animation = _tween.animate(animationController)
       ..addListener(() {
@@ -91,17 +90,14 @@ class DirectSelectItemState<T> extends State<DirectSelectItem<T>>
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
           Expanded(
-            child: RectGetter(
-              key: widget.globalKey,
-              child: Container(
-                color: Colors.transparent,
-                height: widget.itemHeight,
-                alignment: AlignmentDirectional.centerStart,
-                child: Transform.scale(
-                    scale: _animation.value,
-                    alignment: Alignment.topLeft,
-                    child: widget.itemBuilder(context, widget.value)),
-              ),
+            child: Container(
+              color: Colors.transparent,
+              height: widget.itemHeight,
+              alignment: AlignmentDirectional.centerStart,
+              child: Transform.scale(
+                  scale: _animation.value,
+                  alignment: Alignment.topLeft,
+                  child: widget.itemBuilder(context, widget.value)),
             ),
           ),
         ],
