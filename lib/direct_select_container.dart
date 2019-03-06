@@ -7,14 +7,12 @@ import 'package:rect_getter/rect_getter.dart';
 class DirectSelectContainer extends StatefulWidget {
   final Widget child;
   final List<DirectSelectList> controls;
-  final scaleFactor;
   final int dragSpeedMultiplier;
 
   const DirectSelectContainer(
       {Key key,
       this.controls,
       this.child,
-      this.scaleFactor = 4.0,
         this.dragSpeedMultiplier = 2})
       : super(key: key);
 
@@ -215,7 +213,7 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
   }
 
   double _calculateNewScale(double distance) =>
-      1.0 + distance / widget.scaleFactor;
+      1.0 + distance / _currentList.items[lastSelectedItem].scaleFactor;
 
   int neighbourScrollDirection(double neighbourDistance) {
     int neighbourScrollDirection = 0;

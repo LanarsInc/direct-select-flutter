@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:rect_getter/rect_getter.dart';
 
-
 class DirectSelectItem<T> extends StatefulWidget {
   final T value;
   final isSelected;
   final double itemHeight;
   final scale = ValueNotifier<double>(1.0);
   final opacity = ValueNotifier<double>(0.5);
+  final scaleFactor;
   GlobalKey globalKey;
 
   final Widget Function(BuildContext context, T value) itemBuilder;
@@ -17,6 +17,7 @@ class DirectSelectItem<T> extends StatefulWidget {
   DirectSelectItem(
       {Key key,
         this.globalKey,
+        this.scaleFactor = 4.0,
       @required this.value,
         @required this.itemBuilder,
       this.itemHeight = 48.0,
@@ -76,7 +77,7 @@ class DirectSelectItemState<T> extends State<DirectSelectItem<T>>
     animationController =
         AnimationController(duration: Duration(milliseconds: 150), vsync: this);
     //TODO use user defined scale factor
-    _tween = Tween(begin: 1.0, end: 1 + 1 / 4.0);
+    _tween = Tween(begin: 1.0, end: 1 + 1 / widget.scaleFactor);
     _animation = _tween.animate(animationController)
       ..addListener(() {
         setState(() {});
