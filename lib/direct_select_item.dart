@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:rect_getter/rect_getter.dart';
+
 
 class DirectSelectItem<T> extends StatefulWidget {
   final T value;
@@ -8,24 +10,22 @@ class DirectSelectItem<T> extends StatefulWidget {
   final double itemHeight;
   final scale = ValueNotifier<double>(1.0);
   final opacity = ValueNotifier<double>(0.5);
-  final double inListPadding;
+  GlobalKey globalKey;
 
-  final Widget Function(BuildContext context, T value) listItemBuilder;
-  final Widget Function(BuildContext context, T value) buttonItemBuilder;
+  final Widget Function(BuildContext context, T value) itemBuilder;
 
   DirectSelectItem(
       {Key key,
+        this.globalKey,
       @required this.value,
-      @required this.listItemBuilder,
-      @required this.buttonItemBuilder,
-      this.inListPadding = 40,
+        @required this.itemBuilder,
       this.itemHeight = 48.0,
       this.isSelected = false})
       : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return DirectSelectItemState<T>(scale: scale, isSelected: isSelected);
+    return DirectSelectItemState<T>(isSelected: isSelected);
   }
 
   void updateScale(double scale) {
@@ -38,12 +38,13 @@ class DirectSelectItem<T> extends StatefulWidget {
 
   DirectSelectItem<T> getSelectedItem(
       GlobalKey<DirectSelectItemState> animatedStateKey) {
+    globalKey = RectGetter.createGlobalKey();
     return DirectSelectItem<T>(
       value: value,
+      globalKey: globalKey,
       key: animatedStateKey,
       itemHeight: itemHeight,
-      buttonItemBuilder: buttonItemBuilder,
-      listItemBuilder: listItemBuilder,
+      itemBuilder: itemBuilder,
       isSelected: true,
     );
   }
@@ -52,13 +53,12 @@ class DirectSelectItem<T> extends StatefulWidget {
 class DirectSelectItemState<T> extends State<DirectSelectItem<T>>
     with SingleTickerProviderStateMixin {
   final bool isSelected;
-  final ValueListenable scale;
 
   AnimationController animationController;
   Animation _animation;
   Tween<double> _tween;
 
-  DirectSelectItemState({this.scale, this.isSelected = false});
+  DirectSelectItemState({this.isSelected = false});
 
   bool isScaled = false;
 
@@ -71,17 +71,12 @@ class DirectSelectItemState<T> extends State<DirectSelectItem<T>>
   }
 
   @override
-  void didUpdateWidget(DirectSelectItem oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    runScaleTransition(reverse: true);
-  }
-
-  @override
   void initState() {
     super.initState();
     animationController =
         AnimationController(duration: Duration(milliseconds: 150), vsync: this);
-    _tween = Tween(begin: 1.0, end: 1.06);
+    //TODO use user defined scale factor
+    _tween = Tween(begin: 1.0, end: 1 + 1 / 4.0);
     _animation = _tween.animate(animationController)
       ..addListener(() {
         setState(() {});
@@ -91,17 +86,27 @@ class DirectSelectItemState<T> extends State<DirectSelectItem<T>>
   @override
   Widget build(BuildContext context) {
     if (isSelected) {
-      return Container(
-          child: Container(
-              height: widget.itemHeight,
-              child: Transform.scale(
-                  scale: _animation.value,
-                  alignment: Alignment.center,
-                  child: widget.buttonItemBuilder(context, widget.value)),
-              alignment: AlignmentDirectional.centerStart));
+      return Row(
+        mainAxisSize: MainAxisSize.max,
+        children: <Widget>[
+          Expanded(
+            child: RectGetter(
+              key: widget.globalKey,
+              child: Container(
+                color: Colors.transparent,
+                height: widget.itemHeight,
+                alignment: AlignmentDirectional.centerStart,
+                child: Transform.scale(
+                    scale: _animation.value,
+                    alignment: Alignment.topLeft,
+                    child: widget.itemBuilder(context, widget.value)),
+              ),
+            ),
+          ),
+        ],
+      );
     } else {
       return Container(
-        padding: EdgeInsets.only(left: widget.inListPadding),
         child: ValueListenableBuilder<double>(
             valueListenable: widget.scale,
             builder: (context, value, child) {
@@ -112,7 +117,7 @@ class DirectSelectItemState<T> extends State<DirectSelectItem<T>>
                     child: Transform.scale(
                         scale: value,
                         alignment: Alignment.topLeft,
-                        child: widget.listItemBuilder(context, widget.value)),
+                        child: widget.itemBuilder(context, widget.value)),
                     alignment: AlignmentDirectional.centerStart),
               );
             }),

@@ -44,27 +44,8 @@ class _MyHomePageState extends State<MyHomePage> {
     return DirectSelectItem<String>(
         itemHeight: 56,
         value: value,
-        listItemBuilder: (context, value) {
+        itemBuilder: (context, value) {
           return Text(value);
-        },
-        buttonItemBuilder: (context, value) {
-          return Card(
-              margin: EdgeInsets.all(0),
-              elevation: 2,
-              child: Padding(
-                padding: const EdgeInsets.all(14.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  mainAxisSize: MainAxisSize.max,
-                  children: <Widget>[
-                    Text(value),
-                    Icon(
-                      Icons.unfold_more,
-                      color: Colors.black38,
-                    )
-                  ],
-                ),
-              ));
         });
   }
 
@@ -142,7 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: DirectSelectContainer(
         controls: [dsl, dsl2],
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             verticalDirection: VerticalDirection.down,
@@ -158,12 +139,23 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: Text("City")),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-                      child: Row(
+                      child: Card(
+                          child: Row(
                         mainAxisSize: MainAxisSize.max,
                         children: <Widget>[
-                          Expanded(child: dsl),
+                          Expanded(
+                              child: Padding(
+                                  child: dsl,
+                                  padding: EdgeInsets.only(left: 12))),
+                          Padding(
+                            padding: EdgeInsets.only(right: 8),
+                            child: Icon(
+                              Icons.unfold_more,
+                              color: Colors.black38,
+                            ),
+                          )
                         ],
-                      ),
+                          )),
                     ),
                     Container(
                         padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
@@ -172,13 +164,24 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: Text("Number")),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-                      child: Row(
+                      child: Card(
+                          child: Row(
                         mainAxisSize: MainAxisSize.max,
                         children: <Widget>[
-                          Expanded(child: dsl2),
+                          Expanded(
+                              child: Padding(
+                                  child: dsl2,
+                                  padding: EdgeInsets.only(left: 12))),
+                          Padding(
+                            padding: EdgeInsets.only(right: 8),
+                            child: Icon(
+                              Icons.unfold_more,
+                              color: Colors.black38,
+                            ),
+                          )
                         ],
-                      ),
-                    )
+                          )),
+                    ),
                   ],
                 ),
               ),

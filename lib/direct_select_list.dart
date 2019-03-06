@@ -114,6 +114,8 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
       }
     });
 
+    bool transitionEnded = false;
+
     return ValueListenableBuilder<int>(
         valueListenable: widget.selectedItem,
         builder: (context, value, child) {
@@ -121,19 +123,26 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
           return GestureDetector(
               child: selectedItem,
               onTapDown: (tapDownDetails) async {
-                _isShowUpAnimationRunning = true;
-                await animatedStateKey.currentState
-                    .runScaleTransition(reverse: false);
-                _isShowUpAnimationRunning = false;
-                _showListOverlay(_getItemTopPosition(context));
-                lastSelectedItem = value;
+                if (!isOverlayVisible) {
+                  transitionEnded = false;
+                  _isShowUpAnimationRunning = true;
+                  await animatedStateKey.currentState
+                      .runScaleTransition(reverse: false);
+                  if (!transitionEnded) {
+                    await _showListOverlay(_getItemTopPosition(context));
+                    _isShowUpAnimationRunning = false;
+                    lastSelectedItem = value;
+                  }
+                }
               },
-              onTapUp: (tapUpDetails) {
+              onTapUp: (tapUpDetails) async {
+                await _hideListOverlay(_getItemTopPosition(context));
                 animatedStateKey.currentState.runScaleTransition(reverse: true);
-                _hideListOverlay(_getItemTopPosition(context));
               },
-              onVerticalDragEnd: (dragDetails) {
-                _hideListOverlay(_getItemTopPosition(context));
+              onVerticalDragEnd: (dragDetails) async {
+                transitionEnded = true;
+                await _hideListOverlay(_getItemTopPosition(context));
+                animatedStateKey.currentState.runScaleTransition(reverse: true);
               },
               onVerticalDragUpdate: (dragInfo) {
                 if (!_isShowUpAnimationRunning) {
@@ -153,11 +162,10 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
     if (isOverlayVisible) {
       isOverlayVisible = false;
       //fix to prevent stuck scale if selected item is the same as previous
-      onTapEventListener(widget, dy).then((v) {
-        if (lastSelectedItem == widget.selectedItem.value) {
-          animatedStateKey.currentState.runScaleTransition(reverse: true);
-        }
-      });
+      await onTapEventListener(widget, dy);
+      if (lastSelectedItem == widget.selectedItem.value) {
+        animatedStateKey.currentState.runScaleTransition(reverse: true);
+      }
     }
   }
 
