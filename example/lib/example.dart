@@ -1,4 +1,3 @@
-import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_direct_select/direct_select_container.dart';
 import 'package:flutter_direct_select/direct_select_item.dart';
@@ -89,21 +88,6 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         preferredSize: Size.fromHeight(90));
 
-    final bottomNavigationBar = FancyBottomNavigation(
-      initialSelection: 1,
-      activeIconColor: Colors.white,
-      inactiveIconColor: Colors.blueAccent,
-      circleColor: Colors.blueAccent,
-      tabs: [
-        TabData(iconData: Icons.home, title: "Home"),
-        TabData(iconData: Icons.add, title: "Add"),
-        TabData(iconData: Icons.all_inclusive, title: "Infinity")
-      ],
-      onTabChangedListener: (position) {
-        setState(() {});
-      },
-    );
-
     final dsl = DirectSelectList<String>(
         values: _cities,
         defaultItemIndex: 3,
@@ -155,7 +139,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             ),
                           )
                         ],
-                          )),
+                      )),
                     ),
                     Container(
                         padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
@@ -180,7 +164,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             ),
                           )
                         ],
-                          )),
+                      )),
                     ),
                   ],
                 ),
@@ -189,7 +173,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       ),
-      bottomNavigationBar: bottomNavigationBar,
     );
   }
 }

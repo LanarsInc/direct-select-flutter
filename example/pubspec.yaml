@@ -1,0 +1,17 @@
+name: example
+description: A new Flutter project.
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^0.1.2
+  flutter_direct_select:
+    path: ../
+
+flutter:
+  uses-material-design: true

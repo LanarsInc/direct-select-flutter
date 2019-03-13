@@ -1,6 +1,6 @@
 # flutter_direct_select
 
-A new Flutter application.
+Direct Select Widget Implementation inspired by https://dribbble.com/shots/3876250-DirectSelect-Dropdown-ux
 
 ## Getting Started
 
