@@ -8,12 +8,29 @@ typedef DirectSelectItemsBuilder<T> = DirectSelectItem<T> Function(T value);
 typedef ItemSelected = Future<dynamic> Function(
     DirectSelectList owner, double location);
 
+/// Widget that contains items and responds to user's interaction
+/// Usage Example
+///
+///     final dsl2 = DirectSelectList<String>(
+///        values: _numbers,
+///        itemBuilder: (String value) => getDropDownMenuItem(value),
+///        focusedItemDecoration: _getDslDecoration());
+///
 class DirectSelectList<T> extends StatefulWidget {
+
+  //Item widgets
   final List<DirectSelectItem<T>> items;
+
+  //Current focused item overlay
   final Decoration focusedItemDecoration;
+
+  //Default selected item index
   final int defaultItemIndex;
+
+  //Notifies state about new item selected
   final ValueNotifier<int> selectedItem;
 
+  //Function to execute when item selected
   final Function(T value, BuildContext context) onItemSelectedListener;
 
   //todo find better way to notify parent widget about gesture events to make this class immutable

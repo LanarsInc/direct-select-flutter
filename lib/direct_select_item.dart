@@ -3,12 +3,36 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:rect_getter/rect_getter.dart';
 
+/// Widget that defines direct select list appearance
+/// Usage Example
+///
+///   DirectSelectItem<String> getDropDownMenuItem(String value) {
+///    return DirectSelectItem<String>(
+///        itemHeight: 56,
+///        value: value,
+///        itemBuilder: (context, value) {
+///          return Text(value);
+///        });
+///   }
+///
 class DirectSelectItem<T> extends StatefulWidget {
+
+  //Value of item
   final T value;
+
+  //Defines is this item is selected
   final isSelected;
+
+  //height of items in list
   final double itemHeight;
+
+  //initial item scale
   final scale = ValueNotifier<double>(1.0);
+
+  //opacity unselected item
   final opacity = ValueNotifier<double>(0.5);
+
+  //the more value the MORE max scale DECREASES
   final scaleFactor;
 
   final Widget Function(BuildContext context, T value) itemBuilder;
