@@ -1,4 +1,4 @@
-package com.lanars.flutter.flutterdirectselect
+package com.lanars.flutter.directselectflutter
 
 import android.os.Bundle
 

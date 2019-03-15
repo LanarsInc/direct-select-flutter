@@ -1,7 +1,7 @@
+import 'package:direct_select_flutter/direct_select_container.dart';
+import 'package:direct_select_flutter/direct_select_item.dart';
+import 'package:direct_select_flutter/direct_select_list.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_direct_select/direct_select_container.dart';
-import 'package:flutter_direct_select/direct_select_item.dart';
-import 'package:flutter_direct_select/direct_select_list.dart';
 
 void main() => runApp(MyApp());
 
@@ -125,21 +125,21 @@ class _MyHomePageState extends State<MyHomePage> {
                       padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
                       child: Card(
                           child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: <Widget>[
-                          Expanded(
-                              child: Padding(
-                                  child: dsl,
-                                  padding: EdgeInsets.only(left: 12))),
-                          Padding(
-                            padding: EdgeInsets.only(right: 8),
-                            child: Icon(
-                              Icons.unfold_more,
-                              color: Colors.black38,
-                            ),
-                          )
-                        ],
-                      )),
+                            mainAxisSize: MainAxisSize.max,
+                            children: <Widget>[
+                              Expanded(
+                                  child: Padding(
+                                      child: dsl,
+                                      padding: EdgeInsets.only(left: 12))),
+                              Padding(
+                                padding: EdgeInsets.only(right: 8),
+                                child: Icon(
+                                  Icons.unfold_more,
+                                  color: Colors.black38,
+                                ),
+                              )
+                            ],
+                          )),
                     ),
                     Container(
                         padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
@@ -150,21 +150,21 @@ class _MyHomePageState extends State<MyHomePage> {
                       padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
                       child: Card(
                           child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: <Widget>[
-                          Expanded(
-                              child: Padding(
-                                  child: dsl2,
-                                  padding: EdgeInsets.only(left: 22))),
-                          Padding(
-                            padding: EdgeInsets.only(right: 8),
-                            child: Icon(
-                              Icons.unfold_more,
-                              color: Colors.black38,
-                            ),
-                          )
-                        ],
-                      )),
+                            mainAxisSize: MainAxisSize.max,
+                            children: <Widget>[
+                              Expanded(
+                                  child: Padding(
+                                      child: dsl2,
+                                      padding: EdgeInsets.only(left: 22))),
+                              Padding(
+                                padding: EdgeInsets.only(right: 8),
+                                child: Icon(
+                                  Icons.unfold_more,
+                                  color: Colors.black38,
+                                ),
+                              )
+                            ],
+                          )),
                     ),
                   ],
                 ),

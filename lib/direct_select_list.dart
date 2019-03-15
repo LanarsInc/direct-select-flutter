@@ -1,6 +1,6 @@
+import 'package:direct_select_flutter/direct_select_item.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_direct_select/direct_select_item.dart';
 import 'package:rect_getter/rect_getter.dart';
 
 typedef DirectSelectItemsBuilder<T> = DirectSelectItem<T> Function(T value);
@@ -22,13 +22,12 @@ class DirectSelectList<T> extends StatefulWidget {
 
   GlobalKey paddingGlobalKey = RectGetter.createGlobalKey();
 
-  DirectSelectList(
-      {Key key,
-      @required List<T> values,
-      @required DirectSelectItemsBuilder<T> itemBuilder,
-      this.onItemSelectedListener,
-      this.focusedItemDecoration,
-      this.defaultItemIndex = 0})
+  DirectSelectList({Key key,
+    @required List<T> values,
+    @required DirectSelectItemsBuilder<T> itemBuilder,
+    this.onItemSelectedListener,
+    this.focusedItemDecoration,
+    this.defaultItemIndex = 0})
       : items = values.map((val) => itemBuilder(val)).toList(),
         selectedItem = ValueNotifier<int>(defaultItemIndex),
         assert(defaultItemIndex + 1 <= values.length + 1),

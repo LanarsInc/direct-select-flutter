@@ -1,7 +1,7 @@
+import 'package:direct_select_flutter/direct_select_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_direct_select/direct_select_list.dart';
 import 'package:rect_getter/rect_getter.dart';
 
 /// Root widget for direct select.
@@ -79,8 +79,7 @@ class DirectSelectContainer extends StatefulWidget {
   //How fast list is scrolled
   final int dragSpeedMultiplier;
 
-  const DirectSelectContainer(
-      {Key key, this.controls, this.child, this.dragSpeedMultiplier = 2})
+  const DirectSelectContainer({Key key, this.controls, this.child, this.dragSpeedMultiplier = 2})
       : super(key: key);
 
   @override
@@ -95,7 +94,7 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
 
   ScrollController _scrollController;
   DirectSelectList _currentList =
-      DirectSelectList(itemBuilder: (val) => null, values: []);
+  DirectSelectList(itemBuilder: (val) => null, values: []);
   double _currentScrollLocation = 0;
 
   double _adjustedTopOffset = 0.0;
@@ -256,12 +255,12 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
   void _performScaleTransformation(double scrollPixels, int selectedItemIndex) {
     final neighbourDistance = _getNeighbourListElementDistance(scrollPixels);
     int neighbourIncrementDirection =
-        neighbourScrollDirection(neighbourDistance);
+    neighbourScrollDirection(neighbourDistance);
 
     int neighbourIndex = lastSelectedItem + neighbourIncrementDirection;
 
     double neighbourDistanceToCurrentItem =
-        _getNeighbourListElementDistanceToCurrentItem(neighbourDistance);
+    _getNeighbourListElementDistanceToCurrentItem(neighbourDistance);
 
     if (neighbourIndex < 0 || neighbourIndex > _currentList.items.length - 1) {
       //incorrect neighbour index quit
@@ -289,8 +288,7 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
     return neighbourScrollDirection;
   }
 
-  double _getNeighbourListElementDistanceToCurrentItem(
-      double neighbourDistance) {
+  double _getNeighbourListElementDistanceToCurrentItem(double neighbourDistance) {
     double neighbourDistanceToCurrentItem = (1 - neighbourDistance.abs());
 
     if (neighbourDistanceToCurrentItem > 1 ||
@@ -315,7 +313,7 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
 
   double _getNeighbourListElementDistance(double scrollPixels) {
     double selectedElementDeviation =
-        (scrollPixels / _currentList.itemHeight());
+    (scrollPixels / _currentList.itemHeight());
     int selectedElement = _getCurrentListElementIndex(scrollPixels);
     return selectedElementDeviation - selectedElement;
   }
