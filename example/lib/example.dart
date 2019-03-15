@@ -102,29 +102,55 @@ class _MyHomePageState extends State<MyHomePage> {
         itemBuilder: (String value) => getDropDownMenuItem(value),
         focusedItemDecoration: _getDslDecoration());
 
+    final dsl3 = DirectSelectList<String>(
+        values: _numbers,
+        itemBuilder: (String value) => getDropDownMenuItem(value),
+        focusedItemDecoration: _getDslDecoration());
+
+    final dsl4 = DirectSelectList<String>(
+        values: _numbers,
+        itemBuilder: (String value) => getDropDownMenuItem(value),
+        focusedItemDecoration: _getDslDecoration());
+
+    final dsl5 = DirectSelectList<String>(
+        values: _numbers,
+        itemBuilder: (String value) => getDropDownMenuItem(value),
+        focusedItemDecoration: _getDslDecoration());
+
     return Scaffold(
       appBar: appBar,
       body: DirectSelectContainer(
-        controls: [dsl, dsl2],
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            verticalDirection: VerticalDirection.down,
-            children: <Widget>[
-              SizedBox(height: 150.0),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                        alignment: AlignmentDirectional.centerStart,
-                        margin: EdgeInsets.only(left: 4),
-                        child: Text("City")),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-                      child: Card(
-                          child: Row(
+        controls: [dsl, dsl2, dsl3, dsl4, dsl5],
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              verticalDirection: VerticalDirection.down,
+              children: <Widget>[
+                SizedBox(height: 20.0),
+                Container(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    alignment: AlignmentDirectional.centerStart,
+                    margin: EdgeInsets.only(left: 4),
+                    child: Text("Chicken breast(grilled)")),
+                SizedBox(height: 5.0),
+                _getFoodContainsRow(),
+                SizedBox(height: 20.0),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                          alignment: AlignmentDirectional.centerStart,
+                          margin: EdgeInsets.only(left: 4),
+                          child: Text("To which meal?")),
+                      Padding(
+                        padding: buttonPadding,
+                        child: Container(
+                          decoration: _getShadowDecoration(),
+                          child: Card(
+                              child: Row(
                             mainAxisSize: MainAxisSize.max,
                             children: <Widget>[
                               Expanded(
@@ -133,23 +159,24 @@ class _MyHomePageState extends State<MyHomePage> {
                                       padding: EdgeInsets.only(left: 12))),
                               Padding(
                                 padding: EdgeInsets.only(right: 8),
-                                child: Icon(
-                                  Icons.unfold_more,
-                                  color: Colors.black38,
-                                ),
+                                child: _getDropdownIcon(),
                               )
                             ],
                           )),
-                    ),
-                    Container(
-                        padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
-                        margin: EdgeInsets.only(left: 4),
-                        alignment: AlignmentDirectional.centerStart,
-                        child: Text("Number")),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-                      child: Card(
-                          child: Row(
+                        ),
+                      ),
+                      SizedBox(height: 20.0),
+                      Container(
+                          padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
+                          margin: EdgeInsets.only(left: 4),
+                          alignment: AlignmentDirectional.centerStart,
+                          child: Text("Search our database by name")),
+                      Padding(
+                        padding: buttonPadding,
+                        child: Container(
+                          decoration: _getShadowDecoration(),
+                          child: Card(
+                              child: Row(
                             mainAxisSize: MainAxisSize.max,
                             children: <Widget>[
                               Expanded(
@@ -158,20 +185,153 @@ class _MyHomePageState extends State<MyHomePage> {
                                       padding: EdgeInsets.only(left: 22))),
                               Padding(
                                 padding: EdgeInsets.only(right: 8),
-                                child: Icon(
-                                  Icons.unfold_more,
-                                  color: Colors.black38,
-                                ),
+                              )
+                            ],
+                              )),
+                        ),
+                      ),
+                      Padding(
+                        padding: buttonPadding,
+                        child: Container(
+                          decoration: _getShadowDecoration(),
+                          child: Card(
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                children: <Widget>[
+                                  Expanded(
+                                      child: Padding(
+                                          child: dsl3,
+                                          padding: EdgeInsets.only(left: 22))),
+                                  Padding(
+                                    padding: EdgeInsets.only(right: 8),
+                                    child: _getDropdownIcon(),
                               )
                             ],
                           )),
-                    ),
-                  ],
+                        ),
+                      ),
+                      SizedBox(height: 15.0),
+
+                      Container(
+                          padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
+                          margin: EdgeInsets.only(left: 4),
+                          alignment: AlignmentDirectional.centerStart,
+                          child: Text("How Much?")),
+
+                      Row(children: <Widget>[
+                        Expanded(
+                            flex: 2,
+                            child: Container(
+                              decoration: _getShadowDecoration(),
+                              child: Card(
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment
+                                        .center,
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: <Widget>[
+                                      Expanded(
+                                          child: Padding(
+                                              child: dsl4,
+                                              padding: EdgeInsets.only(
+                                                  left: 22))),
+                                    ],
+                                  )),
+                            )),
+                        Expanded(
+                            flex: 8,
+                            child: Container(
+                              decoration: _getShadowDecoration(),
+                              child: Card(
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: <Widget>[
+                                      Expanded(
+                                          child: Padding(
+                                              child: dsl5,
+                                              padding: EdgeInsets.only(
+                                                  left: 22))),
+                                      Padding(
+                                        padding: EdgeInsets.only(right: 8),
+                                        child: _getDropdownIcon(),
+                                      )
+                                    ],
+                                  )),
+                            )),
+                      ])
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
+      ),
+    );
+  }
+
+  final buttonPadding = const EdgeInsets.fromLTRB(0, 8, 0, 0);
+
+  double cardSize = 80;
+
+  Color cardColor = Colors.blueGrey[100];
+
+  Icon _getDropdownIcon() {
+    return Icon(
+      Icons.unfold_more,
+      color: Colors.blueAccent,
+    );
+  }
+
+  BoxDecoration _getShadowDecoration() {
+    return BoxDecoration(
+      boxShadow: <BoxShadow>[
+        new BoxShadow(
+          color: Colors.black.withOpacity(0.06),
+          spreadRadius: 4,
+          offset: new Offset(0.0, 0.0),
+          blurRadius: 15.0,
+        ),
+      ],
+    );
+  }
+
+  Widget _getFoodContainsRow() {
+    return Padding(
+      padding: EdgeInsets.only(left: 8, right: 8),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: Container(
+                height: cardSize,
+                margin: EdgeInsets.only(right: 3),
+                decoration: BoxDecoration(
+                    color: cardColor,
+                    borderRadius: BorderRadius.only(
+                        topLeft: const Radius.circular(10.0),
+                        bottomLeft: const Radius.circular(10.0)))),
+          ),
+          Expanded(
+            child: Container(
+                height: cardSize,
+                margin: EdgeInsets.only(right: 3),
+                decoration: BoxDecoration(color: cardColor)),
+          ),
+          Expanded(
+            child: Container(
+                height: cardSize,
+                margin: EdgeInsets.only(right: 3),
+                decoration: BoxDecoration(color: cardColor)),
+          ),
+          Expanded(
+            child: Container(
+                height: cardSize,
+                decoration: BoxDecoration(
+                    color: cardColor,
+                    borderRadius: BorderRadius.only(
+                        topRight: const Radius.circular(10.0),
+                        bottomRight: const Radius.circular(10.0)))),
+          ),
+        ],
       ),
     );
   }
