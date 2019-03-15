@@ -4,9 +4,79 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_direct_select/direct_select_list.dart';
 import 'package:rect_getter/rect_getter.dart';
 
+/// Root widget for direct select.
+/// This widget displays lists of direct selects.
+/// Usage Example
+///
+///     final dsl = DirectSelectList<String>(
+///        values: _cities,
+///        defaultItemIndex: 3,
+///        itemBuilder: (String value) => getDropDownMenuItem(value),
+///        focusedItemDecoration: _getDslDecoration(),
+///        onItemSelectedListener: (item, context) {
+///          Scaffold.of(context).showSnackBar(SnackBar(content: Text(item)));
+///        });
+///
+///    final dsl2 = DirectSelectList<String>(
+///        values: _numbers,
+///        itemBuilder: (String value) => getDropDownMenuItem(value),
+///        focusedItemDecoration: _getDslDecoration());
+///
+///    return Scaffold(
+///      body: DirectSelectContainer(
+///        controls: [dsl, dsl2],
+///        child: Padding(
+///          padding: const EdgeInsets.all(16.0),
+///          child: Column(
+///            mainAxisSize: MainAxisSize.min,
+///            verticalDirection: VerticalDirection.down,
+///            children: <Widget>[
+///              SizedBox(height: 150.0),
+///              Padding(
+///                padding: const EdgeInsets.all(8.0),
+///                child: Column(
+///                  children: <Widget>[
+///                    Container(
+///                        alignment: AlignmentDirectional.centerStart,
+///                        margin: EdgeInsets.only(left: 4),
+///                        child: Text("City")),
+///                    Padding(
+///                      padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+///                      child: Card(
+///                          child: Row(
+///                        mainAxisSize: MainAxisSize.max,
+///                        children: <Widget>[
+///                          Expanded(
+///                              child: Padding(
+///                                  child: dsl,
+///                                  padding: EdgeInsets.only(left: 12))),
+///                          Padding(
+///                            padding: EdgeInsets.only(right: 8),
+///                            child: Icon(
+///                              Icons.unfold_more,
+///                              color: Colors.black38,
+///                            ),
+///                          )
+///                        ],
+///                      )),
+///                    ),
+///                  ],
+///                ),
+///              ),
+///            ],
+///          ),
+///        ),
+///      ),
+///    );
 class DirectSelectContainer extends StatefulWidget {
+
+  //Actually content of screen
   final Widget child;
+
+  //Direct selects
   final List<DirectSelectList> controls;
+
+  //How fast list is scrolled
   final int dragSpeedMultiplier;
 
   const DirectSelectContainer(
