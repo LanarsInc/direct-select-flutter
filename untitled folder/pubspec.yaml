@@ -13,9 +13,5 @@ dependencies:
   direct_select_flutter:
     path: ../
 
-dev_dependencies:
-  flutter_test:
-    sdk: flutter
-
 flutter:
   uses-material-design: true
