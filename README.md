@@ -3,11 +3,11 @@ DirectSelect is a selection widget with an ethereal, full-screen modal popup dis
 
 # iOS
 
-<img src="example/direct-select-ios.gif">
+<img src="example/direct-select-ios.gif" width="300">
 
 # Android 
 
-<img src="example/direct-select-android.gif">
+<img src="example/direct-select-android.gif" width="300">
 
 # Usage
 
