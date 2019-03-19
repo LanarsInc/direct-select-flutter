@@ -1,7 +1,15 @@
 # direct-select-flutter
 DirectSelect is a selection widget with an ethereal, full-screen modal popup displaying the available choices when the widget is interact with. https://dribbble.com/shots/3876250-DirectSelect-Dropdown-ux
 
-# usage
+# iOS
+
+<img src="example/direct-select-ios.gif">
+
+# Android 
+
+<img src="example/direct-select-android.gif">
+
+# Usage
 
  Create DirectSelectList and fill it with items using itemBuilder
 ```dart
