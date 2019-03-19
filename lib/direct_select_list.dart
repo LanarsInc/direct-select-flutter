@@ -17,7 +17,6 @@ typedef ItemSelected = Future<dynamic> Function(
 ///        focusedItemDecoration: _getDslDecoration());
 ///
 class DirectSelectList<T> extends StatefulWidget {
-
   //Item widgets
   final List<DirectSelectItem<T>> items;
 
@@ -31,7 +30,8 @@ class DirectSelectList<T> extends StatefulWidget {
   final ValueNotifier<int> selectedItem;
 
   //Function to execute when item selected
-  final Function(T value, BuildContext context) onItemSelectedListener;
+  final Function(T value, int selectedIndex, BuildContext context)
+  onItemSelectedListener;
 
   //todo find better way to notify parent widget about gesture events to make this class immutable
   Future Function(DirectSelectList, double) onTapEventListener;
@@ -126,7 +126,9 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
     widget.selectedItem.addListener(() {
       if (widget.onItemSelectedListener != null) {
         widget.onItemSelectedListener(
-            widget.items[widget.selectedItem.value].value, this.context);
+            widget.items[widget.selectedItem.value].value,
+            widget.selectedItem.value,
+            this.context);
       }
     });
 
