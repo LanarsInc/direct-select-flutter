@@ -335,6 +335,7 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
         );
       } catch (e) {} finally {
         _currentList.setSelectedItemIndex(lastSelectedItem);
+        sleep(const Duration(milliseconds: 200));
         await fadeAnimationController.reverse();
         setState(() {
           _hideListOverlay();
