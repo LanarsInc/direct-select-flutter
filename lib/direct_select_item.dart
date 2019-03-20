@@ -16,7 +16,6 @@ import 'package:rect_getter/rect_getter.dart';
 ///   }
 ///
 class DirectSelectItem<T> extends StatefulWidget {
-
   //Value of item
   final T value;
 

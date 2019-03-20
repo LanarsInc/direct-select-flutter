@@ -159,8 +159,11 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
               },
               onVerticalDragEnd: (dragDetails) async {
                 transitionEnded = true;
-                await _hideListOverlay(_getItemTopPosition(context));
-                animatedStateKey.currentState.runScaleTransition(reverse: true);
+                _dragEnd();
+              },
+              onHorizontalDragEnd: (horizontalDetails) async {
+                transitionEnded = true;
+                _dragEnd();
               },
               onVerticalDragUpdate: (dragInfo) {
                 if (!_isShowUpAnimationRunning) {
@@ -168,6 +171,11 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
                 }
               });
         });
+  }
+
+  void _dragEnd() async {
+    await _hideListOverlay(_getItemTopPosition(context));
+    animatedStateKey.currentState.runScaleTransition(reverse: true);
   }
 
   double _getItemTopPosition(BuildContext context) {

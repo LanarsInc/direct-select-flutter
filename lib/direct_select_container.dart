@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:direct_select_flutter/direct_select_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -70,7 +72,6 @@ import 'package:rect_getter/rect_getter.dart';
 ///    );
 ///
 class DirectSelectContainer extends StatefulWidget {
-
   //Actually content of screen
   final Widget child;
 
@@ -80,7 +81,8 @@ class DirectSelectContainer extends StatefulWidget {
   //How fast list is scrolled
   final int dragSpeedMultiplier;
 
-  const DirectSelectContainer({Key key, this.controls, this.child, this.dragSpeedMultiplier = 2})
+  const DirectSelectContainer(
+      {Key key, this.controls, this.child, this.dragSpeedMultiplier = 2})
       : super(key: key);
 
   @override
@@ -289,7 +291,8 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
     return neighbourScrollDirection;
   }
 
-  double _getNeighbourListElementDistanceToCurrentItem(double neighbourDistance) {
+  double _getNeighbourListElementDistanceToCurrentItem(
+      double neighbourDistance) {
     double neighbourDistanceToCurrentItem = (1 - neighbourDistance.abs());
 
     if (neighbourDistanceToCurrentItem > 1 ||
