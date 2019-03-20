@@ -18,7 +18,7 @@ DirectSelect is a selection widget with an ethereal, full-screen modal popup dis
         defaultItemIndex: 3,
         itemBuilder: (String value) => getDropDownMenuItem(value),
         focusedItemDecoration: _getDslDecoration(),
-        onItemSelectedListener: (item, context) {
+        onItemSelectedListener: (item, index, context) {
           Scaffold.of(context).showSnackBar(SnackBar(content: Text(item)));
         });
 ```
