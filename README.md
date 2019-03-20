@@ -3,11 +3,11 @@ DirectSelect is a selection widget with an ethereal, full-screen modal popup dis
 
 # iOS
 
-<img src="example/direct-select-ios.gif" width="300">
+<img src="https://raw.githubusercontent.com/LanarsInc/direct-select-flutter/master/example/direct-select-ios.gif" width="300">
 
 # Android 
 
-<img src="example/direct-select-android.gif" width="300">
+<img src="https://raw.githubusercontent.com/LanarsInc/direct-select-flutter/master/example/direct-select-android.gif" width="300">
 
 # Usage
 
