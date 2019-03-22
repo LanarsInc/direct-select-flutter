@@ -119,8 +119,6 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
   final scrollToListElementAnimationDuration = Duration(milliseconds: 200);
   final fadeAnimationDuration = Duration(milliseconds: 200);
 
-  StreamSubscription _dslSubscription;
-
   @override
   void initState() {
     super.initState();
@@ -381,12 +379,6 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
     _currentScrollLocation = 0;
     _adjustedTopOffset = 0;
     isOverlayVisible = false;
-  }
-
-  @override
-  void dispose() {
-    _dslSubscription?.cancel();
-    super.dispose();
   }
 }
 
