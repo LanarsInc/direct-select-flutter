@@ -82,9 +82,12 @@ class DirectSelectContainer extends StatefulWidget {
   //How fast list is scrolled
   final int dragSpeedMultiplier;
 
-  const DirectSelectContainer(
-      {Key key, this.controls, this.child, this.dragSpeedMultiplier = 2})
-      : super(key: key);
+  const DirectSelectContainer({
+    Key key,
+    this.child,
+    this.controls = const [],
+    this.dragSpeedMultiplier = 2
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
