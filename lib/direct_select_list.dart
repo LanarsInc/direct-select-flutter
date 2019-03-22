@@ -1,3 +1,4 @@
+import 'package:direct_select_flutter/direct_select_container.dart';
 import 'package:direct_select_flutter/direct_select_item.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -97,8 +98,8 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
   final GlobalKey<DirectSelectItemState> animatedStateKey =
   GlobalKey<DirectSelectItemState>();
 
-  final Future Function(DirectSelectList, double) onTapEventListener;
-  final void Function(double) onDragEventListener;
+  Future Function(DirectSelectList, double) onTapEventListener;
+  void Function(double) onDragEventListener;
 
   bool isOverlayVisible = false;
 
@@ -122,6 +123,16 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
               widget.items[i]
                   .getSelectedItem(animatedStateKey, widget.paddingGlobalKey));
     }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final dsListener = DirectSelectContainer.of(context);
+    assert(dsListener != null, "A DirectSelectList must inherit a DirectSelectContainer!");
+
+    this.onTapEventListener = dsListener.toggleListOverlayVisibility;
+    this.onDragEventListener = dsListener.performListDrag;
   }
 
   @override

@@ -379,7 +379,6 @@ class MealSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dsListeners = DirectSelectContainer.of(context);
     return Column(
       children: [
         Container(
@@ -402,8 +401,6 @@ class MealSelector extends StatelessWidget {
                       defaultItemIndex: 0,
                       itemBuilder: (String value) => getDropDownMenuItem(value),
                       focusedItemDecoration: _getDslDecoration(),
-                      onDragEventListener: dsListeners.performListDrag,
-                      onTapEventListener: dsListeners.toggleListOverlayVisibility,
                     ),
                     padding: EdgeInsets.only(left: 12))),
                 Padding(
