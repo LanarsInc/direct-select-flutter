@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:io';
 
+import 'package:direct_select_flutter/direct_select_control.dart';
 import 'package:direct_select_flutter/direct_select_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -111,6 +113,8 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
   final scrollToListElementAnimationDuration = Duration(milliseconds: 200);
   final fadeAnimationDuration = Duration(milliseconds: 200);
 
+  StreamSubscription _dslSubscription;
+
   @override
   void initState() {
     super.initState();
@@ -120,19 +124,24 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
       vsync: this,
     );
 
-    for (DirectSelectList directSelectList in widget.controls) {
-      directSelectList.setOnTapEventListener((owner, location) {
-        return _toggleListOverlayVisibility(owner, location);
-      });
+    for (DirectSelectList directSelectList in widget.controls)
+      _addList(directSelectList);
+  }
 
-      directSelectList.setOnDragEvent((dragDy) {
-        _performListDrag(dragDy);
-      });
-    }
+  @override
+  void didChangeDependencies() {
+    final controlsContainer = DirectSelectControlsContainer.of(context);
+    print('[Container]: Subscribing to Controller!');
+    _dslSubscription?.cancel();
+    _dslSubscription = controlsContainer.outController.listen((dsl) {
+      _addList(dsl);
+    });
+    super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
+
     double topOffset = 0.0;
     RenderObject object = context.findRenderObject();
     if (object?.parentData is ContainerBoxParentData) {
@@ -216,6 +225,16 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
             decoration: _currentList.focusedItemDecoration != null
                 ? _currentList.focusedItemDecoration
                 : BoxDecoration()));
+  }
+
+  void _addList(DirectSelectList directSelectList) {
+    directSelectList.setOnTapEventListener((owner, location) {
+      return _toggleListOverlayVisibility(owner, location);
+    });
+
+    directSelectList.setOnDragEvent((dragDy) {
+      _performListDrag(dragDy);
+    });
   }
 
   void _performListDrag(double dragDy) {
@@ -364,5 +383,11 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
     _currentScrollLocation = 0;
     _adjustedTopOffset = 0;
     isOverlayVisible = false;
+  }
+
+  @override
+  void dispose() {
+    _dslSubscription?.cancel();
+    super.dispose();
   }
 }

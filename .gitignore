@@ -70,3 +70,10 @@ build/
 !**/ios/**/default.perspectivev3
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 project.pbxproj
+example/android/app/.settings/org.eclipse.buildship.core.prefs
+example/android/app/.project
+example/android/app/.classpath
+example/android/.settings/org.eclipse.buildship.core.prefs
+example/android/.project
+android/.settings/org.eclipse.buildship.core.prefs
+android/.project
