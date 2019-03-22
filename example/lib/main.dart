@@ -1,5 +1,4 @@
 import 'package:direct_select_flutter/direct_select_container.dart';
-import 'package:direct_select_flutter/direct_select_control.dart';
 import 'package:direct_select_flutter/direct_select_item.dart';
 import 'package:direct_select_flutter/direct_select_list.dart';
 import 'package:flutter/material.dart';
@@ -153,8 +152,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Scaffold(
       appBar: appBar,
-      body: DirectSelectControlsContainer(
-        child: DirectSelectContainer(
+      body: DirectSelectContainer(
         controls: [dsl2, dsl3, dsl4, dsl5],
         child: SingleChildScrollView(
           child: Padding(
@@ -300,7 +298,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       ),
-      ),
     );
   }
 
@@ -376,45 +373,39 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class MealSelector extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => _MealSelectorState();
-}
 
-class _MealSelectorState extends State<MealSelector> {
+class MealSelector extends StatelessWidget {
   final buttonPadding = const EdgeInsets.fromLTRB(0, 8, 0, 0);
-  DirectSelectList<String> dsl;
 
   @override
   Widget build(BuildContext context) {
-    dsl = DirectSelectList<String>(
-      values: _meals,
-      defaultItemIndex: 0,
-      itemBuilder: (String value) => getDropDownMenuItem(value),
-      focusedItemDecoration: _getDslDecoration());
-    final controlState = DirectSelectControlsContainer.of(context);
-    controlState.addControls([dsl]);
-
-    print('[_MealSelectorState]: Adding controller!');
-
+    final dsListeners = DirectSelectContainer.of(context);
     return Column(
       children: [
         Container(
           alignment: AlignmentDirectional.centerStart,
-            margin: EdgeInsets.only(left: 4),
-            child: Text("To which meal?")),
+          margin: EdgeInsets.only(left: 4),
+          child: Text("To which meal?")
+        ),
         Padding(
           padding: buttonPadding,
           child: Container(
             decoration: _getShadowDecoration(),
             child: Card(
-                child: Row(
+              child: Row(
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
                 Expanded(
-                    child: Padding(
-                        child: dsl,
-                        padding: EdgeInsets.only(left: 12))),
+                  child: Padding(
+                    child: DirectSelectList<String>(
+                      values: _meals,
+                      defaultItemIndex: 0,
+                      itemBuilder: (String value) => getDropDownMenuItem(value),
+                      focusedItemDecoration: _getDslDecoration(),
+                      onDragEventListener: dsListeners.performListDrag,
+                      onTapEventListener: dsListeners.toggleListOverlayVisibility,
+                    ),
+                    padding: EdgeInsets.only(left: 12))),
                 Padding(
                   padding: EdgeInsets.only(right: 8),
                   child: _getDropdownIcon(),

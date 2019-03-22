@@ -42,9 +42,12 @@ class DirectSelectList<T> extends StatefulWidget {
   DirectSelectList({Key key,
     @required List<T> values,
     @required DirectSelectItemsBuilder<T> itemBuilder,
+    this.onDragEventListener,
+    this.onTapEventListener,
     this.onItemSelectedListener,
     this.focusedItemDecoration,
-    this.defaultItemIndex = 0})
+    this.defaultItemIndex = 0
+    })
       : items = values.map((val) => itemBuilder(val)).toList(),
         selectedItem = ValueNotifier<int>(defaultItemIndex),
         assert(defaultItemIndex + 1 <= values.length + 1),

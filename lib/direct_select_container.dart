@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:direct_select_flutter/direct_select_control.dart';
 import 'package:direct_select_flutter/direct_select_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -91,10 +90,17 @@ class DirectSelectContainer extends StatefulWidget {
   State<StatefulWidget> createState() {
     return DirectSelectContainerState();
   }
+
+  static DirectSelectGestureEventListeners of(BuildContext context) {
+    return (context.inheritFromWidgetOfExactType(_InheritedContainerListeners)
+          as _InheritedContainerListeners)
+      .listeners;
+  }
 }
 
 class DirectSelectContainerState extends State<DirectSelectContainer>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin
+    implements DirectSelectGestureEventListeners {
   bool isOverlayVisible = false;
 
   ScrollController _scrollController;
@@ -129,17 +135,6 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
   }
 
   @override
-  void didChangeDependencies() {
-    final controlsContainer = DirectSelectControlsContainer.of(context);
-    print('[Container]: Subscribing to Controller!');
-    _dslSubscription?.cancel();
-    _dslSubscription = controlsContainer.outController.listen((dsl) {
-      _addList(dsl);
-    });
-    super.didChangeDependencies();
-  }
-
-  @override
   Widget build(BuildContext context) {
 
     double topOffset = 0.0;
@@ -159,7 +154,10 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
 
     return Stack(
       children: <Widget>[
-        widget.child,
+        _InheritedContainerListeners(
+          listeners: this,
+          child: widget.child,
+        ),
         Visibility(
             visible: isOverlayVisible,
             child: FadeTransition(
@@ -229,15 +227,15 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
 
   void _addList(DirectSelectList directSelectList) {
     directSelectList.setOnTapEventListener((owner, location) {
-      return _toggleListOverlayVisibility(owner, location);
+      return toggleListOverlayVisibility(owner, location);
     });
 
     directSelectList.setOnDragEvent((dragDy) {
-      _performListDrag(dragDy);
+      performListDrag(dragDy);
     });
   }
 
-  void _performListDrag(double dragDy) {
+  void performListDrag(double dragDy) {
     try {
       if (_scrollController != null && _scrollController.positions.isNotEmpty) {
         final currentScrollOffset = _scrollController.offset;
@@ -341,7 +339,7 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
     return selectedElementDeviation - selectedElement;
   }
 
-  Future _toggleListOverlayVisibility(DirectSelectList visibleList,
+  Future toggleListOverlayVisibility(DirectSelectList visibleList,
       double location) async {
     if (isOverlayVisible) {
       try {
@@ -390,4 +388,26 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
     _dslSubscription?.cancel();
     super.dispose();
   }
+}
+
+class DirectSelectGestureEventListeners {
+  toggleListOverlayVisibility(DirectSelectList list, double location) => throw 'Not implemented.';
+  performListDrag(double dragDy) => throw 'Not implemented';
+}
+
+/// Allows Direct Select List implementations to 
+class _InheritedContainerListeners extends InheritedWidget {
+  final DirectSelectGestureEventListeners listeners;
+
+  _InheritedContainerListeners({
+    Key key,
+    @required this.listeners,
+    @required Widget child,
+  }) : super(
+    key: key,
+    child: child
+  );
+
+  @override
+  bool updateShouldNotify(_InheritedContainerListeners old) => old.listeners != listeners;
 }
