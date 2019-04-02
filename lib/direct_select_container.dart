@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:direct_select_flutter/direct_select_list.dart';
@@ -81,18 +82,28 @@ class DirectSelectContainer extends StatefulWidget {
   //How fast list is scrolled
   final int dragSpeedMultiplier;
 
-  const DirectSelectContainer(
-      {Key key, this.controls, this.child, this.dragSpeedMultiplier = 2})
-      : super(key: key);
+  const DirectSelectContainer({
+    Key key,
+    this.child,
+    this.controls = const [],
+    this.dragSpeedMultiplier = 2
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
     return DirectSelectContainerState();
   }
+
+  static DirectSelectGestureEventListeners of(BuildContext context) {
+    return (context.inheritFromWidgetOfExactType(_InheritedContainerListeners)
+          as _InheritedContainerListeners)
+      .listeners;
+  }
 }
 
 class DirectSelectContainerState extends State<DirectSelectContainer>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin
+    implements DirectSelectGestureEventListeners {
   bool isOverlayVisible = false;
 
   ScrollController _scrollController;
@@ -120,19 +131,13 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
       vsync: this,
     );
 
-    for (DirectSelectList directSelectList in widget.controls) {
-      directSelectList.setOnTapEventListener((owner, location) {
-        return _toggleListOverlayVisibility(owner, location);
-      });
-
-      directSelectList.setOnDragEvent((dragDy) {
-        _performListDrag(dragDy);
-      });
-    }
+    for (DirectSelectList directSelectList in widget.controls)
+      _addList(directSelectList);
   }
 
   @override
   Widget build(BuildContext context) {
+
     double topOffset = 0.0;
     RenderObject object = context.findRenderObject();
     if (object?.parentData is ContainerBoxParentData) {
@@ -150,7 +155,10 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
 
     return Stack(
       children: <Widget>[
-        widget.child,
+        _InheritedContainerListeners(
+          listeners: this,
+          child: widget.child,
+        ),
         Visibility(
             visible: isOverlayVisible,
             child: FadeTransition(
@@ -218,7 +226,17 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
                 : BoxDecoration()));
   }
 
-  void _performListDrag(double dragDy) {
+  void _addList(DirectSelectList directSelectList) {
+    directSelectList.setOnTapEventListener((owner, location) {
+      return toggleListOverlayVisibility(owner, location);
+    });
+
+    directSelectList.setOnDragEvent((dragDy) {
+      performListDrag(dragDy);
+    });
+  }
+
+  void performListDrag(double dragDy) {
     try {
       if (_scrollController != null && _scrollController.positions.isNotEmpty) {
         final currentScrollOffset = _scrollController.offset;
@@ -322,7 +340,7 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
     return selectedElementDeviation - selectedElement;
   }
 
-  Future _toggleListOverlayVisibility(DirectSelectList visibleList,
+  Future toggleListOverlayVisibility(DirectSelectList visibleList,
       double location) async {
     if (isOverlayVisible) {
       try {
@@ -365,4 +383,26 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
     _adjustedTopOffset = 0;
     isOverlayVisible = false;
   }
+}
+
+class DirectSelectGestureEventListeners {
+  toggleListOverlayVisibility(DirectSelectList list, double location) => throw 'Not implemented.';
+  performListDrag(double dragDy) => throw 'Not implemented';
+}
+
+/// Allows Direct Select List implementations to 
+class _InheritedContainerListeners extends InheritedWidget {
+  final DirectSelectGestureEventListeners listeners;
+
+  _InheritedContainerListeners({
+    Key key,
+    @required this.listeners,
+    @required Widget child,
+  }) : super(
+    key: key,
+    child: child
+  );
+
+  @override
+  bool updateShouldNotify(_InheritedContainerListeners old) => old.listeners != listeners;
 }
