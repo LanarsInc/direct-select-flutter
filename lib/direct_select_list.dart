@@ -41,8 +41,7 @@ class DirectSelectList<T> extends StatefulWidget {
     @required DirectSelectItemsBuilder<T> itemBuilder,
     this.onItemSelectedListener,
     this.focusedItemDecoration,
-    this.defaultItemIndex = 0
-    })
+    this.defaultItemIndex = 0})
       : items = values.map((val) => itemBuilder(val)).toList(),
         selectedItem = ValueNotifier<int>(defaultItemIndex),
         assert(defaultItemIndex + 1 <= values.length + 1),
@@ -112,7 +111,8 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     final dsListener = DirectSelectContainer.of(context);
-    assert(dsListener != null, "A DirectSelectList must inherit a DirectSelectContainer!");
+    assert(dsListener != null,
+    "A DirectSelectList must inherit a DirectSelectContainer!");
 
     this.onTapEventListener = dsListener.toggleListOverlayVisibility;
     this.onDragEventListener = dsListener.performListDrag;

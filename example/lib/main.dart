@@ -38,7 +38,6 @@ List<String> _meals = [
 ];
 
 class _MyHomePageState extends State<MyHomePage> {
-
   List<String> _food = ["Chicken", "Pork", "Vegetables", "Cheese", "Bread"];
 
   List<String> _foodVariants = [
@@ -179,7 +178,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     margin: EdgeInsets.only(left: 4),
                     child: Column(
                       children: <Widget>[
-                        Text(_numbers[selectedPortionCounts] + "   " +
+                        Text(_numbers[selectedPortionCounts] +
+                            "   " +
                             _portionSize[selectedPortionSize])
                       ],
                     )),
@@ -373,7 +373,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-
 class MealSelector extends StatelessWidget {
   final buttonPadding = const EdgeInsets.fromLTRB(0, 8, 0, 0);
 
@@ -382,27 +381,27 @@ class MealSelector extends StatelessWidget {
     return Column(
       children: [
         Container(
-          alignment: AlignmentDirectional.centerStart,
-          margin: EdgeInsets.only(left: 4),
-          child: Text("To which meal?")
-        ),
+            alignment: AlignmentDirectional.centerStart,
+            margin: EdgeInsets.only(left: 4),
+            child: Text("To which meal?")),
         Padding(
           padding: buttonPadding,
           child: Container(
             decoration: _getShadowDecoration(),
             child: Card(
-              child: Row(
+                child: Row(
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
                 Expanded(
-                  child: Padding(
-                    child: DirectSelectList<String>(
-                      values: _meals,
-                      defaultItemIndex: 0,
-                      itemBuilder: (String value) => getDropDownMenuItem(value),
-                      focusedItemDecoration: _getDslDecoration(),
-                    ),
-                    padding: EdgeInsets.only(left: 12))),
+                    child: Padding(
+                        child: DirectSelectList<String>(
+                          values: _meals,
+                          defaultItemIndex: 0,
+                          itemBuilder: (String value) =>
+                              getDropDownMenuItem(value),
+                          focusedItemDecoration: _getDslDecoration(),
+                        ),
+                        padding: EdgeInsets.only(left: 12))),
                 Padding(
                   padding: EdgeInsets.only(right: 8),
                   child: _getDropdownIcon(),
@@ -452,5 +451,4 @@ class MealSelector extends StatelessWidget {
       color: Colors.blueAccent,
     );
   }
-
 }

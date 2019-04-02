@@ -79,13 +79,12 @@ class DirectSelectContainer extends StatefulWidget {
   //How fast list is scrolled
   final int dragSpeedMultiplier;
 
-  const DirectSelectContainer({
-    Key key,
+  const DirectSelectContainer({Key key,
     this.child,
-    @Deprecated("Controls are now added from an InheritedWidget.")
-    List<DirectSelectList> controls,
-    this.dragSpeedMultiplier = 2
-  }) : super(key: key);
+    @Deprecated("Controls are now added from an InheritedWidget.") List<
+        DirectSelectList> controls,
+    this.dragSpeedMultiplier = 2})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -94,8 +93,8 @@ class DirectSelectContainer extends StatefulWidget {
 
   static DirectSelectGestureEventListeners of(BuildContext context) {
     return (context.inheritFromWidgetOfExactType(_InheritedContainerListeners)
-          as _InheritedContainerListeners)
-      .listeners;
+    as _InheritedContainerListeners)
+        .listeners;
   }
 }
 
@@ -132,7 +131,6 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
 
   @override
   Widget build(BuildContext context) {
-
     double topOffset = 0.0;
     RenderObject object = context.findRenderObject();
     if (object?.parentData is ContainerBoxParentData) {
@@ -371,11 +369,13 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
 }
 
 class DirectSelectGestureEventListeners {
-  toggleListOverlayVisibility(DirectSelectList list, double location) => throw 'Not implemented.';
+  toggleListOverlayVisibility(DirectSelectList list, double location) =>
+      throw 'Not implemented.';
+
   performListDrag(double dragDy) => throw 'Not implemented';
 }
 
-/// Allows Direct Select List implementations to 
+/// Allows Direct Select List implementations to
 class _InheritedContainerListeners extends InheritedWidget {
   final DirectSelectGestureEventListeners listeners;
 
@@ -383,11 +383,9 @@ class _InheritedContainerListeners extends InheritedWidget {
     Key key,
     @required this.listeners,
     @required Widget child,
-  }) : super(
-    key: key,
-    child: child
-  );
+  }) : super(key: key, child: child);
 
   @override
-  bool updateShouldNotify(_InheritedContainerListeners old) => old.listeners != listeners;
+  bool updateShouldNotify(_InheritedContainerListeners old) =>
+      old.listeners != listeners;
 }
