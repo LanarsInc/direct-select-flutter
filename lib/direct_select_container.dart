@@ -76,16 +76,14 @@ class DirectSelectContainer extends StatefulWidget {
   //Actually content of screen
   final Widget child;
 
-  //Direct selects
-  final List<DirectSelectList> controls;
-
   //How fast list is scrolled
   final int dragSpeedMultiplier;
 
   const DirectSelectContainer({
     Key key,
     this.child,
-    this.controls = const [],
+    @Deprecated("Controls are now added from an InheritedWidget.")
+    List<DirectSelectList> controls,
     this.dragSpeedMultiplier = 2
   }) : super(key: key);
 
@@ -130,9 +128,6 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
       duration: fadeAnimationDuration,
       vsync: this,
     );
-
-    for (DirectSelectList directSelectList in widget.controls)
-      _addList(directSelectList);
   }
 
   @override
@@ -224,16 +219,6 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
             decoration: _currentList.focusedItemDecoration != null
                 ? _currentList.focusedItemDecoration
                 : BoxDecoration()));
-  }
-
-  void _addList(DirectSelectList directSelectList) {
-    directSelectList.setOnTapEventListener((owner, location) {
-      return toggleListOverlayVisibility(owner, location);
-    });
-
-    directSelectList.setOnDragEvent((dragDy) {
-      performListDrag(dragDy);
-    });
   }
 
   void performListDrag(double dragDy) {

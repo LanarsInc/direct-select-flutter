@@ -34,17 +34,11 @@ class DirectSelectList<T> extends StatefulWidget {
   final Function(T value, int selectedIndex, BuildContext context)
   onItemSelectedListener;
 
-  //todo find better way to notify parent widget about gesture events to make this class immutable
-  Future Function(DirectSelectList, double) onTapEventListener;
-  void Function(double) onDragEventListener;
-
   GlobalKey paddingGlobalKey = RectGetter.createGlobalKey();
 
   DirectSelectList({Key key,
     @required List<T> values,
     @required DirectSelectItemsBuilder<T> itemBuilder,
-    this.onDragEventListener,
-    this.onTapEventListener,
     this.onItemSelectedListener,
     this.focusedItemDecoration,
     this.defaultItemIndex = 0
@@ -56,7 +50,7 @@ class DirectSelectList<T> extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return DirectSelectState<T>(onTapEventListener, onDragEventListener);
+    return DirectSelectState<T>();
   }
 
   //todo pass item height in this class and build items with that height
@@ -65,14 +59,6 @@ class DirectSelectList<T> extends StatefulWidget {
       return items.first.itemHeight;
     }
     return 0.0;
-  }
-
-  setOnTapEventListener(ItemSelected onTapEventListener) {
-    this.onTapEventListener = onTapEventListener;
-  }
-
-  setOnDragEvent(Function(double) onDragEventListener) {
-    this.onDragEventListener = onDragEventListener;
   }
 
   int getSelectedItemIndex() {
@@ -102,9 +88,6 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
   void Function(double) onDragEventListener;
 
   bool isOverlayVisible = false;
-
-  DirectSelectState(this.onTapEventListener, this.onDragEventListener);
-
   int lastSelectedItem;
 
   bool _isShowUpAnimationRunning = false;
