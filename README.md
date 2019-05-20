@@ -1,6 +1,8 @@
 # direct-select-flutter
 DirectSelect is a selection widget with an ethereal, full-screen modal popup displaying the available choices when the widget is interact with. https://dribbble.com/shots/3876250-DirectSelect-Dropdown-ux
 
+[![pub package](https://img.shields.io/pub/v/direct_select_flutter.svg)](https://pub.dev/packages/direct_select_flutter)
+
 # iOS
 
 <img src="https://raw.githubusercontent.com/LanarsInc/direct-select-flutter/master/example/direct-select-ios.gif" width="300">
@@ -45,7 +47,7 @@ DirectSelect is a selection widget with an ethereal, full-screen modal popup dis
   }
 ```
  Create DirectSelectContainer and fill it with your data
- ```dart
+```dart
 Scaffold(
       appBar: appBar,
       body: DirectSelectContainer(
@@ -62,28 +64,30 @@ Scaffold(
                 child: Column(
                   children: <Widget>[
                     Container(
-                        alignment: AlignmentDirectional.centerStart,
-                        margin: EdgeInsets.only(left: 4),
-                        child: Text("City")),
+                      alignment: AlignmentDirectional.centerStart,
+                      margin: EdgeInsets.only(left: 4),
+                      child: Text("City"),
+                    ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
                       child: Card(
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: <Widget>[
-                              Expanded(
-                                  child: Padding(
-                                      child: dsl,
-                                      padding: EdgeInsets.only(left: 12))),
-                              Padding(
-                                padding: EdgeInsets.only(right: 8),
-                                child: Icon(
-                                  Icons.unfold_more,
-                                  color: Colors.black38,
-                                ),
-                              )
-                            ],
-                          )),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          children: <Widget>[
+                            Expanded(
+                                child: Padding(
+                                    child: dsl,
+                                    padding: EdgeInsets.only(left: 12))),
+                            Padding(
+                              padding: EdgeInsets.only(right: 8),
+                              child: Icon(
+                                Icons.unfold_more,
+                                color: Colors.black38,
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
                     ),
                   ],
                 ),
