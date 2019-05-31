@@ -11,23 +11,8 @@ import 'package:rect_getter/rect_getter.dart';
 /// This widget displays lists of direct selects.
 /// Usage Example
 ///
-///     final dsl = DirectSelectList<String>(
-///        values: _cities,
-///        defaultItemIndex: 3,
-///        itemBuilder: (String value) => getDropDownMenuItem(value),
-///        focusedItemDecoration: _getDslDecoration(),
-///        onItemSelectedListener: (item, context) {
-///          Scaffold.of(context).showSnackBar(SnackBar(content: Text(item)));
-///        });
-///
-///    final dsl2 = DirectSelectList<String>(
-///        values: _numbers,
-///        itemBuilder: (String value) => getDropDownMenuItem(value),
-///        focusedItemDecoration: _getDslDecoration());
-///
 ///    return Scaffold(
 ///      body: DirectSelectContainer(
-///        controls: [dsl, dsl2],
 ///        child: Padding(
 ///          padding: const EdgeInsets.all(16.0),
 ///          child: Column(
@@ -51,7 +36,14 @@ import 'package:rect_getter/rect_getter.dart';
 ///                        children: <Widget>[
 ///                          Expanded(
 ///                              child: Padding(
-///                                  child: dsl,
+///                                  child: DirectSelectList<String>(
+///                                  values: _cities,
+///                                  defaultItemIndex: 3,
+///                                   itemBuilder: (String value) => getDropDownMenuItem(value),
+///                                   focusedItemDecoration: _getDslDecoration(),
+///                                   onItemSelectedListener: (item, context) {
+///                                       Scaffold.of(context).showSnackBar(SnackBar(content: Text(item)));
+///                                   }),
 ///                                  padding: EdgeInsets.only(left: 12))),
 ///                          Padding(
 ///                            padding: EdgeInsets.only(right: 8),
@@ -178,7 +170,8 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
     var paddingLeft = 0.0;
 
     if (_currentList.items.isNotEmpty) {
-      Rect rect = RectGetter.getRectFromKey(_currentList.paddingGlobalKey);
+      Rect rect = RectGetter.getRectFromKey(
+          _currentList.paddingItemController.paddingGlobalKey);
       if (rect != null) {
         paddingLeft = rect.left;
       }
@@ -221,7 +214,7 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
 
   void performListDrag(double dragDy) {
     try {
-      if (_scrollController != null && _scrollController.positions.isNotEmpty) {
+      if (_scrollController != null && _scrollController.position != null) {
         final currentScrollOffset = _scrollController.offset;
         double allowedOffset = _allowedDragDistance(
             currentScrollOffset + _adjustedTopOffset,

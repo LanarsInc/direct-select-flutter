@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -110,49 +110,9 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         preferredSize: Size.fromHeight(90));
 
-    final dsl2 = DirectSelectList<String>(
-      values: _food,
-      itemBuilder: (String value) => getDropDownMenuItem(value),
-      focusedItemDecoration: _getDslDecoration(),
-    );
-
-    final dsl3 = DirectSelectList<String>(
-        values: _foodVariants,
-        defaultItemIndex: selectedFoodVariants,
-        itemBuilder: (String value) => getDropDownMenuItem(value),
-        focusedItemDecoration: _getDslDecoration(),
-        onItemSelectedListener: (item, index, context) {
-          setState(() {
-            selectedFoodVariants = index;
-          });
-        });
-
-    final dsl4 = DirectSelectList<String>(
-        values: _numbers,
-        defaultItemIndex: selectedPortionCounts,
-        itemBuilder: (String value) => getDropDownMenuItem(value),
-        focusedItemDecoration: _getDslDecoration(),
-        onItemSelectedListener: (item, index, context) {
-          setState(() {
-            selectedPortionCounts = index;
-          });
-        });
-
-    final dsl5 = DirectSelectList<String>(
-        values: _portionSize,
-        defaultItemIndex: selectedPortionSize,
-        itemBuilder: (String value) => getDropDownMenuItem(value),
-        focusedItemDecoration: _getDslDecoration(),
-        onItemSelectedListener: (item, index, context) {
-          setState(() {
-            selectedPortionSize = index;
-          });
-        });
-
     return Scaffold(
       appBar: appBar,
       body: DirectSelectContainer(
-        controls: [dsl2, dsl3, dsl4, dsl5],
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -190,34 +150,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
                     children: <Widget>[
-                      MealSelector(),
+                      MealSelector(data: _meals, label: "To which meal?"),
                       SizedBox(height: 20.0),
-                      Container(
-                          padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
-                          margin: EdgeInsets.only(left: 4),
-                          alignment: AlignmentDirectional.centerStart,
-                          child: Text("Search our database by name")),
+                      MealSelector(
+                          data: _food, label: "Search our database by name"),
                       Padding(
-                        padding: buttonPadding,
-                        child: Container(
-                          decoration: _getShadowDecoration(),
-                          child: Card(
-                              child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: <Widget>[
-                              Expanded(
-                                  child: Padding(
-                                      child: dsl2,
-                                      padding: EdgeInsets.only(left: 22))),
-                              Padding(
-                                padding: EdgeInsets.only(right: 8),
-                              )
-                            ],
-                              )),
-                        ),
-                      ),
-                      Padding(
-                        padding: buttonPadding,
+                        padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
                         child: Container(
                           decoration: _getShadowDecoration(),
                           child: Card(
@@ -226,14 +164,25 @@ class _MyHomePageState extends State<MyHomePage> {
                                 children: <Widget>[
                                   Expanded(
                                       child: Padding(
-                                          child: dsl3,
+                                          child: DirectSelectList<String>(
+                                              values: _foodVariants,
+                                              defaultItemIndex: selectedFoodVariants,
+                                              itemBuilder: (String value) =>
+                                                  getDropDownMenuItem(value),
+                                              focusedItemDecoration: _getDslDecoration(),
+                                              onItemSelectedListener: (item,
+                                                  index, context) {
+                                                setState(() {
+                                                  selectedFoodVariants = index;
+                                                });
+                                              }),
                                           padding: EdgeInsets.only(left: 22))),
                                   Padding(
                                     padding: EdgeInsets.only(right: 8),
                                     child: _getDropdownIcon(),
-                              )
-                            ],
-                          )),
+                                  )
+                                ],
+                              )),
                         ),
                       ),
                       SizedBox(height: 15.0),
@@ -255,7 +204,20 @@ class _MyHomePageState extends State<MyHomePage> {
                                     children: <Widget>[
                                       Expanded(
                                           child: Padding(
-                                              child: dsl4,
+                                              child: DirectSelectList<String>(
+                                                  values: _numbers,
+                                                  defaultItemIndex: selectedPortionCounts,
+                                                  itemBuilder: (String value) =>
+                                                      getDropDownMenuItem(
+                                                          value),
+                                                  focusedItemDecoration: _getDslDecoration(),
+                                                  onItemSelectedListener: (item,
+                                                      index, context) {
+                                                    setState(() {
+                                                      selectedPortionCounts =
+                                                          index;
+                                                    });
+                                                  }),
                                               padding: EdgeInsets.only(
                                                   left: 22))),
                                     ],
@@ -271,7 +233,20 @@ class _MyHomePageState extends State<MyHomePage> {
                                     children: <Widget>[
                                       Expanded(
                                           child: Padding(
-                                              child: dsl5,
+                                              child: DirectSelectList<String>(
+                                                  values: _portionSize,
+                                                  defaultItemIndex: selectedPortionSize,
+                                                  itemBuilder: (String value) =>
+                                                      getDropDownMenuItem(
+                                                          value),
+                                                  focusedItemDecoration: _getDslDecoration(),
+                                                  onItemSelectedListener: (item,
+                                                      index, context) {
+                                                    setState(() {
+                                                      selectedPortionSize =
+                                                          index;
+                                                    });
+                                                  }),
                                               padding: EdgeInsets.only(
                                                   left: 22))),
                                       Padding(
@@ -301,11 +276,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  final buttonPadding = const EdgeInsets.fromLTRB(0, 8, 0, 0);
 
-  double cardSize = 80;
-
-  Color cardColor = Colors.blueGrey[100];
 
   Icon _getDropdownIcon() {
     return Icon(
@@ -327,54 +298,16 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget _getFoodContainsRow() {
-    return Padding(
-      padding: EdgeInsets.only(left: 8, right: 8),
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            child: Container(
-                child: Center(child: Text("226")),
-                height: cardSize,
-                margin: EdgeInsets.only(right: 3),
-                decoration: BoxDecoration(
-                    color: cardColor,
-                    borderRadius: BorderRadius.only(
-                        topLeft: const Radius.circular(10.0),
-                        bottomLeft: const Radius.circular(10.0)))),
-          ),
-          Expanded(
-            child: Container(
-                child: Center(child: Text("41")),
-                height: cardSize,
-                margin: EdgeInsets.only(right: 3),
-                decoration: BoxDecoration(color: cardColor)),
-          ),
-          Expanded(
-            child: Container(
-                child: Center(child: Text("0")),
-                height: cardSize,
-                margin: EdgeInsets.only(right: 3),
-                decoration: BoxDecoration(color: cardColor)),
-          ),
-          Expanded(
-            child: Container(
-                child: Center(child: Text("4.5")),
-                height: cardSize,
-                decoration: BoxDecoration(
-                    color: cardColor,
-                    borderRadius: BorderRadius.only(
-                        topRight: const Radius.circular(10.0),
-                        bottomRight: const Radius.circular(10.0)))),
-          ),
-        ],
-      ),
-    );
-  }
+
 }
 
 class MealSelector extends StatelessWidget {
   final buttonPadding = const EdgeInsets.fromLTRB(0, 8, 0, 0);
+
+  final List<String> data;
+  final String label;
+
+  MealSelector({@required this.data, @required this.label});
 
   @override
   Widget build(BuildContext context) {
@@ -383,31 +316,31 @@ class MealSelector extends StatelessWidget {
         Container(
             alignment: AlignmentDirectional.centerStart,
             margin: EdgeInsets.only(left: 4),
-            child: Text("To which meal?")),
+            child: Text(label)),
         Padding(
           padding: buttonPadding,
           child: Container(
             decoration: _getShadowDecoration(),
             child: Card(
                 child: Row(
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                Expanded(
-                    child: Padding(
-                        child: DirectSelectList<String>(
-                          values: _meals,
-                          defaultItemIndex: 0,
-                          itemBuilder: (String value) =>
-                              getDropDownMenuItem(value),
-                          focusedItemDecoration: _getDslDecoration(),
-                        ),
-                        padding: EdgeInsets.only(left: 12))),
-                Padding(
-                  padding: EdgeInsets.only(right: 8),
-                  child: _getDropdownIcon(),
-                )
-              ],
-            )),
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    Expanded(
+                        child: Padding(
+                            child: DirectSelectList<String>(
+                              values: data,
+                              defaultItemIndex: 0,
+                              itemBuilder: (String value) =>
+                                  getDropDownMenuItem(value),
+                              focusedItemDecoration: _getDslDecoration(),
+                            ),
+                            padding: EdgeInsets.only(left: 12))),
+                    Padding(
+                      padding: EdgeInsets.only(right: 8),
+                      child: _getDropdownIcon(),
+                    )
+                  ],
+                )),
           ),
         ),
       ],
@@ -451,4 +384,52 @@ class MealSelector extends StatelessWidget {
       color: Colors.blueAccent,
     );
   }
+}
+
+
+Widget _getFoodContainsRow() {
+  final cardSize = 80.0;
+  final cardColor = Colors.blueGrey[100];
+  return Padding(
+    padding: EdgeInsets.only(left: 8, right: 8),
+    child: Row(
+      children: <Widget>[
+        Expanded(
+          child: Container(
+              child: Center(child: Text("226")),
+              height: cardSize,
+              margin: EdgeInsets.only(right: 3),
+              decoration: BoxDecoration(
+                  color: cardColor,
+                  borderRadius: BorderRadius.only(
+                      topLeft: const Radius.circular(10.0),
+                      bottomLeft: const Radius.circular(10.0)))),
+        ),
+        Expanded(
+          child: Container(
+              child: Center(child: Text("41")),
+              height: cardSize,
+              margin: EdgeInsets.only(right: 3),
+              decoration: BoxDecoration(color: cardColor)),
+        ),
+        Expanded(
+          child: Container(
+              child: Center(child: Text("0")),
+              height: cardSize,
+              margin: EdgeInsets.only(right: 3),
+              decoration: BoxDecoration(color: cardColor)),
+        ),
+        Expanded(
+          child: Container(
+              child: Center(child: Text("4.5")),
+              height: cardSize,
+              decoration: BoxDecoration(
+                  color: cardColor,
+                  borderRadius: BorderRadius.only(
+                      topRight: const Radius.circular(10.0),
+                      bottomRight: const Radius.circular(10.0)))),
+        ),
+      ],
+    ),
+  );
 }

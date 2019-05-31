@@ -49,7 +49,6 @@ DirectSelect is a selection widget with an ethereal, full-screen modal popup dis
 Scaffold(
       appBar: appBar,
       body: DirectSelectContainer(
-        controls: [dsl, dsl2],
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -73,7 +72,14 @@ Scaffold(
                             children: <Widget>[
                               Expanded(
                                   child: Padding(
-                                      child: dsl,
+                                      child: DirectSelectList<String>(
+                                                     values: _cities,
+                                                     defaultItemIndex: 3,
+                                                     itemBuilder: (String value) => getDropDownMenuItem(value),
+                                                     focusedItemDecoration: _getDslDecoration(),
+                                                     onItemSelectedListener: (item, index, context) {
+                                                       Scaffold.of(context).showSnackBar(SnackBar(content: Text(item)));
+                                                     }),
                                       padding: EdgeInsets.only(left: 12))),
                               Padding(
                                 padding: EdgeInsets.only(right: 8),
@@ -83,7 +89,8 @@ Scaffold(
                                 ),
                               )
                             ],
-                          )),
+                          ),
+                         ),
                     ),
                   ],
                 ),

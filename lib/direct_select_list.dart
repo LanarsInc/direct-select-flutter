@@ -6,6 +6,10 @@ import 'package:rect_getter/rect_getter.dart';
 
 typedef DirectSelectItemsBuilder<T> = DirectSelectItem<T> Function(T value);
 
+class PaddingItemController {
+  GlobalKey paddingGlobalKey = RectGetter.createGlobalKey();
+}
+
 typedef ItemSelected = Future<dynamic> Function(
     DirectSelectList owner, double location);
 
@@ -34,14 +38,16 @@ class DirectSelectList<T> extends StatefulWidget {
   final Function(T value, int selectedIndex, BuildContext context)
   onItemSelectedListener;
 
-  GlobalKey paddingGlobalKey = RectGetter.createGlobalKey();
+  final PaddingItemController paddingItemController = PaddingItemController();
 
-  DirectSelectList({Key key,
+  DirectSelectList({
+    Key key,
     @required List<T> values,
     @required DirectSelectItemsBuilder<T> itemBuilder,
     this.onItemSelectedListener,
     this.focusedItemDecoration,
-    this.defaultItemIndex = 0})
+    this.defaultItemIndex = 0,
+  })
       : items = values.map((val) => itemBuilder(val)).toList(),
         selectedItem = ValueNotifier<int>(defaultItemIndex),
         assert(defaultItemIndex + 1 <= values.length + 1),
@@ -98,12 +104,15 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
     super.initState();
     lastSelectedItem = widget.defaultItemIndex;
     selectedItemWidgets = Map();
-    for (int i = 0; i < widget.items.length; i++) {
+    for (int index = 0; index < widget.items.length; index++) {
       selectedItemWidgets.putIfAbsent(
-          i,
-              () =>
-              widget.items[i]
-                  .getSelectedItem(animatedStateKey, widget.paddingGlobalKey));
+        index,
+            () =>
+            widget.items[index].getSelectedItem(
+              animatedStateKey,
+              widget.paddingItemController.paddingGlobalKey,
+            ),
+      );
     }
   }
 
@@ -194,7 +203,8 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
 
   @override
   void didUpdateWidget(DirectSelectList oldWidget) {
-    widget.paddingGlobalKey = oldWidget.paddingGlobalKey;
+    widget.paddingItemController.paddingGlobalKey =
+        oldWidget.paddingItemController.paddingGlobalKey;
     super.didUpdateWidget(oldWidget);
   }
 
