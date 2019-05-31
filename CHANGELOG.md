@@ -6,3 +6,8 @@
 
 * Horizontal scroll problem fix
 * Scale down small overlay problem resolved
+
+## 1.0.3
+
+* Improve code formatting, fixed immutable issues.
+* Improve documentation
