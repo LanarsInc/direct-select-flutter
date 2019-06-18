@@ -2,6 +2,9 @@
 DirectSelect is a selection widget with an ethereal, full-screen modal popup displaying the available choices when the widget is interact with. https://dribbble.com/shots/3876250-DirectSelect-Dropdown-ux
 
 [![pub package](https://img.shields.io/pub/v/direct_select_flutter.svg)](https://pub.dev/packages/direct_select_flutter)
+<a href="https://github.com/Solido/awesome-flutter">
+   <img alt="Awesome Flutter" src="https://img.shields.io/badge/Awesome-Flutter-blue.svg?longCache=true&style=flat-square" />
+</a>
 
 # iOS
 
