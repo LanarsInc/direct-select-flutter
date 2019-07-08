@@ -126,21 +126,23 @@ class DirectSelectItemState<T> extends State<DirectSelectItem<T>>
         ],
       );
     } else {
-      return Container(
-        child: ValueListenableBuilder<double>(
-          valueListenable: widget.scale,
-          builder: (context, value, child) {
-            return Opacity(
-              opacity: widget.opacity.value,
-              child: Container(
-                  height: widget.itemHeight,
-                  child: Transform.scale(
-                      scale: value,
-                      alignment: Alignment.topLeft,
-                      child: widget.itemBuilder(context, widget.value)),
-                  alignment: AlignmentDirectional.centerStart),
-            );
-          },
+      return Material(
+        child: Container(
+          child: ValueListenableBuilder<double>(
+            valueListenable: widget.scale,
+            builder: (context, value, child) {
+              return Opacity(
+                opacity: widget.opacity.value,
+                child: Container(
+                    height: widget.itemHeight,
+                    child: Transform.scale(
+                        scale: value,
+                        alignment: Alignment.topLeft,
+                        child: widget.itemBuilder(context, widget.value)),
+                    alignment: AlignmentDirectional.centerStart),
+              );
+            },
+          ),
         ),
       );
     }

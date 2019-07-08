@@ -177,8 +177,9 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
       }
     }
 
+    final theme = Theme.of(context);
     return Container(
-        color: Colors.white,
+        color: theme.scaffoldBackgroundColor,
         child: ListView.builder(
           padding: EdgeInsets.only(left: paddingLeft),
           controller: _scrollController,
