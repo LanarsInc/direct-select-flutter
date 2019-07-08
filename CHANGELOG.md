@@ -11,3 +11,7 @@
 
 * Improve code formatting, fixed immutable issues.
 * Improve documentation
+
+## 1.0.4
+
+* Choice screen color can be set up using theme
