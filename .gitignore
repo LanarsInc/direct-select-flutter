@@ -75,5 +75,6 @@ example/android/app/.project
 example/android/app/.classpath
 example/android/.settings/org.eclipse.buildship.core.prefs
 example/android/.project
+example/ios/Flutter/flutter_export_environment.sh
 android/.settings/org.eclipse.buildship.core.prefs
 android/.project

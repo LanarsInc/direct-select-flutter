@@ -128,6 +128,7 @@ class DirectSelectItemState<T> extends State<DirectSelectItem<T>>
     } else {
       return Material(
         child: Container(
+          color: Theme.of(context).scaffoldBackgroundColor,
           child: ValueListenableBuilder<double>(
             valueListenable: widget.scale,
             builder: (context, value, child) {
