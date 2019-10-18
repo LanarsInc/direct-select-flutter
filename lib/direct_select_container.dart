@@ -84,6 +84,11 @@ class DirectSelectContainer extends StatefulWidget {
   }
 
   static DirectSelectGestureEventListeners of(BuildContext context) {
+    if (context.inheritFromWidgetOfExactType(_InheritedContainerListeners) ==
+        null) {
+      throw Exception(
+          "A DirectSelectList must inherit a DirectSelectContainer!");
+    }
     return (context.inheritFromWidgetOfExactType(_InheritedContainerListeners)
     as _InheritedContainerListeners)
         .listeners;
