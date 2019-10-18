@@ -15,3 +15,9 @@
 ## 1.0.4
 
 * Choice screen color can be set up using theme
+
+## 1.0.5
+
+* Throw exception if dsl not extends dsl listener
+* Add listener to notify that user must hold instead of just tap
+* Add optional decoration param to DSL Container
