@@ -38,6 +38,9 @@ class DirectSelectList<T> extends StatefulWidget {
   final Function(T value, int selectedIndex, BuildContext context)
   onItemSelectedListener;
 
+  //Callback for action when user just tapped instead of hold and scroll
+  final VoidCallback onUserTappedListener;
+
   final PaddingItemController paddingItemController = PaddingItemController();
 
   DirectSelectList({
@@ -47,6 +50,7 @@ class DirectSelectList<T> extends StatefulWidget {
     this.onItemSelectedListener,
     this.focusedItemDecoration,
     this.defaultItemIndex = 0,
+    this.onUserTappedListener,
   })
       : items = values.map((val) => itemBuilder(val)).toList(),
         selectedItem = ValueNotifier<int>(defaultItemIndex),
@@ -146,6 +150,11 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
           final selectedItem = selectedItemWidgets[value];
           return GestureDetector(
               child: selectedItem,
+              onTap: () {
+                if (widget.onUserTappedListener != null) {
+                  widget.onUserTappedListener();
+                }
+              },
               onTapDown: (tapDownDetails) async {
                 if (!isOverlayVisible) {
                   transitionEnded = false;

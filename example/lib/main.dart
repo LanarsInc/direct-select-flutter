@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -79,6 +78,8 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     final appBar = PreferredSize(
@@ -112,6 +113,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Scaffold(
       appBar: appBar,
+      key: scaffoldKey,
       body: DirectSelectContainer(
         child: SingleChildScrollView(
           child: Padding(
@@ -166,12 +168,17 @@ class _MyHomePageState extends State<MyHomePage> {
                                       child: Padding(
                                           child: DirectSelectList<String>(
                                               values: _foodVariants,
-                                              defaultItemIndex: selectedFoodVariants,
+                                              onUserTappedListener: () {
+                                                _showScaffold();
+                                              },
+                                              defaultItemIndex:
+                                              selectedFoodVariants,
                                               itemBuilder: (String value) =>
                                                   getDropDownMenuItem(value),
-                                              focusedItemDecoration: _getDslDecoration(),
-                                              onItemSelectedListener: (item,
-                                                  index, context) {
+                                              focusedItemDecoration:
+                                              _getDslDecoration(),
+                                              onItemSelectedListener:
+                                                  (item, index, context) {
                                                 setState(() {
                                                   selectedFoodVariants = index;
                                                 });
@@ -205,14 +212,20 @@ class _MyHomePageState extends State<MyHomePage> {
                                       Expanded(
                                           child: Padding(
                                               child: DirectSelectList<String>(
+                                                  onUserTappedListener:
+                                                      () {
+                                                    _showScaffold();
+                                                  },
                                                   values: _numbers,
-                                                  defaultItemIndex: selectedPortionCounts,
+                                                  defaultItemIndex:
+                                                  selectedPortionCounts,
                                                   itemBuilder: (String value) =>
                                                       getDropDownMenuItem(
                                                           value),
-                                                  focusedItemDecoration: _getDslDecoration(),
-                                                  onItemSelectedListener: (item,
-                                                      index, context) {
+                                                  focusedItemDecoration:
+                                                  _getDslDecoration(),
+                                                  onItemSelectedListener:
+                                                      (item, index, context) {
                                                     setState(() {
                                                       selectedPortionCounts =
                                                           index;
@@ -235,13 +248,15 @@ class _MyHomePageState extends State<MyHomePage> {
                                           child: Padding(
                                               child: DirectSelectList<String>(
                                                   values: _portionSize,
-                                                  defaultItemIndex: selectedPortionSize,
+                                                  defaultItemIndex:
+                                                  selectedPortionSize,
                                                   itemBuilder: (String value) =>
                                                       getDropDownMenuItem(
                                                           value),
-                                                  focusedItemDecoration: _getDslDecoration(),
-                                                  onItemSelectedListener: (item,
-                                                      index, context) {
+                                                  focusedItemDecoration:
+                                                  _getDslDecoration(),
+                                                  onItemSelectedListener:
+                                                      (item, index, context) {
                                                     setState(() {
                                                       selectedPortionSize =
                                                           index;
@@ -276,7 +291,10 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-
+  void _showScaffold() {
+    final snackBar = SnackBar(content: Text('Hold and drag instead of tap'));
+    scaffoldKey.currentState.showSnackBar(snackBar);
+  }
 
   Icon _getDropdownIcon() {
     return Icon(
@@ -297,8 +315,6 @@ class _MyHomePageState extends State<MyHomePage> {
       ],
     );
   }
-
-
 }
 
 class MealSelector extends StatelessWidget {
@@ -385,7 +401,6 @@ class MealSelector extends StatelessWidget {
     );
   }
 }
-
 
 Widget _getFoodContainsRow() {
   final cardSize = 80.0;
