@@ -36,14 +36,14 @@ class DirectSelectItem<T> extends StatefulWidget {
 
   final Widget Function(BuildContext context, T value) itemBuilder;
 
-  DirectSelectItem(
-      {Key key,
-        this.scaleFactor = 4.0,
-      @required this.value,
-        @required this.itemBuilder,
-      this.itemHeight = 48.0,
-      this.isSelected = false})
-      : super(key: key);
+  DirectSelectItem({
+    Key key,
+    this.scaleFactor = 4.0,
+    @required this.value,
+    @required this.itemBuilder,
+    this.itemHeight = 48.0,
+    this.isSelected = false,
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -127,6 +127,7 @@ class DirectSelectItemState<T> extends State<DirectSelectItem<T>>
       );
     } else {
       return Material(
+        color: Colors.transparent,
         child: Container(
           child: ValueListenableBuilder<double>(
             valueListenable: widget.scale,

@@ -71,12 +71,14 @@ class DirectSelectContainer extends StatefulWidget {
   //How fast list is scrolled
   final int dragSpeedMultiplier;
 
-  const DirectSelectContainer({Key key,
+  final Decoration decortion;
+
+  const DirectSelectContainer({
+    Key key,
     this.child,
-    @Deprecated("Controls are now added from an InheritedWidget.") List<
-        DirectSelectList> controls,
-    this.dragSpeedMultiplier = 2})
-      : super(key: key);
+    this.dragSpeedMultiplier = 2,
+    this.decortion,
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -182,9 +184,16 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
       }
     }
 
-    final theme = Theme.of(context);
+    Decoration dslContainerDecoration;
+    if (widget.decortion == null) {
+      final theme = Theme.of(context);
+      dslContainerDecoration =
+          BoxDecoration(color: theme.scaffoldBackgroundColor);
+    } else {
+      dslContainerDecoration = widget.decortion;
+    }
     return Container(
-        color: theme.scaffoldBackgroundColor,
+        decoration: dslContainerDecoration,
         child: ListView.builder(
           padding: EdgeInsets.only(left: paddingLeft),
           controller: _scrollController,
