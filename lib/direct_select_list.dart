@@ -36,7 +36,7 @@ class DirectSelectList<T> extends StatefulWidget {
 
   //Function to execute when item selected
   final Function(T value, int selectedIndex, BuildContext context)
-  onItemSelectedListener;
+      onItemSelectedListener;
 
   //Callback for action when user just tapped instead of hold and scroll
   final VoidCallback onUserTappedListener;
@@ -51,8 +51,7 @@ class DirectSelectList<T> extends StatefulWidget {
     this.focusedItemDecoration,
     this.defaultItemIndex = 0,
     this.onUserTappedListener,
-  })
-      : items = values.map((val) => itemBuilder(val)).toList(),
+  })  : items = values.map((val) => itemBuilder(val)).toList(),
         selectedItem = ValueNotifier<int>(defaultItemIndex),
         assert(defaultItemIndex + 1 <= values.length + 1),
         super(key: key);
@@ -91,7 +90,7 @@ class DirectSelectList<T> extends StatefulWidget {
 
 class DirectSelectState<T> extends State<DirectSelectList<T>> {
   final GlobalKey<DirectSelectItemState> animatedStateKey =
-  GlobalKey<DirectSelectItemState>();
+      GlobalKey<DirectSelectItemState>();
 
   Future Function(DirectSelectList, double) onTapEventListener;
   void Function(double) onDragEventListener;
@@ -111,11 +110,10 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
     for (int index = 0; index < widget.items.length; index++) {
       selectedItemWidgets.putIfAbsent(
         index,
-            () =>
-            widget.items[index].getSelectedItem(
-              animatedStateKey,
-              widget.paddingItemController.paddingGlobalKey,
-            ),
+        () => widget.items[index].getSelectedItem(
+          animatedStateKey,
+          widget.paddingItemController.paddingGlobalKey,
+        ),
       );
     }
   }
@@ -125,7 +123,7 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
     super.didChangeDependencies();
     final dsListener = DirectSelectContainer.of(context);
     assert(dsListener != null,
-    "A DirectSelectList must inherit a DirectSelectContainer!");
+        "A DirectSelectList must inherit a DirectSelectContainer!");
 
     this.onTapEventListener = dsListener.toggleListOverlayVisibility;
     this.onDragEventListener = dsListener.performListDrag;
