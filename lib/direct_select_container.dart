@@ -153,23 +153,24 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
           child: widget.child,
         ),
         Visibility(
-            visible: isOverlayVisible,
-            child: FadeTransition(
-              opacity: fadeAnimationController
-                  .drive(CurveTween(curve: Curves.easeOut)),
-              child: Column(
-                children: <Widget>[
-                  Expanded(
-                    child: Stack(
-                      children: <Widget>[
-                        _getListWidget(),
-                        _getSelectionOverlayWidget(),
-                      ],
-                    ),
+          visible: isOverlayVisible,
+          child: FadeTransition(
+            opacity: fadeAnimationController
+                .drive(CurveTween(curve: Curves.easeOut)),
+            child: Column(
+              children: <Widget>[
+                Expanded(
+                  child: Stack(
+                    children: <Widget>[
+                      _getListWidget(),
+                      _getSelectionOverlayWidget(),
+                    ],
                   ),
-                ],
-              ),
-            ))
+                ),
+              ],
+            ),
+          ),
+        )
       ],
     );
   }

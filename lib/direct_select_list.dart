@@ -100,13 +100,25 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
 
   bool _isShowUpAnimationRunning = false;
 
-  Map<int, Widget> selectedItemWidgets;
+  Map<int, Widget> selectedItemWidgets = Map();
 
   @override
   void initState() {
     super.initState();
     lastSelectedItem = widget.defaultItemIndex;
-    selectedItemWidgets = Map();
+    _updateSelectItemWidget();
+  }
+
+  @override
+  void didUpdateWidget(DirectSelectList oldWidget) {
+    widget.paddingItemController.paddingGlobalKey =
+        oldWidget.paddingItemController.paddingGlobalKey;
+    _updateSelectItemWidget();
+    super.didUpdateWidget(widget);
+  }
+
+  void _updateSelectItemWidget() {
+    selectedItemWidgets.clear();
     for (int index = 0; index < widget.items.length; index++) {
       selectedItemWidgets.putIfAbsent(
         index,
@@ -206,13 +218,6 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
         animatedStateKey.currentState.runScaleTransition(reverse: true);
       }
     }
-  }
-
-  @override
-  void didUpdateWidget(DirectSelectList oldWidget) {
-    widget.paddingItemController.paddingGlobalKey =
-        oldWidget.paddingItemController.paddingGlobalKey;
-    super.didUpdateWidget(oldWidget);
   }
 
   _showListOverlay(double dy) {
