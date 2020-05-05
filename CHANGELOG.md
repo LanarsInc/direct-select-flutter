@@ -2,7 +2,7 @@
 
 * Fix update of selected item
 
-# [1.0.5+1] - 2020.04.27
+## [1.0.5+1] - 2020.04.27
 
 * Update dependencies to latest version
 * Fix spelling
