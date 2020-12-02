@@ -64,12 +64,13 @@ import 'package:rect_getter/rect_getter.dart';
 ///    );
 ///
 class DirectSelectContainer extends StatefulWidget {
-  //Actually content of screen
+  ///Actually content of screen
   final Widget child;
 
-  //How fast list is scrolled
+  ///How fast list is scrolled
   final int dragSpeedMultiplier;
 
+  ///Decoration for the DSL container
   final Decoration decoration;
 
   const DirectSelectContainer({

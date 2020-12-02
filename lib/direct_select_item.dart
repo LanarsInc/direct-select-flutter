@@ -16,24 +16,25 @@ import 'package:rect_getter/rect_getter.dart';
 ///   }
 ///
 class DirectSelectItem<T> extends StatefulWidget {
-  //Value of item
+  ///Value of item
   final T value;
 
-  //Defines is this item is selected
+  ///Defines is this item is selected
   final isSelected;
 
-  //height of items in list
+  ///Height of items in list
   final double itemHeight;
 
-  //initial item scale
+  ///Initial item scale
   final scale = ValueNotifier<double>(1.0);
 
-  //opacity unselected item
+  ///Opacity unselected item
   final opacity = ValueNotifier<double>(0.5);
 
-  //the more value the MORE max scale DECREASES
+  ///the more value the MORE max scale DECREASES
   final scaleFactor;
 
+  ///Item builder
   final Widget Function(BuildContext context, T value) itemBuilder;
 
   DirectSelectItem({

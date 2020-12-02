@@ -22,25 +22,26 @@ typedef ItemSelected = Future<dynamic> Function(
 ///        focusedItemDecoration: _getDslDecoration());
 ///
 class DirectSelectList<T> extends StatefulWidget {
-  //Item widgets
+  ///Item widgets
   final List<DirectSelectItem<T>> items;
 
-  //Current focused item overlay
+  ///Current focused item overlay
   final Decoration focusedItemDecoration;
 
-  //Default selected item index
+  ///Default selected item index
   final int defaultItemIndex;
 
-  //Notifies state about new item selected
+  ///Notifies state about new item selected
   final ValueNotifier<int> selectedItem;
 
-  //Function to execute when item selected
+  ///Function to execute when item selected
   final Function(T value, int selectedIndex, BuildContext context)
       onItemSelectedListener;
 
-  //Callback for action when user just tapped instead of hold and scroll
+  ///Callback for action when user just tapped instead of hold and scroll
   final VoidCallback onUserTappedListener;
 
+  ///Holds [GlobalKey] for [RectGetter]
   final PaddingItemController paddingItemController = PaddingItemController();
 
   DirectSelectList({
@@ -61,7 +62,7 @@ class DirectSelectList<T> extends StatefulWidget {
     return DirectSelectState<T>();
   }
 
-  //todo pass item height in this class and build items with that height
+  //TODO pass item height in this class and build items with that height
   double itemHeight() {
     if (items != null && items.isNotEmpty) {
       return items.first.itemHeight;
@@ -212,7 +213,7 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
   _hideListOverlay(double dy) async {
     if (isOverlayVisible) {
       isOverlayVisible = false;
-      //fix to prevent stuck scale if selected item is the same as previous
+      //TODO fix to prevent stuck scale if selected item is the same as previous
       await onTapEventListener(widget, dy);
       if (lastSelectedItem == widget.selectedItem.value) {
         animatedStateKey.currentState.runScaleTransition(reverse: true);
