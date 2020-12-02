@@ -9,7 +9,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^0.1.3
   rect_getter: ^0.1.0
 
 dev_dependencies:
