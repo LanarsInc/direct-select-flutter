@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:direct_select_flutter/direct_select_list.dart';
 import 'package:flutter/material.dart';
@@ -346,7 +345,7 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
         );
       } catch (e) {} finally {
         _currentList.setSelectedItemIndex(lastSelectedItem);
-        sleep(const Duration(milliseconds: 200));
+        await Future.delayed(Duration(milliseconds: 200));
         await fadeAnimationController.reverse();
         setState(() {
           _hideListOverlay();
