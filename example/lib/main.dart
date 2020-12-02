@@ -162,34 +162,34 @@ class _MyHomePageState extends State<MyHomePage> {
                           decoration: _getShadowDecoration(),
                           child: Card(
                               child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                children: <Widget>[
-                                  Expanded(
-                                      child: Padding(
-                                          child: DirectSelectList<String>(
-                                              values: _foodVariants,
-                                              onUserTappedListener: () {
-                                                _showScaffold();
-                                              },
-                                              defaultItemIndex:
+                            mainAxisSize: MainAxisSize.max,
+                            children: <Widget>[
+                              Expanded(
+                                  child: Padding(
+                                      child: DirectSelectList<String>(
+                                          values: _foodVariants,
+                                          onUserTappedListener: () {
+                                            _showScaffold();
+                                          },
+                                          defaultItemIndex:
                                               selectedFoodVariants,
-                                              itemBuilder: (String value) =>
-                                                  getDropDownMenuItem(value),
-                                              focusedItemDecoration:
+                                          itemBuilder: (String value) =>
+                                              getDropDownMenuItem(value),
+                                          focusedItemDecoration:
                                               _getDslDecoration(),
-                                              onItemSelectedListener:
-                                                  (item, index, context) {
-                                                setState(() {
-                                                  selectedFoodVariants = index;
-                                                });
-                                              }),
-                                          padding: EdgeInsets.only(left: 22))),
-                                  Padding(
-                                    padding: EdgeInsets.only(right: 8),
-                                    child: _getDropdownIcon(),
-                                  )
-                                ],
-                              )),
+                                          onItemSelectedListener:
+                                              (item, index, context) {
+                                            setState(() {
+                                              selectedFoodVariants = index;
+                                            });
+                                          }),
+                                      padding: EdgeInsets.only(left: 22))),
+                              Padding(
+                                padding: EdgeInsets.only(right: 8),
+                                child: _getDropdownIcon(),
+                              )
+                            ],
+                          )),
                         ),
                       ),
                       SizedBox(height: 15.0),
@@ -205,36 +205,31 @@ class _MyHomePageState extends State<MyHomePage> {
                               decoration: _getShadowDecoration(),
                               child: Card(
                                   child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .center,
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: <Widget>[
-                                      Expanded(
-                                          child: Padding(
-                                              child: DirectSelectList<String>(
-                                                  onUserTappedListener:
-                                                      () {
-                                                    _showScaffold();
-                                                  },
-                                                  values: _numbers,
-                                                  defaultItemIndex:
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.max,
+                                children: <Widget>[
+                                  Expanded(
+                                      child: Padding(
+                                          child: DirectSelectList<String>(
+                                              onUserTappedListener: () {
+                                                _showScaffold();
+                                              },
+                                              values: _numbers,
+                                              defaultItemIndex:
                                                   selectedPortionCounts,
-                                                  itemBuilder: (String value) =>
-                                                      getDropDownMenuItem(
-                                                          value),
-                                                  focusedItemDecoration:
+                                              itemBuilder: (String value) =>
+                                                  getDropDownMenuItem(value),
+                                              focusedItemDecoration:
                                                   _getDslDecoration(),
-                                                  onItemSelectedListener:
-                                                      (item, index, context) {
-                                                    setState(() {
-                                                      selectedPortionCounts =
-                                                          index;
-                                                    });
-                                                  }),
-                                              padding: EdgeInsets.only(
-                                                  left: 22))),
-                                    ],
-                                  )),
+                                              onItemSelectedListener:
+                                                  (item, index, context) {
+                                                setState(() {
+                                                  selectedPortionCounts = index;
+                                                });
+                                              }),
+                                          padding: EdgeInsets.only(left: 22))),
+                                ],
+                              )),
                             )),
                         Expanded(
                             flex: 8,
@@ -242,43 +237,40 @@ class _MyHomePageState extends State<MyHomePage> {
                               decoration: _getShadowDecoration(),
                               child: Card(
                                   child: Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: <Widget>[
-                                      Expanded(
-                                          child: Padding(
-                                              child: DirectSelectList<String>(
-                                                  values: _portionSize,
-                                                  defaultItemIndex:
+                                mainAxisSize: MainAxisSize.max,
+                                children: <Widget>[
+                                  Expanded(
+                                      child: Padding(
+                                          child: DirectSelectList<String>(
+                                              values: _portionSize,
+                                              defaultItemIndex:
                                                   selectedPortionSize,
-                                                  itemBuilder: (String value) =>
-                                                      getDropDownMenuItem(
-                                                          value),
-                                                  focusedItemDecoration:
+                                              itemBuilder: (String value) =>
+                                                  getDropDownMenuItem(value),
+                                              focusedItemDecoration:
                                                   _getDslDecoration(),
-                                                  onItemSelectedListener:
-                                                      (item, index, context) {
-                                                    setState(() {
-                                                      selectedPortionSize =
-                                                          index;
-                                                    });
-                                                  }),
-                                              padding: EdgeInsets.only(
-                                                  left: 22))),
-                                      Padding(
-                                        padding: EdgeInsets.only(right: 8),
-                                        child: _getDropdownIcon(),
-                                      )
-                                    ],
-                                  )),
+                                              onItemSelectedListener:
+                                                  (item, index, context) {
+                                                setState(() {
+                                                  selectedPortionSize = index;
+                                                });
+                                              }),
+                                          padding: EdgeInsets.only(left: 22))),
+                                  Padding(
+                                    padding: EdgeInsets.only(right: 8),
+                                    child: _getDropdownIcon(),
+                                  )
+                                ],
+                              )),
                             )),
                       ]),
                       Row(children: <Widget>[
                         Expanded(
                             child: RaisedButton(
-                              child: const Text('ADD TO JOURNAL',
-                                  style: TextStyle(color: Colors.blueAccent)),
-                              onPressed: () {},
-                            ))
+                          child: const Text('ADD TO JOURNAL',
+                              style: TextStyle(color: Colors.blueAccent)),
+                          onPressed: () {},
+                        ))
                       ]),
                     ],
                   ),
@@ -339,24 +331,24 @@ class MealSelector extends StatelessWidget {
             decoration: _getShadowDecoration(),
             child: Card(
                 child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: <Widget>[
-                    Expanded(
-                        child: Padding(
-                            child: DirectSelectList<String>(
-                              values: data,
-                              defaultItemIndex: 0,
-                              itemBuilder: (String value) =>
-                                  getDropDownMenuItem(value),
-                              focusedItemDecoration: _getDslDecoration(),
-                            ),
-                            padding: EdgeInsets.only(left: 12))),
-                    Padding(
-                      padding: EdgeInsets.only(right: 8),
-                      child: _getDropdownIcon(),
-                    )
-                  ],
-                )),
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                Expanded(
+                    child: Padding(
+                        child: DirectSelectList<String>(
+                          values: data,
+                          defaultItemIndex: 0,
+                          itemBuilder: (String value) =>
+                              getDropDownMenuItem(value),
+                          focusedItemDecoration: _getDslDecoration(),
+                        ),
+                        padding: EdgeInsets.only(left: 12))),
+                Padding(
+                  padding: EdgeInsets.only(right: 8),
+                  child: _getDropdownIcon(),
+                )
+              ],
+            )),
           ),
         ),
       ],
