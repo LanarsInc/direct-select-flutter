@@ -1,7 +1,7 @@
 name: direct_select_flutter
 description: Direct Select Widget Implementation inspired by https://dribbble.com/shots/3876250-DirectSelect-Dropdown-ux
 homepage: https://github.com/LanarsInc/direct-select-flutter
-version: 1.0.6
+version: 1.0.7
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -9,7 +9,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^0.1.3
   rect_getter: ^0.1.0
 
 dev_dependencies:
