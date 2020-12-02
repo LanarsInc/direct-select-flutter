@@ -1,3 +1,8 @@
+## [1.0.7] - 2020.12.02
+
+* Remove redundant dependencies
+* Update dart docs
+
 ## [1.0.6] - 2020.05.05
 
 * Fix update of selected item
