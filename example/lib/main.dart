@@ -44,14 +44,14 @@ class _MyHomePageState extends State<MyHomePage> {
     "Pork grilled",
     "Vegetables as is",
     "Cheese as is",
-    "Bread tasty"
+    "Bread tasty",
   ];
 
   List<String> _portionSize = [
     "Small portion",
     "Medium portion",
     "Large portion",
-    "Huge portion"
+    "Huge portion",
   ];
 
   List<String> _numbers = ["1.0", "2.0", "3.0", "4.0", "5.0", "6.0", "7.0"];
@@ -85,29 +85,37 @@ class _MyHomePageState extends State<MyHomePage> {
     final appBar = PreferredSize(
         child: Container(
           decoration: BoxDecoration(
-              color: Color.fromRGBO(246, 247, 249, 1),
-              border: BorderDirectional(
-                  bottom: BorderSide(width: 1, color: Colors.black12))),
+            color: Color.fromRGBO(246, 247, 249, 1),
+            border: BorderDirectional(
+              bottom: BorderSide(width: 1, color: Colors.black12),
+            ),
+          ),
           child: Padding(
               padding: EdgeInsets.only(left: 16, bottom: 24),
-              child: Column(
-                  verticalDirection: VerticalDirection.up,
-                  children: <Widget>[
-                    Container(
-                        alignment: AlignmentDirectional.centerStart,
-                        child: Text("Add Food",
-                            style: TextStyle(
-                                fontSize: 26,
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold))),
-                    Container(
-                        alignment: AlignmentDirectional.centerStart,
-                        child: Text("Journal",
-                            style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.black38,
-                                fontWeight: FontWeight.bold)))
-                  ])),
+              child: Column(verticalDirection: VerticalDirection.up, children: <Widget>[
+                Container(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: Text(
+                    "Add Food",
+                    style: TextStyle(
+                      fontSize: 26,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Container(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: Text(
+                    "Journal",
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.black38,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                )
+              ])),
         ),
         preferredSize: Size.fromHeight(90));
 
@@ -129,9 +137,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     margin: EdgeInsets.only(left: 4),
                     child: Column(
                       children: <Widget>[
-                        Text(_foodVariants[selectedFoodVariants],
-                            style: TextStyle(
-                                fontSize: 26, fontWeight: FontWeight.bold))
+                        Text(
+                          _foodVariants[selectedFoodVariants],
+                          style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                        )
                       ],
                     )),
                 Container(
@@ -139,11 +148,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     alignment: AlignmentDirectional.centerStart,
                     margin: EdgeInsets.only(left: 4),
                     child: Column(
-                      children: <Widget>[
-                        Text(_numbers[selectedPortionCounts] +
-                            "   " +
-                            _portionSize[selectedPortionSize])
-                      ],
+                      children: <Widget>[Text(_numbers[selectedPortionCounts] + "   " + _portionSize[selectedPortionSize])],
                     )),
                 SizedBox(height: 5.0),
                 _getFoodContainsRow(),
@@ -154,8 +159,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     children: <Widget>[
                       MealSelector(data: _meals, label: "To which meal?"),
                       SizedBox(height: 20.0),
-                      MealSelector(
-                          data: _food, label: "Search our database by name"),
+                      MealSelector(data: _food, label: "Search our database by name"),
                       Padding(
                         padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
                         child: Container(
@@ -168,17 +172,14 @@ class _MyHomePageState extends State<MyHomePage> {
                                   child: Padding(
                                       child: DirectSelectList<String>(
                                           values: _foodVariants,
+                                          useLongPressGesture: true,
                                           onUserTappedListener: () {
                                             _showScaffold();
                                           },
-                                          defaultItemIndex:
-                                              selectedFoodVariants,
-                                          itemBuilder: (String value) =>
-                                              getDropDownMenuItem(value),
-                                          focusedItemDecoration:
-                                              _getDslDecoration(),
-                                          onItemSelectedListener:
-                                              (item, index, context) {
+                                          defaultItemIndex: selectedFoodVariants,
+                                          itemBuilder: (String value) => getDropDownMenuItem(value),
+                                          focusedItemDecoration: _getDslDecoration(),
+                                          onItemSelectedListener: (item, index, context) {
                                             setState(() {
                                               selectedFoodVariants = index;
                                             });
@@ -215,14 +216,10 @@ class _MyHomePageState extends State<MyHomePage> {
                                                 _showScaffold();
                                               },
                                               values: _numbers,
-                                              defaultItemIndex:
-                                                  selectedPortionCounts,
-                                              itemBuilder: (String value) =>
-                                                  getDropDownMenuItem(value),
-                                              focusedItemDecoration:
-                                                  _getDslDecoration(),
-                                              onItemSelectedListener:
-                                                  (item, index, context) {
+                                              defaultItemIndex: selectedPortionCounts,
+                                              itemBuilder: (String value) => getDropDownMenuItem(value),
+                                              focusedItemDecoration: _getDslDecoration(),
+                                              onItemSelectedListener: (item, index, context) {
                                                 setState(() {
                                                   selectedPortionCounts = index;
                                                 });
@@ -243,14 +240,10 @@ class _MyHomePageState extends State<MyHomePage> {
                                       child: Padding(
                                           child: DirectSelectList<String>(
                                               values: _portionSize,
-                                              defaultItemIndex:
-                                                  selectedPortionSize,
-                                              itemBuilder: (String value) =>
-                                                  getDropDownMenuItem(value),
-                                              focusedItemDecoration:
-                                                  _getDslDecoration(),
-                                              onItemSelectedListener:
-                                                  (item, index, context) {
+                                              defaultItemIndex: selectedPortionSize,
+                                              itemBuilder: (String value) => getDropDownMenuItem(value),
+                                              focusedItemDecoration: _getDslDecoration(),
+                                              onItemSelectedListener: (item, index, context) {
                                                 setState(() {
                                                   selectedPortionSize = index;
                                                 });
@@ -267,8 +260,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       Row(children: <Widget>[
                         Expanded(
                             child: RaisedButton(
-                          child: const Text('ADD TO JOURNAL',
-                              style: TextStyle(color: Colors.blueAccent)),
+                          child: const Text(
+                            'ADD TO JOURNAL',
+                            style: TextStyle(color: Colors.blueAccent),
+                          ),
                           onPressed: () {},
                         ))
                       ]),
@@ -322,9 +317,10 @@ class MealSelector extends StatelessWidget {
     return Column(
       children: [
         Container(
-            alignment: AlignmentDirectional.centerStart,
-            margin: EdgeInsets.only(left: 4),
-            child: Text(label)),
+          alignment: AlignmentDirectional.centerStart,
+          margin: EdgeInsets.only(left: 4),
+          child: Text(label),
+        ),
         Padding(
           padding: buttonPadding,
           child: Container(
@@ -338,8 +334,7 @@ class MealSelector extends StatelessWidget {
                         child: DirectSelectList<String>(
                           values: data,
                           defaultItemIndex: 0,
-                          itemBuilder: (String value) =>
-                              getDropDownMenuItem(value),
+                          itemBuilder: (String value) => getDropDownMenuItem(value),
                           focusedItemDecoration: _getDslDecoration(),
                         ),
                         padding: EdgeInsets.only(left: 12))),
@@ -403,14 +398,17 @@ Widget _getFoodContainsRow() {
       children: <Widget>[
         Expanded(
           child: Container(
-              child: Center(child: Text("226")),
-              height: cardSize,
-              margin: EdgeInsets.only(right: 3),
-              decoration: BoxDecoration(
-                  color: cardColor,
-                  borderRadius: BorderRadius.only(
-                      topLeft: const Radius.circular(10.0),
-                      bottomLeft: const Radius.circular(10.0)))),
+            child: Center(child: Text("226")),
+            height: cardSize,
+            margin: EdgeInsets.only(right: 3),
+            decoration: BoxDecoration(
+              color: cardColor,
+              borderRadius: BorderRadius.only(
+                topLeft: const Radius.circular(10.0),
+                bottomLeft: const Radius.circular(10.0),
+              ),
+            ),
+          ),
         ),
         Expanded(
           child: Container(
@@ -428,13 +426,16 @@ Widget _getFoodContainsRow() {
         ),
         Expanded(
           child: Container(
-              child: Center(child: Text("4.5")),
-              height: cardSize,
-              decoration: BoxDecoration(
-                  color: cardColor,
-                  borderRadius: BorderRadius.only(
-                      topRight: const Radius.circular(10.0),
-                      bottomRight: const Radius.circular(10.0)))),
+            child: Center(child: Text("4.5")),
+            height: cardSize,
+            decoration: BoxDecoration(
+              color: cardColor,
+              borderRadius: BorderRadius.only(
+                topRight: const Radius.circular(10.0),
+                bottomRight: const Radius.circular(10.0),
+              ),
+            ),
+          ),
         ),
       ],
     ),
