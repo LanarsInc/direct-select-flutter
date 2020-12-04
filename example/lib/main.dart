@@ -123,20 +123,6 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: appBar,
       key: scaffoldKey,
       body: DirectSelectContainer(
-        /// sample configuration to show select items in bottom aligned half-screen size section
-        // alignment: Alignment.bottomCenter,
-        // constraints: BoxConstraints.tightFor(height: MediaQuery.of(context).size.height / 2),
-        // decoration: BoxDecoration(
-        //   color: Theme.of(context).colorScheme.surface,
-        //   border: Border.all(
-        //     width: 1,
-        //     color: Colors.black12,
-        //   ),
-        //   borderRadius: BorderRadius.only(
-        //     topLeft: const Radius.circular(10.0),
-        //     topRight: const Radius.circular(10.0),
-        //   ),
-        // ),
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
