@@ -1,3 +1,8 @@
+## [1.0.8] - ????
+
+* Allow use of Long Press to open select box
+* Now DirectSelect overlay takes same size as underlying child
+
 ## [1.0.7] - 2020.12.02
 
 * Remove redundant dependencies
