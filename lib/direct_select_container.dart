@@ -209,15 +209,14 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
   }
 
   Widget _getSelectionOverlayWidget() {
-    var singleItemContainer = Container(
-        height: _currentList.itemHeight(),
-        decoration: _currentList.focusedItemDecoration != null ? _currentList.focusedItemDecoration : BoxDecoration());
     return Positioned(
       top: _adjustedTopOffset,
       left: 0,
       right: 0,
       height: _currentList.itemHeight(),
-      child: singleItemContainer,
+      child: Container(
+          height: _currentList.itemHeight(),
+          decoration: _currentList.focusedItemDecoration != null ? _currentList.focusedItemDecoration : BoxDecoration()),
     );
   }
 
