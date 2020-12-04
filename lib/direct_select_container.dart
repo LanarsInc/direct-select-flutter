@@ -68,15 +68,6 @@ class DirectSelectContainer extends StatefulWidget {
   ///Actually content of screen
   final Widget child;
 
-  /// box constraints to use just part of available screen to show list items
-  final BoxConstraints constraints;
-
-  /// alignment of the main overlay, bottomCenter by default when given constraints
-  final Alignment alignment;
-
-  /// should it be restricted to the given constraints? set in constructor based on constraints availability
-  final bool showInConstraintBox;
-
   ///How fast list is scrolled
   final int dragSpeedMultiplier;
 
@@ -86,13 +77,9 @@ class DirectSelectContainer extends StatefulWidget {
   const DirectSelectContainer({
     Key key,
     this.child,
-    this.constraints,
-    Alignment alignment,
     this.dragSpeedMultiplier = 2,
     this.decoration,
-  })  : showInConstraintBox = constraints != null,
-        alignment = alignment ?? (constraints == null ? Alignment.center : Alignment.bottomCenter),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -141,18 +128,12 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
   Widget build(BuildContext context) {
     double topOffset = 0.0;
 
-    if (widget.showInConstraintBox) {
-      listPadding = widget.constraints.maxHeight;
-      _adjustedTopOffset = listPadding / 2 - _currentList.itemHeight() / 2;
-      topOffset = -_adjustedTopOffset;
-    } else {
-      RenderObject object = context.findRenderObject();
-      if (object?.parentData is ContainerBoxParentData) {
-        topOffset = (object.parentData as ContainerBoxParentData).offset.dy;
-      }
-      listPadding = MediaQuery.of(context).size.height;
-      _adjustedTopOffset = _currentScrollLocation - topOffset;
+    RenderBox object = context.findRenderObject() as RenderBox;
+    if (object != null) {
+      topOffset = object.localToGlobal(Offset.zero).dy;
     }
+    listPadding = MediaQuery.of(context).size.height;
+    _adjustedTopOffset = _currentScrollLocation - topOffset;
 
     _scrollController = ScrollController(
         initialScrollOffset:
@@ -164,26 +145,22 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
           listeners: this,
           child: widget.child,
         ),
-        Align(
-          alignment: widget.alignment,
+        Positioned.fill(
           child: Visibility(
             visible: isOverlayVisible,
             child: FadeTransition(
               opacity: fadeAnimationController.drive(CurveTween(curve: Curves.easeOut)),
-              child: Container(
-                constraints: widget.constraints,
-                child: Column(
-                  children: <Widget>[
-                    Expanded(
-                      child: Stack(
-                        children: <Widget>[
-                          _getListWidget(),
-                          _getSelectionOverlayWidget(),
-                        ],
-                      ),
+              child: Column(
+                children: <Widget>[
+                  Expanded(
+                    child: Stack(
+                      children: <Widget>[
+                        _getListWidget(),
+                        _getSelectionOverlayWidget(),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -235,21 +212,13 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
     var singleItemContainer = Container(
         height: _currentList.itemHeight(),
         decoration: _currentList.focusedItemDecoration != null ? _currentList.focusedItemDecoration : BoxDecoration());
-    if (widget.showInConstraintBox) {
-      return Container(
-        height: widget.constraints.maxHeight,
-        alignment: Alignment.center,
-        child: singleItemContainer,
-      );
-    } else {
-      return Positioned(
-        top: _adjustedTopOffset,
-        left: 0,
-        right: 0,
-        height: _currentList.itemHeight(),
-        child: singleItemContainer,
-      );
-    }
+    return Positioned(
+      top: _adjustedTopOffset,
+      left: 0,
+      right: 0,
+      height: _currentList.itemHeight(),
+      child: singleItemContainer,
+    );
   }
 
   void performListDrag(double dragDy) {
@@ -368,9 +337,7 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
 
   _showListOverlay(DirectSelectList visibleList, double location) async {
     _currentList = visibleList;
-    if (!widget.showInConstraintBox) {
-      _currentScrollLocation = location;
-    }
+    _currentScrollLocation = location;
     lastSelectedItem = _currentList.getSelectedItemIndex();
     _currentList.items[lastSelectedItem].updateOpacity(1.0);
     isOverlayVisible = true;
