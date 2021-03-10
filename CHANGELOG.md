@@ -1,3 +1,7 @@
+## [1.1.0] - 2021.03.10
+
+* Migrate to null safety
+
 ## [1.0.7] - 2020.12.02
 
 * Remove redundant dependencies
