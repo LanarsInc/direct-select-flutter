@@ -4,12 +4,12 @@ homepage: https://github.com/LanarsInc/direct-select-flutter
 version: 1.0.7
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
-  rect_getter: ^0.1.0
+  rect_getter: ^1.0.0
 
 dev_dependencies:
   flutter_test:

@@ -71,11 +71,11 @@ class DirectSelectContainer extends StatefulWidget {
   final int dragSpeedMultiplier;
 
   ///Decoration for the DSL container
-  final Decoration decoration;
+  final Decoration? decoration;
 
   const DirectSelectContainer({
-    Key key,
-    this.child,
+    Key? key,
+    required this.child,
     this.dragSpeedMultiplier = 2,
     this.decoration,
   }) : super(key: key);
@@ -93,7 +93,7 @@ class DirectSelectContainer extends StatefulWidget {
           "A DirectSelectList must inherit a DirectSelectContainer!");
     }
     return context
-        .dependOnInheritedWidgetOfExactType<_InheritedContainerListeners>()
+        .dependOnInheritedWidgetOfExactType<_InheritedContainerListeners>()!
         .listeners;
   }
 }
@@ -103,14 +103,14 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
     implements DirectSelectGestureEventListeners {
   bool isOverlayVisible = false;
 
-  ScrollController _scrollController;
+  late ScrollController _scrollController;
   DirectSelectList _currentList =
       DirectSelectList(itemBuilder: (val) => null, values: []);
   double _currentScrollLocation = 0;
 
   double _adjustedTopOffset = 0.0;
 
-  AnimationController fadeAnimationController;
+  late AnimationController fadeAnimationController;
 
   int lastSelectedItem = 0;
 
@@ -132,9 +132,9 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
   @override
   Widget build(BuildContext context) {
     double topOffset = 0.0;
-    RenderObject object = context.findRenderObject();
+    RenderObject? object = context.findRenderObject();
     if (object?.parentData is ContainerBoxParentData) {
-      topOffset = (object.parentData as ContainerBoxParentData).offset.dy;
+      topOffset = (object!.parentData as ContainerBoxParentData).offset.dy;
     }
 
     listPadding = MediaQuery.of(context).size.height;
@@ -179,21 +179,16 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
     var paddingLeft = 0.0;
 
     if (_currentList.items.isNotEmpty) {
-      Rect rect = RectGetter.getRectFromKey(
+      Rect? rect = RectGetter.getRectFromKey(
           _currentList.paddingItemController.paddingGlobalKey);
       if (rect != null) {
         paddingLeft = rect.left;
       }
     }
 
-    Decoration dslContainerDecoration;
-    if (widget.decoration == null) {
-      final theme = Theme.of(context);
-      dslContainerDecoration =
-          BoxDecoration(color: theme.scaffoldBackgroundColor);
-    } else {
-      dslContainerDecoration = widget.decoration;
-    }
+    final Decoration dslContainerDecoration = widget.decoration ??
+        BoxDecoration(color: Theme.of(context).scaffoldBackgroundColor);
+
     return Container(
         decoration: dslContainerDecoration,
         child: ListView.builder(
@@ -231,7 +226,7 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
 
   void performListDrag(double dragDy) {
     try {
-      if (_scrollController != null && _scrollController.position != null) {
+      if (_scrollController.hasClients) {
         final currentScrollOffset = _scrollController.offset;
         double allowedOffset = _allowedDragDistance(
             currentScrollOffset + _adjustedTopOffset,
@@ -370,7 +365,6 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
 
   void _hideListOverlay() {
     _scrollController.dispose();
-    _scrollController = null;
     _currentList.items[lastSelectedItem].updateScale(1.0);
     _currentScrollLocation = 0;
     _adjustedTopOffset = 0;
@@ -390,9 +384,9 @@ class _InheritedContainerListeners extends InheritedWidget {
   final DirectSelectGestureEventListeners listeners;
 
   _InheritedContainerListeners({
-    Key key,
-    @required this.listeners,
-    @required Widget child,
+    Key? key,
+    required this.listeners,
+    required Widget child,
   }) : super(key: key, child: child);
 
   @override

@@ -38,10 +38,10 @@ class DirectSelectItem<T> extends StatefulWidget {
   final Widget Function(BuildContext context, T value) itemBuilder;
 
   DirectSelectItem({
-    Key key,
+    Key? key,
     this.scaleFactor = 4.0,
-    @required this.value,
-    @required this.itemBuilder,
+    required this.value,
+    required this.itemBuilder,
     this.itemHeight = 48.0,
     this.isSelected = false,
   }) : super(key: key);
@@ -60,7 +60,7 @@ class DirectSelectItem<T> extends StatefulWidget {
   }
 
   Widget getSelectedItem(GlobalKey<DirectSelectItemState> animatedStateKey,
-      GlobalKey paddingGlobalKey) {
+      dynamic paddingGlobalKey) {
     return RectGetter(
       key: paddingGlobalKey,
       child: DirectSelectItem<T>(
@@ -78,15 +78,15 @@ class DirectSelectItemState<T> extends State<DirectSelectItem<T>>
     with SingleTickerProviderStateMixin {
   final bool isSelected;
 
-  AnimationController animationController;
-  Animation _animation;
-  Tween<double> _tween;
+  late AnimationController animationController;
+  late Animation _animation;
+  late Tween<double> _tween;
 
   DirectSelectItemState({this.isSelected = false});
 
   bool isScaled = false;
 
-  Future runScaleTransition({@required bool reverse}) {
+  Future runScaleTransition({required bool reverse}) {
     if (reverse) {
       return animationController.reverse();
     } else {

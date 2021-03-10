@@ -4,10 +4,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:rect_getter/rect_getter.dart';
 
-typedef DirectSelectItemsBuilder<T> = DirectSelectItem<T> Function(T value);
+typedef DirectSelectItemsBuilder<T> = DirectSelectItem<T>? Function(T value);
 
 class PaddingItemController {
-  GlobalKey paddingGlobalKey = RectGetter.createGlobalKey();
+  var paddingGlobalKey = RectGetter.createGlobalKey();
 }
 
 typedef ItemSelected = Future<dynamic> Function(
@@ -26,7 +26,7 @@ class DirectSelectList<T> extends StatefulWidget {
   final List<DirectSelectItem<T>> items;
 
   ///Current focused item overlay
-  final Decoration focusedItemDecoration;
+  final Decoration? focusedItemDecoration;
 
   ///Default selected item index
   final int defaultItemIndex;
@@ -35,24 +35,25 @@ class DirectSelectList<T> extends StatefulWidget {
   final ValueNotifier<int> selectedItem;
 
   ///Function to execute when item selected
-  final Function(T value, int selectedIndex, BuildContext context)
+  final Function(T value, int selectedIndex, BuildContext context)?
       onItemSelectedListener;
 
   ///Callback for action when user just tapped instead of hold and scroll
-  final VoidCallback onUserTappedListener;
+  final VoidCallback? onUserTappedListener;
 
   ///Holds [GlobalKey] for [RectGetter]
   final PaddingItemController paddingItemController = PaddingItemController();
 
   DirectSelectList({
-    Key key,
-    @required List<T> values,
-    @required DirectSelectItemsBuilder<T> itemBuilder,
+    Key? key,
+    required List<T> values,
+    required DirectSelectItemsBuilder<T> itemBuilder,
     this.onItemSelectedListener,
     this.focusedItemDecoration,
     this.defaultItemIndex = 0,
     this.onUserTappedListener,
-  })  : items = values.map((val) => itemBuilder(val)).toList(),
+  })  : items = values.map((val) => itemBuilder(val)).toList()
+            as List<DirectSelectItem<T>>,
         selectedItem = ValueNotifier<int>(defaultItemIndex),
         assert(defaultItemIndex + 1 <= values.length + 1),
         super(key: key);
@@ -64,22 +65,18 @@ class DirectSelectList<T> extends StatefulWidget {
 
   //TODO pass item height in this class and build items with that height
   double itemHeight() {
-    if (items != null && items.isNotEmpty) {
+    if (items.isNotEmpty) {
       return items.first.itemHeight;
     }
     return 0.0;
   }
 
   int getSelectedItemIndex() {
-    if (selectedItem != null) {
-      return selectedItem.value;
-    } else {
-      return 0;
-    }
+    return selectedItem.value;
   }
 
   void setSelectedItemIndex(int index) {
-    if (selectedItem != null && index != selectedItem.value) {
+    if (index != selectedItem.value) {
       selectedItem.value = index;
     }
   }
@@ -93,11 +90,11 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
   final GlobalKey<DirectSelectItemState> animatedStateKey =
       GlobalKey<DirectSelectItemState>();
 
-  Future Function(DirectSelectList, double) onTapEventListener;
-  void Function(double) onDragEventListener;
+  late Future Function(DirectSelectList, double) onTapEventListener;
+  late void Function(double?) onDragEventListener;
 
   bool isOverlayVisible = false;
-  int lastSelectedItem;
+  int? lastSelectedItem;
 
   bool _isShowUpAnimationRunning = false;
 
@@ -135,18 +132,18 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     final dsListener = DirectSelectContainer.of(context);
-    assert(dsListener != null,
-        "A DirectSelectList must inherit a DirectSelectContainer!");
 
-    this.onTapEventListener = dsListener.toggleListOverlayVisibility;
-    this.onDragEventListener = dsListener.performListDrag;
+    this.onTapEventListener = dsListener.toggleListOverlayVisibility
+        as Future<dynamic> Function(DirectSelectList<dynamic>, double);
+    this.onDragEventListener =
+        dsListener.performListDrag as void Function(double?);
   }
 
   @override
   Widget build(BuildContext context) {
     widget.selectedItem.addListener(() {
       if (widget.onItemSelectedListener != null) {
-        widget.onItemSelectedListener(
+        widget.onItemSelectedListener?.call(
             widget.items[widget.selectedItem.value].value,
             widget.selectedItem.value,
             this.context);
@@ -163,7 +160,7 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
               child: selectedItem,
               onTap: () {
                 if (widget.onUserTappedListener != null) {
-                  widget.onUserTappedListener();
+                  widget.onUserTappedListener?.call();
                 }
               },
               onTapDown: (tapDownDetails) async {
@@ -171,7 +168,7 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
                   transitionEnded = false;
                   _isShowUpAnimationRunning = true;
                   await animatedStateKey.currentState
-                      .runScaleTransition(reverse: false);
+                      ?.runScaleTransition(reverse: false);
                   if (!transitionEnded) {
                     await _showListOverlay(_getItemTopPosition(context));
                     _isShowUpAnimationRunning = false;
@@ -181,7 +178,8 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
               },
               onTapUp: (tapUpDetails) async {
                 await _hideListOverlay(_getItemTopPosition(context));
-                animatedStateKey.currentState.runScaleTransition(reverse: true);
+                animatedStateKey.currentState
+                    ?.runScaleTransition(reverse: true);
               },
               onVerticalDragEnd: (dragDetails) async {
                 transitionEnded = true;
@@ -201,11 +199,11 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
 
   void _dragEnd() async {
     await _hideListOverlay(_getItemTopPosition(context));
-    animatedStateKey.currentState.runScaleTransition(reverse: true);
+    animatedStateKey.currentState?.runScaleTransition(reverse: true);
   }
 
   double _getItemTopPosition(BuildContext context) {
-    final RenderBox itemBox = context.findRenderObject();
+    final RenderBox itemBox = context.findRenderObject() as RenderBox;
     final Rect itemRect = itemBox.localToGlobal(Offset.zero) & itemBox.size;
     return itemRect.top;
   }
@@ -216,12 +214,12 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
       //TODO fix to prevent stuck scale if selected item is the same as previous
       await onTapEventListener(widget, dy);
       if (lastSelectedItem == widget.selectedItem.value) {
-        animatedStateKey.currentState.runScaleTransition(reverse: true);
+        animatedStateKey.currentState?.runScaleTransition(reverse: true);
       }
     }
   }
 
-  _showListOverlay(double dy) {
+  _showListOverlay(double? dy) {
     if (!isOverlayVisible) {
       isOverlayVisible = true;
       onTapEventListener(widget, _getItemTopPosition(context));
