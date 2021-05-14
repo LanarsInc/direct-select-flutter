@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
@@ -285,7 +285,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _showScaffold() {
     final snackBar = SnackBar(content: Text('Hold and drag instead of tap'));
-    scaffoldKey.currentState.showSnackBar(snackBar);
+    scaffoldKey.currentState?.showSnackBar(snackBar);
   }
 
   Icon _getDropdownIcon() {
@@ -315,7 +315,7 @@ class MealSelector extends StatelessWidget {
   final List<String> data;
   final String label;
 
-  MealSelector({@required this.data, @required this.label});
+  MealSelector({required this.data, required this.label});
 
   @override
   Widget build(BuildContext context) {
