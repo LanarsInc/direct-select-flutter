@@ -1,7 +1,7 @@
 name: direct_select_flutter
 description: Direct Select Widget Implementation inspired by https://dribbble.com/shots/3876250-DirectSelect-Dropdown-ux
 homepage: https://github.com/LanarsInc/direct-select-flutter
-version: 1.1.0
+version: 1.1.1
 
 environment:
   sdk: '>=2.12.0 <3.0.0'

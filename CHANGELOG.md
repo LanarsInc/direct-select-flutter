@@ -1,3 +1,7 @@
+## [1.1.1] - 2021.05.14
+
+* Fix [#25](https://github.com/LanarsInc/direct-select-flutter/issues/25)
+
 ## [1.1.0] - 2021.03.10
 
 * Migrate to null safety
