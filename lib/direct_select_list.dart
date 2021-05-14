@@ -52,8 +52,7 @@ class DirectSelectList<T> extends StatefulWidget {
     this.focusedItemDecoration,
     this.defaultItemIndex = 0,
     this.onUserTappedListener,
-  })  : items = values.map((val) => itemBuilder(val)).toList()
-            as List<DirectSelectItem<T>>,
+  })  : items = values.map((val) => itemBuilder(val)).toNotNullableList(),
         selectedItem = ValueNotifier<int>(defaultItemIndex),
         assert(defaultItemIndex + 1 <= values.length + 1),
         super(key: key);
@@ -91,7 +90,7 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
       GlobalKey<DirectSelectItemState>();
 
   late Future Function(DirectSelectList, double) onTapEventListener;
-  late void Function(double?) onDragEventListener;
+  late void Function(double) onDragEventListener;
 
   bool isOverlayVisible = false;
   int? lastSelectedItem;
@@ -136,7 +135,7 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
     this.onTapEventListener = dsListener.toggleListOverlayVisibility
         as Future<dynamic> Function(DirectSelectList<dynamic>, double);
     this.onDragEventListener =
-        dsListener.performListDrag as void Function(double?);
+        dsListener.performListDrag as void Function(double);
   }
 
   @override
@@ -223,8 +222,15 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
     if (!isOverlayVisible) {
       isOverlayVisible = true;
       onTapEventListener(widget, _getItemTopPosition(context));
-    } else {
+    } else if (dy != null) {
       onDragEventListener(dy);
     }
+  }
+}
+
+extension _ListHelper on Iterable {
+  List<T> toNotNullableList<T>() {
+    var data = this.toList();
+    return data.contains(null) ? List<T>.empty() : data.cast<T>();
   }
 }
