@@ -135,7 +135,7 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
     this.onTapEventListener = dsListener.toggleListOverlayVisibility
         as Future<dynamic> Function(DirectSelectList<dynamic>, double);
     this.onDragEventListener =
-        dsListener.performListDrag as void Function(double);
+        dsListener.performListDrag;
   }
 
   @override
