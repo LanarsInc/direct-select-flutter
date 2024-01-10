@@ -180,19 +180,46 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
                 animatedStateKey.currentState
                     ?.runScaleTransition(reverse: true);
               },
-              onVerticalDragEnd: (dragDetails) async {
+              // onVerticalDragEnd: (dragDetails) async {
+              //   debugPrint('DirectSelectList onVerticalDragEnd');
+              //   transitionEnded = true;
+              //   _dragEnd();
+              // },
+              // onHorizontalDragEnd: (horizontalDetails) async {
+              //   debugPrint('DirectSelectList onVerticalDragEnd');
+              //   transitionEnded = true;
+              //   _dragEnd();
+              // },
+              //   onVerticalDragUpdate: (dragInfo) {
+              //     debugPrint('DirectSelectList onVerticalDragUpdate');
+              //     if (!_isShowUpAnimationRunning) {
+              //       _showListOverlay(dragInfo.primaryDelta);
+              //     }
+              //   },
+              onPanEnd: (dragInfo) async {
+                debugPrint('DirectSelectList onPanEnd');
                 transitionEnded = true;
                 _dragEnd();
               },
-              onHorizontalDragEnd: (horizontalDetails) async {
-                transitionEnded = true;
-                _dragEnd();
-              },
-              onVerticalDragUpdate: (dragInfo) {
-                if (!_isShowUpAnimationRunning) {
-                  _showListOverlay(dragInfo.primaryDelta);
+              onPanUpdate: (dragInfo) {
+                if (dragInfo.delta.dx > 0)
+                  print("Dragging in +X direction");
+                else
+                  print("Dragging in -X direction");
+  
+                if (dragInfo.delta.dy > 0) {
+                  print("Dragging in +Y direction");
+                  if (!_isShowUpAnimationRunning) {
+                    _showListOverlay(dragInfo.delta.dy);
+                  }
+                } else {
+                  print("Dragging in -Y direction");
+                  if (!_isShowUpAnimationRunning) {
+                    _showListOverlay(dragInfo.delta.dy);
+                  }
                 }
-              });
+              },
+          );
         });
   }
 
