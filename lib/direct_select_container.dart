@@ -182,7 +182,9 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
       Rect? rect = RectGetter.getRectFromKey(
           _currentList.paddingItemController.paddingGlobalKey);
       if (rect != null) {
-        paddingLeft = rect.left;
+        // paddingLeft = rect.left;
+        paddingLeft = 0;
+        //will leave menus as centered.
       }
     }
 
