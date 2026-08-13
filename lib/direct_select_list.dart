@@ -2,12 +2,25 @@ import 'package:direct_select_flutter/direct_select_container.dart';
 import 'package:direct_select_flutter/direct_select_item.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:rect_getter/rect_getter.dart';
+import 'package:flutter/rendering.dart';
 
 typedef DirectSelectItemsBuilder<T> = DirectSelectItem<T>? Function(T value);
 
 class PaddingItemController {
-  var paddingGlobalKey = RectGetter.createGlobalKey();
+  GlobalKey paddingGlobalKey = GlobalKey();
+
+  /// Bounds of the selected item in global coordinates, or null while it is not laid out yet
+  Rect? get paddingItemRect {
+    final renderObject = paddingGlobalKey.currentContext?.findRenderObject();
+    if (renderObject == null || !renderObject.attached) {
+      return null;
+    }
+    final topLeft = MatrixUtils.transformPoint(
+      renderObject.getTransformTo(null),
+      Offset.zero,
+    );
+    return topLeft & renderObject.semanticBounds.size;
+  }
 }
 
 typedef ItemSelected = Future<dynamic> Function(
@@ -41,7 +54,7 @@ class DirectSelectList<T> extends StatefulWidget {
   ///Callback for action when user just tapped instead of hold and scroll
   final VoidCallback? onUserTappedListener;
 
-  ///Holds [GlobalKey] for [RectGetter]
+  ///Holds [GlobalKey] used to measure the selected item position
   final PaddingItemController paddingItemController = PaddingItemController();
 
   DirectSelectList({
@@ -134,8 +147,7 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
 
     this.onTapEventListener = dsListener.toggleListOverlayVisibility
         as Future<dynamic> Function(DirectSelectList<dynamic>, double);
-    this.onDragEventListener =
-        dsListener.performListDrag;
+    this.onDragEventListener = dsListener.performListDrag;
   }
 
   @override

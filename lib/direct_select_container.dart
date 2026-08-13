@@ -4,7 +4,6 @@ import 'package:direct_select_flutter/direct_select_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:rect_getter/rect_getter.dart';
 
 /// Root widget for direct select.
 /// This widget displays lists of direct selects.
@@ -179,8 +178,7 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
     var paddingLeft = 0.0;
 
     if (_currentList.items.isNotEmpty) {
-      Rect? rect = RectGetter.getRectFromKey(
-          _currentList.paddingItemController.paddingGlobalKey);
+      Rect? rect = _currentList.paddingItemController.paddingItemRect;
       if (rect != null) {
         paddingLeft = rect.left;
       }
@@ -339,7 +337,8 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
           duration: scrollToListElementAnimationDuration,
           curve: Curves.ease,
         );
-      } catch (e) {} finally {
+      } catch (e) {
+      } finally {
         _currentList.setSelectedItemIndex(lastSelectedItem);
         await Future.delayed(Duration(milliseconds: 200));
         await fadeAnimationController.reverse();

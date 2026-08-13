@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:rect_getter/rect_getter.dart';
 
 /// Widget that defines direct select list appearance
 /// Usage Example
@@ -60,8 +59,8 @@ class DirectSelectItem<T> extends StatefulWidget {
   }
 
   Widget getSelectedItem(GlobalKey<DirectSelectItemState> animatedStateKey,
-      dynamic paddingGlobalKey) {
-    return RectGetter(
+      GlobalKey paddingGlobalKey) {
+    return KeyedSubtree(
       key: paddingGlobalKey,
       child: DirectSelectItem<T>(
         value: value,
