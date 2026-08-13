@@ -266,11 +266,13 @@ class _MyHomePageState extends State<MyHomePage> {
                       ]),
                       Row(children: <Widget>[
                         Expanded(
-                            child: RaisedButton(
-                          child: const Text('ADD TO JOURNAL',
-                              style: TextStyle(color: Colors.blueAccent)),
-                          onPressed: () {},
-                        ))
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                textStyle: TextStyle(color: Colors.blueAccent)),
+                            child: Text('ADD TO JOURNAL'),
+                            onPressed: () {},
+                          ),
+                        ),
                       ]),
                     ],
                   ),
@@ -285,7 +287,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _showScaffold() {
     final snackBar = SnackBar(content: Text('Hold and drag instead of tap'));
-    scaffoldKey.currentState?.showSnackBar(snackBar);
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   Icon _getDropdownIcon() {
