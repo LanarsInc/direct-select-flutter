@@ -7,4 +7,4 @@ version:
   revision: 5391447fae6209bb21a89e6a5a6583cac1af9b4b
   channel: stable
 
-project_type: app
+project_type: package
