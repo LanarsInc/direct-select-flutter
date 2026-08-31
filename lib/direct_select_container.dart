@@ -392,10 +392,10 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
 }
 
 class DirectSelectGestureEventListeners {
-  showListOverlay(DirectSelectList list, double location) =>
+  Future<void> showListOverlay(DirectSelectList list, double location) =>
       throw 'Not implemented.';
 
-  hideListOverlay(double location) => throw 'Not implemented.';
+  Future<void> hideListOverlay(double location) => throw 'Not implemented.';
 
   @Deprecated('Use showListOverlay or hideListOverlay instead.')
   toggleListOverlayVisibility(DirectSelectList list, double location) =>
