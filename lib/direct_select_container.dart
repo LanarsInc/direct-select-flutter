@@ -120,6 +120,8 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
 
   bool _isHidingOverlay = false;
 
+  static const _minVisibleNeighbours = 2;
+
   @override
   void initState() {
     super.initState();
@@ -140,12 +142,26 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
 
     listPadding = MediaQuery.of(context).size.height;
 
-    _adjustedTopOffset = _currentScrollLocation - topOffset;
+    final overlayHeight = (object is RenderBox && object.hasSize)
+        ? object.size.height
+        : MediaQuery.of(context).size.height;
+
+    final itemHeight = _currentList.itemHeight();
+    var adjustedTopOffset = _currentScrollLocation - topOffset;
+    if (itemHeight > 0) {
+      final band = _minVisibleNeighbours * itemHeight;
+      final lower = band;
+      final upper = overlayHeight - band - itemHeight;
+      if (lower <= upper) {
+        adjustedTopOffset = adjustedTopOffset.clamp(lower, upper);
+      }
+    }
+    _adjustedTopOffset = adjustedTopOffset;
+
     _scrollController = ScrollController(
         initialScrollOffset: listPadding -
-            _currentScrollLocation +
-            topOffset +
-            _currentList.getSelectedItemIndex() * _currentList.itemHeight());
+            _adjustedTopOffset +
+            _currentList.getSelectedItemIndex() * itemHeight);
 
     return Stack(
       children: <Widget>[
