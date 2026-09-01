@@ -2,12 +2,25 @@ import 'package:direct_select_flutter/direct_select_container.dart';
 import 'package:direct_select_flutter/direct_select_item.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:rect_getter/rect_getter.dart';
+import 'package:flutter/rendering.dart';
 
 typedef DirectSelectItemsBuilder<T> = DirectSelectItem<T>? Function(T value);
 
 class PaddingItemController {
-  var paddingGlobalKey = RectGetter.createGlobalKey();
+  GlobalKey paddingGlobalKey = GlobalKey();
+
+  /// Bounds of the selected item in global coordinates, or null while it is not laid out yet
+  Rect? get paddingItemRect {
+    final renderObject = paddingGlobalKey.currentContext?.findRenderObject();
+    if (renderObject == null || !renderObject.attached) {
+      return null;
+    }
+    final topLeft = MatrixUtils.transformPoint(
+      renderObject.getTransformTo(null),
+      Offset.zero,
+    );
+    return topLeft & renderObject.semanticBounds.size;
+  }
 }
 
 typedef ItemSelected = Future<dynamic> Function(
@@ -41,7 +54,7 @@ class DirectSelectList<T> extends StatefulWidget {
   ///Callback for action when user just tapped instead of hold and scroll
   final VoidCallback? onUserTappedListener;
 
-  ///Holds [GlobalKey] for [RectGetter]
+  ///Holds [GlobalKey] used to measure the selected item position
   final PaddingItemController paddingItemController = PaddingItemController();
 
   DirectSelectList({
@@ -89,7 +102,8 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
   final GlobalKey<DirectSelectItemState> animatedStateKey =
       GlobalKey<DirectSelectItemState>();
 
-  late Future Function(DirectSelectList, double) onTapEventListener;
+  late Future Function(DirectSelectList, double) onOverlayShowRequested;
+  late Future Function(double) onOverlayHideRequested;
   late void Function(double) onDragEventListener;
 
   bool isOverlayVisible = false;
@@ -132,10 +146,9 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
     super.didChangeDependencies();
     final dsListener = DirectSelectContainer.of(context);
 
-    this.onTapEventListener = dsListener.toggleListOverlayVisibility
-        as Future<dynamic> Function(DirectSelectList<dynamic>, double);
-    this.onDragEventListener =
-        dsListener.performListDrag;
+    this.onOverlayShowRequested = dsListener.showListOverlay;
+    this.onOverlayHideRequested = dsListener.hideListOverlay;
+    this.onDragEventListener = dsListener.performListDrag;
   }
 
   @override
@@ -168,9 +181,9 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
                   _isShowUpAnimationRunning = true;
                   await animatedStateKey.currentState
                       ?.runScaleTransition(reverse: false);
+                  _isShowUpAnimationRunning = false;
                   if (!transitionEnded) {
                     await _showListOverlay(_getItemTopPosition(context));
-                    _isShowUpAnimationRunning = false;
                     lastSelectedItem = value;
                   }
                 }
@@ -184,8 +197,9 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
                 transitionEnded = true;
                 _dragEnd();
               },
-              onHorizontalDragEnd: (horizontalDetails) async {
+              onVerticalDragCancel: () {
                 transitionEnded = true;
+                _isShowUpAnimationRunning = false;
                 _dragEnd();
               },
               onVerticalDragUpdate: (dragInfo) {
@@ -211,7 +225,7 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
     if (isOverlayVisible) {
       isOverlayVisible = false;
       //TODO fix to prevent stuck scale if selected item is the same as previous
-      await onTapEventListener(widget, dy);
+      await onOverlayHideRequested(dy);
       if (lastSelectedItem == widget.selectedItem.value) {
         animatedStateKey.currentState?.runScaleTransition(reverse: true);
       }
@@ -221,7 +235,7 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
   _showListOverlay(double? dy) {
     if (!isOverlayVisible) {
       isOverlayVisible = true;
-      onTapEventListener(widget, _getItemTopPosition(context));
+      onOverlayShowRequested(widget, _getItemTopPosition(context));
     } else if (dy != null) {
       onDragEventListener(dy);
     }

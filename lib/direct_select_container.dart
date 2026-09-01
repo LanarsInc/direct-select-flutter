@@ -4,7 +4,6 @@ import 'package:direct_select_flutter/direct_select_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:rect_getter/rect_getter.dart';
 
 /// Root widget for direct select.
 /// This widget displays lists of direct selects.
@@ -119,6 +118,10 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
   final scrollToListElementAnimationDuration = Duration(milliseconds: 200);
   final fadeAnimationDuration = Duration(milliseconds: 200);
 
+  bool _isHidingOverlay = false;
+
+  static const _minVisibleNeighbours = 2;
+
   @override
   void initState() {
     super.initState();
@@ -139,12 +142,26 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
 
     listPadding = MediaQuery.of(context).size.height;
 
-    _adjustedTopOffset = _currentScrollLocation - topOffset;
+    final overlayHeight = (object is RenderBox && object.hasSize)
+        ? object.size.height
+        : MediaQuery.of(context).size.height;
+
+    final itemHeight = _currentList.itemHeight();
+    var adjustedTopOffset = _currentScrollLocation - topOffset;
+    if (itemHeight > 0) {
+      final band = _minVisibleNeighbours * itemHeight;
+      final lower = band;
+      final upper = overlayHeight - band - itemHeight;
+      if (lower <= upper) {
+        adjustedTopOffset = adjustedTopOffset.clamp(lower, upper);
+      }
+    }
+    _adjustedTopOffset = adjustedTopOffset;
+
     _scrollController = ScrollController(
         initialScrollOffset: listPadding -
-            _currentScrollLocation +
-            topOffset +
-            _currentList.getSelectedItemIndex() * _currentList.itemHeight());
+            _adjustedTopOffset +
+            _currentList.getSelectedItemIndex() * itemHeight);
 
     return Stack(
       children: <Widget>[
@@ -179,8 +196,7 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
     var paddingLeft = 0.0;
 
     if (_currentList.items.isNotEmpty) {
-      Rect? rect = RectGetter.getRectFromKey(
-          _currentList.paddingItemController.paddingGlobalKey);
+      Rect? rect = _currentList.paddingItemController.paddingItemRect;
       if (rect != null) {
         paddingLeft = rect.left;
       }
@@ -328,42 +344,61 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
     return selectedElementDeviation - selectedElement;
   }
 
-  Future toggleListOverlayVisibility(
+  Future<void> showListOverlay(
       DirectSelectList visibleList, double location) async {
-    if (isOverlayVisible) {
-      try {
-        await _scrollController.animateTo(
-          listPadding -
-              _adjustedTopOffset +
-              lastSelectedItem * _currentList.itemHeight(),
-          duration: scrollToListElementAnimationDuration,
-          curve: Curves.ease,
-        );
-      } catch (e) {} finally {
-        _currentList.setSelectedItemIndex(lastSelectedItem);
-        await Future.delayed(Duration(milliseconds: 200));
-        await fadeAnimationController.reverse();
-        setState(() {
-          _hideListOverlay();
-        });
-      }
-    } else {
-      setState(() {
-        _showListOverlay(visibleList, location);
-      });
-    }
-  }
+    if (isOverlayVisible) return;
 
-  _showListOverlay(DirectSelectList visibleList, double location) async {
-    _currentList = visibleList;
-    _currentScrollLocation = location;
-    lastSelectedItem = _currentList.getSelectedItemIndex();
-    _currentList.items[lastSelectedItem].updateOpacity(1.0);
-    isOverlayVisible = true;
+    setState(() {
+      _currentList = visibleList;
+      _currentScrollLocation = location;
+      lastSelectedItem = _currentList.getSelectedItemIndex();
+      _currentList.items[lastSelectedItem].updateOpacity(1.0);
+      isOverlayVisible = true;
+    });
     await fadeAnimationController.forward(from: 0.0);
   }
 
-  void _hideListOverlay() {
+  Future<void> hideListOverlay(double location) async {
+    if (!isOverlayVisible || _isHidingOverlay) return;
+
+    _isHidingOverlay = true;
+    try {
+      await _scrollController.animateTo(
+        listPadding -
+            _adjustedTopOffset +
+            lastSelectedItem * _currentList.itemHeight(),
+        duration: scrollToListElementAnimationDuration,
+        curve: Curves.ease,
+      );
+    } catch (e) {
+    } finally {
+      _currentList.setSelectedItemIndex(lastSelectedItem);
+      await Future.delayed(Duration(milliseconds: 200));
+      await fadeAnimationController.reverse();
+      if (mounted) {
+        setState(() {
+          _resetOverlayState();
+        });
+      } else {
+        _resetOverlayState();
+      }
+      _isHidingOverlay = false;
+    }
+  }
+
+  @Deprecated('Use showListOverlay or hideListOverlay instead. A toggle cannot '
+      'express intent when several gesture callbacks race to release the '
+      'overlay: the redundant call inverts the state instead of being ignored.')
+  Future<void> toggleListOverlayVisibility(
+      DirectSelectList visibleList, double location) async {
+    if (isOverlayVisible) {
+      await hideListOverlay(location);
+    } else {
+      await showListOverlay(visibleList, location);
+    }
+  }
+
+  void _resetOverlayState() {
     _scrollController.dispose();
     _currentList.items[lastSelectedItem].updateScale(1.0);
     _currentScrollLocation = 0;
@@ -373,6 +408,12 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
 }
 
 class DirectSelectGestureEventListeners {
+  Future<void> showListOverlay(DirectSelectList list, double location) =>
+      throw 'Not implemented.';
+
+  Future<void> hideListOverlay(double location) => throw 'Not implemented.';
+
+  @Deprecated('Use showListOverlay or hideListOverlay instead.')
   toggleListOverlayVisibility(DirectSelectList list, double location) =>
       throw 'Not implemented.';
 
