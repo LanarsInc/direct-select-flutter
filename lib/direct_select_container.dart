@@ -37,8 +37,8 @@ import 'package:flutter/material.dart';
 ///                                  defaultItemIndex: 3,
 ///                                   itemBuilder: (String value) => getDropDownMenuItem(value),
 ///                                   focusedItemDecoration: _getDslDecoration(),
-///                                   onItemSelectedListener: (item, context) {
-///                                       Scaffold.of(context).showSnackBar(SnackBar(content: Text(item)));
+///                                   onItemSelectedListener: (item, index, context) {
+///                                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(item)));
 ///                                   }),
 ///                                  padding: EdgeInsets.only(left: 12))),
 ///                          Padding(

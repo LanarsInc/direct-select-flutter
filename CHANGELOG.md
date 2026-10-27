@@ -1,4 +1,4 @@
-## Unreleased
+## [1.2.0] - 2026.10.27
 
 * Require Dart 3.0 and Flutter 3.10 or newer ([#33](https://github.com/LanarsInc/direct-select-flutter/pull/33))
 * Remove `rect_getter` dependency ([#33](https://github.com/LanarsInc/direct-select-flutter/pull/33))
