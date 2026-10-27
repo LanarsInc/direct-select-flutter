@@ -1,8 +1,6 @@
 import 'package:direct_select_flutter/direct_select_container.dart';
 import 'package:direct_select_flutter/direct_select_item.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
 typedef DirectSelectItemsBuilder<T> = DirectSelectItem<T>? Function(T value);
 
@@ -221,7 +219,7 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
     return itemRect.top;
   }
 
-  _hideListOverlay(double dy) async {
+  Future<void> _hideListOverlay(double dy) async {
     if (isOverlayVisible) {
       isOverlayVisible = false;
       //TODO fix to prevent stuck scale if selected item is the same as previous
@@ -232,7 +230,7 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
     }
   }
 
-  _showListOverlay(double? dy) {
+  Future<void> _showListOverlay(double? dy) async {
     if (!isOverlayVisible) {
       isOverlayVisible = true;
       onOverlayShowRequested(widget, _getItemTopPosition(context));

@@ -2,7 +2,7 @@ import 'package:direct_select_flutter/direct_select_item.dart';
 import 'package:direct_select_flutter/direct_select_list.dart';
 import 'package:flutter/material.dart';
 
-const _focusedItemDecoration = BoxDecoration(
+const selectorFocusedItemDecoration = BoxDecoration(
   border: BorderDirectional(
     top: BorderSide(color: Colors.black12),
     bottom: BorderSide(color: Colors.black12),
@@ -43,7 +43,7 @@ class SelectorField<T> extends StatelessWidget {
                   values: values,
                   defaultItemIndex: selectedIndex,
                   itemBuilder: (value) => SelectorItem<T>(value: value, label: itemLabel?.call(value)),
-                  focusedItemDecoration: _focusedItemDecoration,
+                  focusedItemDecoration: selectorFocusedItemDecoration,
                   onUserTappedListener: () =>
                       ScaffoldMessenger.of(context)
                           .showSnackBar(const SnackBar(content: Text('Hold and drag instead of tap'))),

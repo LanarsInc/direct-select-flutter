@@ -2,6 +2,7 @@ import 'package:direct_select_flutter/direct_select_container.dart';
 import 'package:flutter/material.dart';
 
 import 'food_data.dart';
+import 'widgets/compact_selector_examples.dart';
 import 'widgets/nutrition_summary.dart';
 import 'widgets/page_header.dart';
 import 'widgets/selected_food_title.dart';
@@ -93,6 +94,12 @@ class _AddFoodPageState extends State<AddFoodPage> {
                       width: double.infinity,
                       child: ElevatedButton(onPressed: () {}, child: const Text('ADD TO JOURNAL')),
                     ),
+                    const SizedBox(height: 31),
+                    const FieldLabel('Inline in a sentence'),
+                    const ReminderSentence(),
+                    const SizedBox(height: 20),
+                    const FieldLabel('Horizontal filter bar'),
+                    const FoodFilterBar(),
                   ],
                 ),
               ),

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:direct_select_flutter/direct_select_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 
 /// Root widget for direct select.
 /// This widget displays lists of direct selects.
@@ -370,7 +369,8 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
         duration: scrollToListElementAnimationDuration,
         curve: Curves.ease,
       );
-    } catch (e) {
+    } catch (_) {
+      // The scroll animation throws when the list is disposed mid-animation.
     } finally {
       _currentList.setSelectedItemIndex(lastSelectedItem);
       await Future.delayed(Duration(milliseconds: 200));
@@ -414,10 +414,11 @@ class DirectSelectGestureEventListeners {
   Future<void> hideListOverlay(double location) => throw 'Not implemented.';
 
   @Deprecated('Use showListOverlay or hideListOverlay instead.')
-  toggleListOverlayVisibility(DirectSelectList list, double location) =>
+  Future<void> toggleListOverlayVisibility(
+          DirectSelectList list, double location) =>
       throw 'Not implemented.';
 
-  performListDrag(double dragDy) => throw 'Not implemented';
+  void performListDrag(double dragDy) => throw 'Not implemented';
 }
 
 /// Allows Direct Select List implementations to

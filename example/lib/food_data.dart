@@ -9,3 +9,11 @@ const portionSizes = ['Small portion', 'Medium portion', 'Large portion', 'Huge 
 final portionCounts = List.generate(7, (index) => '${index + 1}.0');
 
 const nutritionValues = ['226', '41', '0', '4.5'];
+
+final reminderCounts = List.generate(5, (index) => '${index + 1}');
+
+const cuisineFilters = ['Any cuisine', 'Italian', 'Japanese', 'Mexican', 'Ukrainian'];
+
+const priceFilters = ['Any price', r'$', r'$$', r'$$$'];
+
+const ratingFilters = ['Any rating', '3+ stars', '4+ stars', '4.5+ stars'];
