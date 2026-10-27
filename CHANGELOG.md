@@ -1,33 +1,16 @@
 ## Unreleased
 
-### Breaking changes
-
-* Require Dart 3.0 and Flutter 3.10 or newer ([#33](https://github.com/LanarsInc/direct-select-flutter/pull/33)).
-
-### Changed
-
-* The selected item no longer requires a bounded width, so `DirectSelectList` can be placed inside a `Row` without `Expanded` or in a horizontal scroll view ([#30](https://github.com/LanarsInc/direct-select-flutter/issues/30)). Layouts with a bounded width are unchanged. When the item shrinks to its content, only the item itself reacts to the hold-and-drag gesture.
-* `DirectSelectItem.isSelected` is now typed as `bool` and `DirectSelectItem.scaleFactor` as `num`, instead of `dynamic`.
-
-### Fixed
-
-* The list no longer locks up after a drag that starts horizontally, and the overlay is released when the drag gesture is cancelled instead of staying on screen ([#32](https://github.com/LanarsInc/direct-select-flutter/issues/32), [#34](https://github.com/LanarsInc/direct-select-flutter/pull/34)).
-* Options are no longer rendered off screen when the field is near the bottom or top of a scrollable view: the overlay keeps the neighboring options visible ([#18](https://github.com/LanarsInc/direct-select-flutter/issues/18), [#34](https://github.com/LanarsInc/direct-select-flutter/pull/34)).
-
-### Deprecated
-
-* `toggleListOverlayVisibility`: use `showListOverlay` and `hideListOverlay` instead ([#34](https://github.com/LanarsInc/direct-select-flutter/pull/34)).
-
-### Removed
-
-* The `rect_getter` dependency ([#33](https://github.com/LanarsInc/direct-select-flutter/pull/33)).
-
-### Other
-
-* The package passes pub.dev static analysis with `package:lints/core.yaml`.
-* Widget tests for the selected and list item layouts.
-* The unused root Android and iOS app scaffolding and other unused files are removed from the repository ([#33](https://github.com/LanarsInc/direct-select-flutter/pull/33)).
-* The example app targets the latest Flutter (Gradle 9, Android Gradle Plugin 9, Kotlin 2.4), is split into reusable widgets, and shows compact selectors inside a `Row` and a horizontal scroll view.
+* Require Dart 3.0 and Flutter 3.10 or newer ([#33](https://github.com/LanarsInc/direct-select-flutter/pull/33))
+* Remove `rect_getter` dependency ([#33](https://github.com/LanarsInc/direct-select-flutter/pull/33))
+* Allow `DirectSelectList` inside a `Row` without `Expanded` or in a horizontal scroll view ([#30](https://github.com/LanarsInc/direct-select-flutter/issues/30))
+* Fix list lock up after a horizontal drag and overlay stuck after a cancelled drag ([#32](https://github.com/LanarsInc/direct-select-flutter/issues/32), [#34](https://github.com/LanarsInc/direct-select-flutter/pull/34))
+* Keep options on screen when the field is near the top or bottom of a scrollable view ([#18](https://github.com/LanarsInc/direct-select-flutter/issues/18), [#34](https://github.com/LanarsInc/direct-select-flutter/pull/34))
+* Deprecate `toggleListOverlayVisibility` in favor of `showListOverlay` and `hideListOverlay` ([#34](https://github.com/LanarsInc/direct-select-flutter/pull/34))
+* Type `DirectSelectItem.isSelected` as `bool` and `DirectSelectItem.scaleFactor` as `num`
+* Fix pub.dev static analysis issues
+* Add widget tests
+* Remove unused root Android and iOS scaffolding ([#33](https://github.com/LanarsInc/direct-select-flutter/pull/33))
+* Update example app to the latest Flutter
 
 ## [1.1.1] - 2021.05.14
 
