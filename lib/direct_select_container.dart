@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:direct_select_flutter/direct_select_list.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
 /// Root widget for direct select.
 /// This widget displays lists of direct selects.
@@ -107,6 +106,7 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
   double _currentScrollLocation = 0;
 
   double _adjustedTopOffset = 0.0;
+  double _containerLeft = 0.0;
 
   late AnimationController fadeAnimationController;
 
@@ -133,11 +133,13 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
 
   @override
   Widget build(BuildContext context) {
-    double topOffset = 0.0;
     RenderObject? object = context.findRenderObject();
-    if (object?.parentData is ContainerBoxParentData) {
-      topOffset = (object!.parentData as ContainerBoxParentData).offset.dy;
-    }
+    final containerOrigin =
+        (object is RenderBox && object.attached && object.hasSize)
+            ? object.localToGlobal(Offset.zero)
+            : Offset.zero;
+    _containerLeft = containerOrigin.dx;
+    final topOffset = containerOrigin.dy;
 
     listPadding = MediaQuery.of(context).size.height;
 
@@ -168,25 +170,21 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
           listeners: this,
           child: widget.child,
         ),
-        Visibility(
-          visible: isOverlayVisible,
-          child: FadeTransition(
-            opacity: fadeAnimationController
-                .drive(CurveTween(curve: Curves.easeOut)),
-            child: Column(
-              children: <Widget>[
-                Expanded(
-                  child: Stack(
-                    children: <Widget>[
-                      _getListWidget(),
-                      _getSelectionOverlayWidget(),
-                    ],
-                  ),
-                ),
-              ],
+        Positioned.fill(
+          child: Visibility(
+            visible: isOverlayVisible,
+            child: FadeTransition(
+              opacity: fadeAnimationController
+                  .drive(CurveTween(curve: Curves.easeOut)),
+              child: Stack(
+                children: <Widget>[
+                  _getListWidget(),
+                  _getSelectionOverlayWidget(),
+                ],
+              ),
             ),
           ),
-        )
+        ),
       ],
     );
   }
@@ -197,7 +195,7 @@ class DirectSelectContainerState extends State<DirectSelectContainer>
     if (_currentList.items.isNotEmpty) {
       Rect? rect = _currentList.paddingItemController.paddingItemRect;
       if (rect != null) {
-        paddingLeft = rect.left;
+        paddingLeft = rect.left - _containerLeft;
       }
     }
 
