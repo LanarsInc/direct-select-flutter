@@ -52,6 +52,10 @@ class DirectSelectList<T> extends StatefulWidget {
   ///Callback for action when user just tapped instead of hold and scroll
   final VoidCallback? onUserTappedListener;
 
+  ///Opens the list only after a long press, so a drag that starts on the
+  ///field still scrolls the enclosing scrollable or bottom sheet
+  final bool openOnLongPress;
+
   ///Holds [GlobalKey] used to measure the selected item position
   final PaddingItemController paddingItemController = PaddingItemController();
 
@@ -63,6 +67,7 @@ class DirectSelectList<T> extends StatefulWidget {
     this.focusedItemDecoration,
     this.defaultItemIndex = 0,
     this.onUserTappedListener,
+    this.openOnLongPress = false,
   })  : items = values.map((val) => itemBuilder(val)).toNotNullableList(),
         selectedItem = ValueNotifier<int>(defaultItemIndex),
         assert(defaultItemIndex + 1 <= values.length + 1),
@@ -108,6 +113,8 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
   int? lastSelectedItem;
 
   bool _isShowUpAnimationRunning = false;
+  bool _isGestureEnded = false;
+  double _lastLongPressDy = 0.0;
 
   Map<int, Widget> selectedItemWidgets = Map();
 
@@ -160,12 +167,28 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
       }
     });
 
-    bool transitionEnded = false;
-
     return ValueListenableBuilder<int>(
         valueListenable: widget.selectedItem,
         builder: (context, value, child) {
           final selectedItem = selectedItemWidgets[value];
+          if (widget.openOnLongPress) {
+            return GestureDetector(
+              child: selectedItem,
+              onTap: widget.onUserTappedListener,
+              onLongPressStart: (details) {
+                _lastLongPressDy = 0.0;
+                _startSelection(value);
+              },
+              onLongPressMoveUpdate: (details) {
+                final dy = details.localOffsetFromOrigin.dy;
+                final delta = dy - _lastLongPressDy;
+                _lastLongPressDy = dy;
+                _moveSelection(delta);
+              },
+              onLongPressEnd: (details) => _endSelection(),
+              onLongPressCancel: _endSelection,
+            );
+          }
           return GestureDetector(
               child: selectedItem,
               onTap: () {
@@ -173,39 +196,44 @@ class DirectSelectState<T> extends State<DirectSelectList<T>> {
                   widget.onUserTappedListener?.call();
                 }
               },
-              onTapDown: (tapDownDetails) async {
-                if (!isOverlayVisible) {
-                  transitionEnded = false;
-                  _isShowUpAnimationRunning = true;
-                  await animatedStateKey.currentState
-                      ?.runScaleTransition(reverse: false);
-                  _isShowUpAnimationRunning = false;
-                  if (!transitionEnded) {
-                    await _showListOverlay(_getItemTopPosition(context));
-                    lastSelectedItem = value;
-                  }
-                }
-              },
+              onTapDown: (tapDownDetails) => _startSelection(value),
               onTapUp: (tapUpDetails) async {
                 await _hideListOverlay(_getItemTopPosition(context));
                 animatedStateKey.currentState
                     ?.runScaleTransition(reverse: true);
               },
               onVerticalDragEnd: (dragDetails) async {
-                transitionEnded = true;
+                _isGestureEnded = true;
                 _dragEnd();
               },
-              onVerticalDragCancel: () {
-                transitionEnded = true;
-                _isShowUpAnimationRunning = false;
-                _dragEnd();
-              },
-              onVerticalDragUpdate: (dragInfo) {
-                if (!_isShowUpAnimationRunning) {
-                  _showListOverlay(dragInfo.primaryDelta);
-                }
-              });
+              onVerticalDragCancel: _endSelection,
+              onVerticalDragUpdate: (dragInfo) =>
+                  _moveSelection(dragInfo.primaryDelta));
         });
+  }
+
+  Future<void> _startSelection(int value) async {
+    if (isOverlayVisible) return;
+    _isGestureEnded = false;
+    _isShowUpAnimationRunning = true;
+    await animatedStateKey.currentState?.runScaleTransition(reverse: false);
+    _isShowUpAnimationRunning = false;
+    if (!_isGestureEnded && mounted) {
+      await _showListOverlay(_getItemTopPosition(context));
+      lastSelectedItem = value;
+    }
+  }
+
+  void _moveSelection(double? dy) {
+    if (!_isShowUpAnimationRunning) {
+      _showListOverlay(dy);
+    }
+  }
+
+  void _endSelection() {
+    _isGestureEnded = true;
+    _isShowUpAnimationRunning = false;
+    _dragEnd();
   }
 
   void _dragEnd() async {

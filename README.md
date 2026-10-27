@@ -110,3 +110,16 @@ Scaffold(
       ),
     );
 ```
+
+## Inside scrollable views and bottom sheets
+
+By default the list opens as soon as the field is touched, so a drag that starts on the field
+selects an item instead of scrolling the page or closing a bottom sheet.
+Set `openOnLongPress` to open the list only after a long press:
+```dart
+    DirectSelectList<String>(
+        values: _cities,
+        openOnLongPress: true,
+        itemBuilder: (String value) => getDropDownMenuItem(value),
+        focusedItemDecoration: _getDslDecoration());
+```

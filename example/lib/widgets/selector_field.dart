@@ -21,6 +21,7 @@ class SelectorField<T> extends StatelessWidget {
     required this.onSelected,
     this.itemLabel,
     this.showDropdownIcon = true,
+    this.openOnLongPress = false,
   });
 
   final List<T> values;
@@ -28,6 +29,7 @@ class SelectorField<T> extends StatelessWidget {
   final ValueChanged<int> onSelected;
   final String Function(T value)? itemLabel;
   final bool showDropdownIcon;
+  final bool openOnLongPress;
 
   @override
   Widget build(BuildContext context) {
@@ -44,9 +46,10 @@ class SelectorField<T> extends StatelessWidget {
                   defaultItemIndex: selectedIndex,
                   itemBuilder: (value) => SelectorItem<T>(value: value, label: itemLabel?.call(value)),
                   focusedItemDecoration: selectorFocusedItemDecoration,
-                  onUserTappedListener: () =>
-                      ScaffoldMessenger.of(context)
-                          .showSnackBar(const SnackBar(content: Text('Hold and drag instead of tap'))),
+                  openOnLongPress: openOnLongPress,
+                  onUserTappedListener: () => ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(openOnLongPress ? 'Long press, then drag' : 'Hold and drag instead of tap')),
+                  ),
                   onItemSelectedListener: (_, index, _) => onSelected(index),
                 ),
               ),
