@@ -1,11 +1,18 @@
 name: direct_select_flutter
 description: Direct Select Widget Implementation inspired by https://dribbble.com/shots/3876250-DirectSelect-Dropdown-ux
 homepage: https://github.com/LanarsInc/direct-select-flutter
-version: 1.1.1
+repository: https://github.com/LanarsInc/direct-select-flutter
+issue_tracker: https://github.com/LanarsInc/direct-select-flutter/issues
+topics:
+  - dropdown
+  - select
+  - picker
+  - widget
+version: 1.2.0
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
-  flutter: '>=3.10.0 <4.0.0'
+  flutter: '>=3.10.0'
 
 dependencies:
   flutter:
@@ -14,6 +21,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  lints: ^6.1.0
 
 flutter:
   uses-material-design: true
