@@ -1,7 +1,7 @@
 import 'package:direct_select_flutter/direct_select_container.dart';
+import 'package:example/food_data.dart';
 import 'package:flutter/material.dart';
 
-import '../food_data.dart';
 import 'selector_field.dart';
 
 class MealTimeSheetButton extends StatelessWidget {
