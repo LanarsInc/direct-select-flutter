@@ -1,4 +1,5 @@
 import 'package:example/main.dart';
+import 'package:example/widgets/compact_selector_examples.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -19,5 +20,14 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Hold and drag instead of tap'), findsOneWidget);
+  });
+
+  testWidgets('compact selectors fit inside a row and a horizontal scroll view', (tester) async {
+    await tester.pumpWidget(const DirectSelectExampleApp());
+
+    expect(tester.takeException(), isNull);
+    expect(find.byType(ReminderSentence), findsOneWidget);
+    expect(find.byType(FoodFilterBar), findsOneWidget);
+    expect(find.text('Any cuisine'), findsOneWidget);
   });
 }
