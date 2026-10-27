@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'food_data.dart';
 import 'widgets/compact_selector_examples.dart';
+import 'widgets/meal_time_sheet.dart';
 import 'widgets/nutrition_summary.dart';
 import 'widgets/page_header.dart';
 import 'widgets/selected_food_title.dart';
@@ -100,6 +101,9 @@ class _AddFoodPageState extends State<AddFoodPage> {
                     const SizedBox(height: 20),
                     const FieldLabel('Horizontal filter bar'),
                     const FoodFilterBar(),
+                    const SizedBox(height: 20),
+                    const FieldLabel('Bottom sheet with long press'),
+                    const MealTimeSheetButton(),
                   ],
                 ),
               ),

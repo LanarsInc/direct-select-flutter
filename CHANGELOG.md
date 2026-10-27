@@ -3,8 +3,10 @@
 * Require Dart 3.0 and Flutter 3.10 or newer ([#33](https://github.com/LanarsInc/direct-select-flutter/pull/33))
 * Remove `rect_getter` dependency ([#33](https://github.com/LanarsInc/direct-select-flutter/pull/33))
 * Allow `DirectSelectList` inside a `Row` without `Expanded` or in a horizontal scroll view ([#30](https://github.com/LanarsInc/direct-select-flutter/issues/30))
+* Add `DirectSelectList.openOnLongPress` to open the list only after a long press, so a drag on the field still scrolls the page or closes a bottom sheet ([#24](https://github.com/LanarsInc/direct-select-flutter/pull/24))
 * Fix list lock up after a horizontal drag and overlay stuck after a cancelled drag ([#32](https://github.com/LanarsInc/direct-select-flutter/issues/32), [#34](https://github.com/LanarsInc/direct-select-flutter/pull/34))
 * Keep options on screen when the field is near the top or bottom of a scrollable view ([#18](https://github.com/LanarsInc/direct-select-flutter/issues/18), [#34](https://github.com/LanarsInc/direct-select-flutter/pull/34))
+* Fix list overlay position when `DirectSelectContainer` is under `Padding` or `SafeArea`, and keep the container size when it does not fill the screen, for example in a bottom sheet ([#24](https://github.com/LanarsInc/direct-select-flutter/pull/24))
 * Deprecate `toggleListOverlayVisibility` in favor of `showListOverlay` and `hideListOverlay` ([#34](https://github.com/LanarsInc/direct-select-flutter/pull/34))
 * Type `DirectSelectItem.isSelected` as `bool` and `DirectSelectItem.scaleFactor` as `num`
 * Fix pub.dev static analysis issues
